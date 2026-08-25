@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ບົດທີ 5: Form Handling & Reactive State - ຫຼັກສູດ Nuxt 4 (2027)</title>
+  <title>ບົດທີ 5: ຕິດຕັ້ງ ແລະ ໃຊ້ງານ Vuetify 3 - ຫຼັກສູດ Nuxt 4 (2027)</title>
 
   <!-- Google Fonts: Noto Sans Lao, Plus Jakarta Sans & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,10 +29,10 @@
   </script>
 </head>
 
-<body class="bg-white text-slate-800 min-h-screen font-sans antialiased selection:bg-rose-500 selection:text-white">
+<body class="bg-white text-slate-800 min-h-screen font-sans antialiased selection:bg-indigo-500 selection:text-white">
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 text-sm border border-rose-500/40">
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 text-sm border border-indigo-500/40">
     <span>📋 ຄັດລອກໂຄດສຳເລັດແລ້ວ!</span>
   </div>
 
@@ -49,21 +49,21 @@
 
         <a href="./index.html" class="flex items-center gap-3 group">
           <span
-            class="w-9 h-9 rounded-lg bg-rose-500 text-white font-black flex items-center justify-center text-sm shadow-md shadow-rose-500/20 group-hover:scale-105 transition">N4</span>
+            class="w-9 h-9 rounded-lg bg-indigo-600 text-white font-black flex items-center justify-center text-sm shadow-md shadow-indigo-500/20 group-hover:scale-105 transition">N4</span>
           <div>
-            <span class="font-bold text-lg text-slate-900 group-hover:text-rose-600 transition">ຫຼັກສູດ Nuxt 4</span>
+            <span class="font-bold text-lg text-slate-900 group-hover:text-indigo-600 transition">ຫຼັກສູດ Nuxt 4</span>
           </div>
         </a>
-        <span class="hidden sm:inline-block text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-0.5 rounded-full ml-1">ບົດທີ 5</span>
+        <span class="hidden sm:inline-block text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 rounded-full ml-1">ບົດທີ 5</span>
       </div>
 
       <!-- Desktop Nav -->
       <nav class="hidden md:flex items-center gap-6 text-sm font-semibold">
-        <a href="./index.html" class="text-slate-600 hover:text-rose-600 transition">ໜ້າຫຼັກ</a>
+        <a href="./index.html" class="text-slate-600 hover:text-indigo-600 transition">ໜ້າຫຼັກ</a>
         
         <!-- Course Dropdown -->
         <div class="relative group">
-          <button class="text-rose-600 font-bold flex items-center gap-1.5 py-2">
+          <button class="text-indigo-600 font-bold flex items-center gap-1.5 py-2">
             <span>ບົດຮຽນທັງໝົດ</span>
             <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </button>
@@ -73,18 +73,20 @@
             <a href="./N02.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 2: ໜ້າເວັບ & Components</a>
             <a href="./N03.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 3: Data Fetching & State</a>
             <a href="./N04.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 4: nuxt.config, Plugins & Assets</a>
-            <a href="./N05.html" class="block px-3 py-2 rounded-xl bg-rose-50 text-rose-700 font-bold text-xs">ບົດທີ 5: Form Handling & State</a>
+            <a href="./N05.html" class="block px-3 py-2 rounded-xl bg-indigo-50 text-indigo-700 font-bold text-xs">ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</a>
+            <a href="./N06.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 6: Form Handling & State</a>
           </div>
         </div>
 
-        <a href="./about.html" class="text-slate-600 hover:text-rose-600 transition">ກ່ຽວກັບ</a>
-        <a href="./contact.html" class="text-slate-600 hover:text-rose-600 transition">ຕິດຕໍ່</a>
+        <a href="./about.html" class="text-slate-600 hover:text-indigo-600 transition">ກ່ຽວກັບ</a>
+        <a href="./contact.html" class="text-slate-600 hover:text-indigo-600 transition">ຕິດຕໍ່</a>
       </nav>
 
       <!-- Action Button -->
       <div class="flex items-center gap-3">
-        <a href="./index.html" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs shadow-md shadow-rose-500/20 transition">
-          <span>ສຳເລັດຫຼັກສູດ 🎓</span>
+        <a href="./N06.html" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-500/20 transition">
+          <span>ບົດຕໍ່ໄປ (N06)</span>
+          <span>→</span>
         </a>
       </div>
 
@@ -96,7 +98,7 @@
   <aside id="mobile-sidebar" class="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-white border-r border-slate-200 z-50 p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 space-y-6 shadow-2xl">
     <div class="flex items-center justify-between pb-4 border-b border-slate-100">
       <div class="flex items-center gap-2">
-        <span class="w-8 h-8 rounded-lg bg-rose-500 text-white font-black flex items-center justify-center text-sm">N4</span>
+        <span class="w-8 h-8 rounded-lg bg-indigo-600 text-white font-black flex items-center justify-center text-sm">N4</span>
         <span class="font-bold text-slate-900 text-base">ຫຼັກສູດ Nuxt 4</span>
       </div>
       <button onclick="toggleMobileSidebar()" class="p-2 text-slate-400 hover:text-slate-700 rounded-lg">✕</button>
@@ -128,8 +130,11 @@
       <a href="./N04.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
         04. nuxt.config, Plugins & Assets
       </a>
-      <a href="./N05.html" class="block px-3 py-2.5 rounded-xl bg-rose-50 text-rose-700 font-bold text-xs border border-rose-200">
-        05. Form Handling & State (ປັດຈຸບັນ)
+      <a href="./N05.html" class="block px-3 py-2.5 rounded-xl bg-indigo-50 text-indigo-700 font-bold text-xs border border-indigo-200">
+        05. ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify (ປັດຈຸບັນ)
+      </a>
+      <a href="./N06.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        06. Form Handling & State
       </a>
     </div>
   </aside>
@@ -147,7 +152,7 @@
             <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
               <span>📚</span> ສາລະບານຫຼັກສູດ Nuxt 4
             </h3>
-            <span class="text-[11px] font-semibold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full">6 ບົດຮຽນ</span>
+            <span class="text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">7 ບົດຮຽນ</span>
           </div>
 
           <div class="space-y-2 text-xs">
@@ -197,13 +202,22 @@
             </a>
 
             <!-- Lesson 5 (Active) -->
-            <a href="./N05.html" class="flex items-center gap-3 p-3 rounded-2xl bg-rose-50 text-rose-800 font-bold border border-rose-200 shadow-sm transition">
-              <span class="w-7 h-7 rounded-xl bg-rose-500 text-white flex items-center justify-center text-xs font-black shrink-0">05</span>
+            <a href="./N05.html" class="flex items-center gap-3 p-3 rounded-2xl bg-indigo-50 text-indigo-800 font-bold border border-indigo-200 shadow-sm transition">
+              <span class="w-7 h-7 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xs font-black shrink-0">05</span>
               <div class="flex-grow">
-                <div>ບົດທີ 5: Form Handling & State</div>
-                <div class="text-[10px] text-rose-600 font-normal">v-model, const form & Show Data</div>
+                <div>ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</div>
+                <div class="text-[10px] text-indigo-600 font-normal">Vuetify 3, MDI Icons & Theme</div>
               </div>
-              <span class="text-rose-600 font-bold">●</span>
+              <span class="text-indigo-600 font-bold">●</span>
+            </a>
+
+            <!-- Lesson 6 -->
+            <a href="./N06.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+              <span class="w-7 h-7 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xs font-bold shrink-0 border border-rose-200/60">06</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 6: Form Handling & State</div>
+                <div class="text-[10px] text-slate-400">v-model, const form & Show Data</div>
+              </div>
             </a>
           </div>
         </div>
@@ -212,10 +226,11 @@
         <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 space-y-3">
           <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider text-slate-400">ຫົວຂໍ້ໃນບົດນີ້</h4>
           <nav class="space-y-1.5 text-xs">
-            <a href="#section-1" class="block py-1 text-slate-600 hover:text-rose-600 transition">1. ຫຼັກການ Form ໃນ Vue / Nuxt 4</a>
-            <a href="#section-2" class="block py-1 text-slate-600 hover:text-rose-600 transition">2. ປະກາດ const form ດ້ວຍ reactive()</a>
-            <a href="#section-3" class="block py-1 text-slate-600 hover:text-rose-600 transition">3. ທົດລອງ Live Form Demo ຕົວຈິງ</a>
-            <a href="#section-4" class="block py-1 text-slate-600 hover:text-rose-600 transition">4. ໂຄດຕົວຢ່າງ Vue 3 Component</a>
+            <a href="#section-1" class="block py-1 text-slate-600 hover:text-indigo-600 transition">1. ແນະນຳ Vuetify 3 & Material Design</a>
+            <a href="#section-2" class="block py-1 text-slate-600 hover:text-indigo-600 transition">2. ຕິດຕັ້ງ Packages (vuetify, sass, mdi)</a>
+            <a href="#section-3" class="block py-1 text-slate-600 hover:text-indigo-600 transition">3. ສ້າງ Plugin `vuetify.ts` & Config</a>
+            <a href="#section-4" class="block py-1 text-slate-600 hover:text-indigo-600 transition">4. ຕົວຢ່າງການໃຊ້ Material Components</a>
+            <a href="#section-5" class="block py-1 text-slate-600 hover:text-indigo-600 transition">5. Vuetify Interactive UI Preview</a>
           </nav>
         </div>
 
@@ -225,298 +240,275 @@
       <main class="lg:col-span-8 space-y-10">
 
         <!-- Lesson Header Banner -->
-        <div class="bg-gradient-to-br from-rose-600 via-pink-700 to-slate-900 rounded-3xl p-8 sm:p-10 text-white shadow-xl space-y-4">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-bold border border-rose-400/30">
-            <span>LESSON 05</span> • <span>Interactive Forms & State</span>
+        <div class="bg-gradient-to-br from-indigo-600 via-blue-700 to-slate-900 rounded-3xl p-8 sm:p-10 text-white shadow-xl space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold border border-indigo-400/30">
+            <span>LESSON 05</span> • <span>Material Design 3 & Vuetify</span>
           </div>
-          <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight">ບົດທີ 5: Form Handling, v-model ແລະ ການສະແດງຜົນຂໍ້ມູນ</h1>
-          <p class="text-rose-100 text-base sm:text-lg leading-relaxed">
-            ຮຽນຮູ້ການຮັບຄ່າຈາກຟອມດ້ວຍ <code class="text-white font-mono bg-rose-900/50 px-2 py-0.5 rounded">v-model</code>, ການສ້າງ Reactive State ດ້ວຍ <code class="text-white font-mono bg-rose-900/50 px-2 py-0.5 rounded">const formData = reactive({...})</code>, ແລະ ການກົດປຸ່ມເພື່ອສະແດງຜົນຂໍ້ມູນ Input ທັນທີ.
+          <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight">ບົດທີ 5: ການຕິດຕັ້ງ ແລະ ໃຊ້ງານ Vuetify 3 ໃນ Nuxt 4</h1>
+          <p class="text-indigo-100 text-base sm:text-lg leading-relaxed">
+            ຮຽນຮູ້ວິທີຕິດຕັ້ງ <strong>Vuetify 3</strong>, ການເຊື່ອມໂຍງລະບົບ Material Design Icons (MDI), ການຕັ້ງຄ່າ Plugin ໃນ <code class="text-white font-mono bg-indigo-900/50 px-2 py-0.5 rounded">app/plugins/vuetify.ts</code> ແລະ ການນຳໃຊ້ Components ເຊັ່ນ <code class="text-white font-mono bg-indigo-900/50 px-2 py-0.5 rounded">&lt;v-btn&gt;</code>, <code class="text-white font-mono bg-indigo-900/50 px-2 py-0.5 rounded">&lt;v-card&gt;</code>, <code class="text-white font-mono bg-indigo-900/50 px-2 py-0.5 rounded">&lt;v-text-field&gt;</code>.
           </p>
         </div>
 
-        <!-- Section 1: Form Concept -->
+        <!-- Section 1: Introduction -->
         <section id="section-1" class="space-y-4 scroll-mt-24">
           <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-xl bg-rose-500 text-white text-sm font-bold flex items-center justify-center">1</span>
-            ຫຼັກການເຮັດວຽກຂອງ Form ໃນ Nuxt 4 / Vue 3
+            <span class="w-8 h-8 rounded-xl bg-indigo-600 text-white text-sm font-bold flex items-center justify-center">1</span>
+            Vuetify 3 ແມ່ນຫຍັງ?
           </h2>
           <p class="text-slate-600 leading-relaxed">
-            ໃນ Nuxt 4 (Vue 3 Composition API), ການເຊື່ອມຕໍ່ຂໍ້ມູນລະຫວ່າງ Input Elements ແລະ JavaScript State ໃຊ້ລະບົບ <strong>Two-Way Data Binding</strong> ຜ່ານ Directive <code class="text-rose-700 font-mono bg-rose-50 px-1.5 py-0.5 rounded font-bold">v-model</code>:
+            <strong>Vuetify 3</strong> ແມ່ນ UI Component Framework ຍອດນິຍົມອັນດັບ 1 ສຳລັບ Vue 3 ແລະ Nuxt ເຊິ່ງຖືກອອກແບບຕາມມາດຕະຖານ <strong>Google Material Design 3</strong>. ມັນຊ່ວຍໃຫ້ນັກພັດທະນາສ້າງລະບົບ Admin Dashboard, Enterprise App ແລະ Web UI ທີ່ສວຍງາມ ແລະ ມີ Component ຄົບຖ້ວນໂດຍບໍ່ຕ້ອງຂຽນ CSS ເອງທັງໝົດ.
           </p>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
             <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-              <div class="w-8 h-8 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-sm">🔄</div>
-              <h3 class="font-bold text-slate-900 text-sm">v-model Two-Way Binding</h3>
-              <p class="text-xs text-slate-600 leading-relaxed">ເມື່ອຜູ້ໃຊ້ພິມຂໍ້ຄວາມ, ຄ່າໃນຕົວປ່ຽນ `const` ຈະອັບເດດທັນທີ ແລະ ໃນທາງກັບກັນຫາກປ່ຽນຄ່າໃນໂຄດ Input ກໍຈະປ່ຽນຕາມ.</p>
+              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm">🎨</div>
+              <h3 class="font-bold text-slate-900 text-sm">Material Design 3</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">ອອກແບບຕາມຫຼັກການ UI/UX ລະດັບສາກົນ ພ້ອມ Ripple Effects ແລະ Elevation Shadows.</p>
             </div>
 
             <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-              <div class="w-8 h-8 rounded-lg bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold text-sm">📦</div>
-              <h3 class="font-bold text-slate-900 text-sm">reactive() vs ref()</h3>
-              <p class="text-xs text-slate-600 leading-relaxed">ສຳລັບ Form ທີ່ມີຫຼາຍ Fields ແນະນຳໃຫ້ໃຊ້ `reactive({ name: '', email: '' })` ເພື່ອຮວບຮວມຂໍ້ມູນໄວ້ໃນ Object ດຽວ.</p>
+              <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">🧩</div>
+              <h3 class="font-bold text-slate-900 text-sm">100+ Ready Components</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">ມີ Components ຄົບຖ້ວນ ເຊັ່ນ Buttons, Cards, Dialogs, Data Tables, Forms, Navigation Drawers.</p>
             </div>
 
             <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-              <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">⚡</div>
-              <h3 class="font-bold text-slate-900 text-sm">@submit.prevent</h3>
-              <p class="text-xs text-slate-600 leading-relaxed">ປ້ອງກັນບໍ່ໃຫ້ Browser Reload ໜ້າຈໍໃໝ່ ເພື່ອໃຫ້ Vue ປະມວນຜົນ ແລະ ສະແດງຜົນຂໍ້ມູນໄດ້ແບບ Single Page App.</p>
+              <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-sm">🌓</div>
+              <h3 class="font-bold text-slate-900 text-sm">Dynamic Light / Dark Themes</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">ຮອງຮັບການສະຫຼັບໂໝດມືດ (Dark Mode) ແລະ ການປັບແຕ່ງສີ Theme ໄດ້ຢ່າງງ່າຍດາຍ.</p>
             </div>
           </div>
         </section>
 
-        <!-- Section 2: Code Breakdown -->
+        <!-- Section 2: Installation -->
         <section id="section-2" class="space-y-4 scroll-mt-24">
           <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-xl bg-rose-500 text-white text-sm font-bold flex items-center justify-center">2</span>
-            ວິທີປະກາດ <code class="text-rose-600 font-mono text-xl">const form</code> ແລະ ຟັງຊັນກົດປຸ່ມ
+            <span class="w-8 h-8 rounded-xl bg-indigo-600 text-white text-sm font-bold flex items-center justify-center">2</span>
+            ຂັ້ນຕອນການຕິດຕັ້ງ Vuetify 3 ໃນ Nuxt ໂປຣເຈັກ
           </h2>
           <p class="text-slate-600 leading-relaxed">
-            ສ້າງຕົວປ່ຽນ Reactive State ເພື່ອຮັບຄ່າ ແລະ ຕົວປ່ຽນສຳລັບເກັບຂໍ້ມູນທີ່ກົດບັນທຶກແລ້ວ:
+            ເປີດ Terminal ໃນໂຟລເດີໂປຣເຈັກ Nuxt 4 ແລ້ວຕິດຕັ້ງ <code class="text-indigo-700 font-mono bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded text-xs">vuetify</code>, <code class="text-indigo-700 font-mono bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded text-xs">sass</code> ແລະ ໄອຄອນ <code class="text-indigo-700 font-mono bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded text-xs">@mdi/font</code>:
           </p>
 
-          <div class="bg-slate-900 rounded-2xl p-5 text-slate-200 font-mono text-xs sm:text-sm shadow-xl space-y-3">
-            <div class="text-slate-400">// 1. ປະກາດ Form State & Submitted State</div>
-            <div class="text-rose-300">
-              const form = reactive({<br>
-              &nbsp;&nbsp;fullName: '',<br>
-              &nbsp;&nbsp;email: '',<br>
-              &nbsp;&nbsp;level: 'ເລີ່ມຕົ້ນ',<br>
-              &nbsp;&nbsp;message: ''<br>
-              })
+          <!-- CLI Command Box -->
+          <div class="bg-slate-900 rounded-2xl p-5 shadow-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between text-xs text-slate-400 pb-2 border-b border-slate-800">
+              <span class="font-mono">Terminal (npm / pnpm)</span>
+              <button onclick="copyCmd('npm i vuetify sass @mdi/font')" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono transition">
+                Copy
+              </button>
             </div>
+            <pre class="text-emerald-400 font-mono text-xs sm:text-sm overflow-x-auto"><code>npm i vuetify sass @mdi/font</code></pre>
+          </div>
 
-            <div class="text-cyan-300 pt-2">
-              // 2. ຕົວປ່ຽນເກັບຂໍ້ມູນຫຼັງຈາກກົດປຸ່ມ Show Data<br>
-              const submittedData = ref&lt;typeof form | null&gt;(null)
+          <div class="p-4 rounded-2xl bg-indigo-50 border border-indigo-200 text-xs text-indigo-900 space-y-1">
+            <div class="font-bold flex items-center gap-1.5 text-indigo-800">
+              <span>💡</span> ທາງເລືອກ (Nuxt Module):
             </div>
-
-            <div class="text-emerald-300 pt-2">
-              // 3. ຟັງຊັນເມື່ອກົດປຸ່ມ Submit / Show<br>
-              const handleShowData = () =&gt; {<br>
-              &nbsp;&nbsp;submittedData.value = { ...form }<br>
-              }
-            </div>
+            <p>ທ່ານຍັງສາມາດຕິດຕັ້ງຜ່ານ Nuxt Module ທາງການໄດ້ເຊັ່ນກັນ: <code class="font-mono bg-white px-2 py-0.5 rounded border border-indigo-200 text-indigo-700">npx nuxi module add vuetify-nuxt-module</code></p>
           </div>
         </section>
 
-        <!-- Section 3: Interactive Live Form Demo -->
-        <section id="section-3" class="space-y-6 scroll-mt-24">
-          <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
-              <span class="w-8 h-8 rounded-xl bg-rose-500 text-white text-sm font-bold flex items-center justify-center">3</span>
-              ທົດລອງປ້ອນຂໍ້ມູນ ແລະ ກົດປຸ່ມສະແດງຜົນ (Interactive Demo)
-            </h2>
-          </div>
-          <p class="text-slate-600 text-sm leading-relaxed">
-            ທົດລອງຕື່ມຂໍ້ມູນລົງໃນຟອມດ້ານລຸ່ມ ແລ້ວກົດປຸ່ມ <strong>"ສະແດງຜົນຂໍ້ມູນ (Show Data)"</strong> ເພື່ອເບິ່ງການດຶງຄ່າຈາກ <code class="font-mono text-rose-700 bg-rose-50 px-1 py-0.5 rounded">const</code> ມາສະແດງຜົນທັນທີ:
-          </p>
-
-          <!-- Live Interactive Form Grid -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            
-            <!-- Left: Interactive Form -->
-            <div class="lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-lg space-y-5">
-              <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <span class="font-bold text-slate-900 text-sm flex items-center gap-2">
-                  <span>📝</span> ແບບຟອມປ້ອນຂໍ້ມູນນັກຮຽນ
-                </span>
-                <span class="text-[11px] font-semibold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full">Live v-model</span>
-              </div>
-
-              <form id="live-course-form" onsubmit="event.preventDefault(); showFormResult();" class="space-y-4 text-xs sm:text-sm">
-                <!-- Name -->
-                <div class="space-y-1.5">
-                  <label class="block font-bold text-slate-700 text-xs">ຊື່ ແລະ ນາມສະກຸນ <span class="text-rose-500">*</span></label>
-                  <input type="text" id="input-name" required placeholder="ເຊັ່ນ: ສົມສັກ ໄຊຍະວົງ" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 transition text-slate-800" />
-                </div>
-
-                <!-- Email -->
-                <div class="space-y-1.5">
-                  <label class="block font-bold text-slate-700 text-xs">ອີເມວ (Email) <span class="text-rose-500">*</span></label>
-                  <input type="email" id="input-email" required placeholder="somsak@example.com" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 transition text-slate-800" />
-                </div>
-
-                <!-- Level Dropdown -->
-                <div class="space-y-1.5">
-                  <label class="block font-bold text-slate-700 text-xs">ລະດັບພື້ນຖານ Nuxt</label>
-                  <select id="input-level" class="w-พull w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 transition text-slate-800">
-                    <option value="ເລີ່ມຕົ້ນ (Beginner)">ເລີ່ມຕົ້ນ (Beginner)</option>
-                    <option value="ປານກາງ (Intermediate)">ປານກາງ (Intermediate)</option>
-                    <option value="ຂັ້ນສູງ (Advanced)">ຂັ້ນສູງ (Advanced)</option>
-                  </select>
-                </div>
-
-                <!-- Message -->
-                <div class="space-y-1.5">
-                  <label class="block font-bold text-slate-700 text-xs">ເປົ້າໝາຍໃນການຮຽນ Nuxt 4</label>
-                  <textarea id="input-message" rows="3" placeholder="ຂຽນສິ່ງທີ່ທ່ານຢາກສ້າງດ້ວຍ Nuxt 4..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 transition text-slate-800"></textarea>
-                </div>
-
-                <!-- Buttons -->
-                <div class="flex items-center gap-3 pt-2">
-                  <button type="submit" class="px-6 py-3 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs sm:text-sm shadow-md shadow-rose-500/25 transition flex items-center gap-2">
-                    <span>ສະແດງຜົນຂໍ້ມູນ (Show Data)</span>
-                    <span>→</span>
-                  </button>
-                  <button type="button" onclick="resetLiveForm()" class="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs sm:text-sm transition">
-                    ລ້າງຂໍ້ມູນ (Reset)
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            <!-- Right: Live Result Display Card -->
-            <div class="lg:col-span-5 space-y-4">
-              <div class="bg-slate-900 text-white rounded-3xl p-6 shadow-xl space-y-4 border border-slate-800">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-                  <div class="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-2">
-                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
-                    <span>ຜົນລັບຈາກ const formData</span>
-                  </div>
-                  <span id="badge-status" class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full font-mono">ຍັງບໍ່ມີຂໍ້ມູນ</span>
-                </div>
-
-                <!-- Empty State Placeholder -->
-                <div id="result-empty" class="py-8 text-center text-slate-500 space-y-2">
-                  <div class="text-3xl">📥</div>
-                  <p class="text-xs">ກະລຸນາປ້ອນຂໍ້ມູນ ແລະ ກົດປຸ່ມ "Show Data" ເພື່ອເບິ່ງຜົນ</p>
-                </div>
-
-                <!-- Result Card (Shown on Submit) -->
-                <div id="result-content" class="hidden space-y-4 text-xs sm:text-sm">
-                  <div class="space-y-2 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                    <div class="text-[11px] text-slate-400">ຊື່ ແລະ ນາມສະກຸນ:</div>
-                    <div id="display-name" class="font-bold text-rose-400 text-base">-</div>
-
-                    <div class="text-[11px] text-slate-400 pt-1">ອີເມວ:</div>
-                    <div id="display-email" class="font-mono text-cyan-300">-</div>
-
-                    <div class="text-[11px] text-slate-400 pt-1">ລະດັບພື້ນຖານ:</div>
-                    <div id="display-level" class="font-semibold text-emerald-400">-</div>
-
-                    <div class="text-[11px] text-slate-400 pt-1">ເປົ້າໝາຍ:</div>
-                    <div id="display-message" class="text-slate-300 italic">-</div>
-                  </div>
-
-                  <!-- Raw JSON preview -->
-                  <div class="space-y-1">
-                    <div class="text-[10px] text-slate-400 font-mono">JSON State Preview:</div>
-                    <pre id="display-json" class="bg-slate-950 p-3 rounded-xl text-[11px] font-mono text-emerald-400 overflow-x-auto border border-slate-800"></pre>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- Section 4: Full Vue 3 Component Code -->
-        <section id="section-4" class="space-y-4 scroll-mt-24">
+        <!-- Section 3: Plugin & nuxt.config Setup -->
+        <section id="section-3" class="space-y-5 scroll-mt-24">
           <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-xl bg-rose-500 text-white text-sm font-bold flex items-center justify-center">4</span>
-            ໂຄດຕົວຢ່າງສົມບູນໃນ Nuxt 4 Component (<code class="text-rose-600 font-mono text-xl">app/pages/form-demo.vue</code>)
+            <span class="w-8 h-8 rounded-xl bg-indigo-600 text-white text-sm font-bold flex items-center justify-center">3</span>
+            ສ້າງ Plugin <code class="text-indigo-600 font-mono text-xl">app/plugins/vuetify.ts</code> ແລະ ຕັ້ງຄ່າ
           </h2>
-          <p class="text-slate-600 text-sm">ທ່ານສາມາດນຳໂຄດນີ້ໄປວາງໄວ້ໃນໂປຣເຈັກ Nuxt 4 ເພື່ອສ້າງໜ້າ Form ທີ່ສົມບູນແບບ:</p>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            ສ້າງໄຟລ໌ Plugin ເພື່ອລົງທະບຽນ Vuetify ເຂົ້າສູ່ Nuxt App Lifecycle:
+          </p>
 
+          <!-- Code Box: Plugin -->
           <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl">
             <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
-              <span>app/pages/form-demo.vue</span>
-              <button onclick="copyCmd(document.getElementById('code-form-full').innerText)" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+              <span>app/plugins/vuetify.ts</span>
+              <button onclick="copyCmd(document.getElementById('code-vuetify-plugin').innerText)" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
                 Copy Code
               </button>
             </div>
-            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-form-full">&lt;script setup lang="ts"&gt;
-// 1. ສ້າງ Reactive Form Object ດ້ວຍ const
-const formData = reactive({
-  fullName: '',
-  email: '',
-  level: 'Beginner',
-  message: ''
-})
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-vuetify-plugin">import '@mdi/font/css/materialdesignicons.css'
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
 
-// 2. ຕົວປ່ຽນເກັບຂໍ້ມູນທີ່ກົດ Submit ແລ້ວ
-const submittedData = ref&lt;typeof formData | null&gt;(null)
-const isSubmitted = ref(false)
+export default defineNuxtPlugin((nuxtApp) => {
+  const vuetify = createVuetify({
+    ssr: true,
+    components,
+    directives,
+    theme: {
+      defaultTheme: 'light',
+      themes: {
+        light: {
+          colors: {
+            primary: '#4F46E5',   // Indigo
+            secondary: '#06B6D4', // Cyan
+            success: '#10B981',   // Emerald
+            warning: '#F59E0B',   // Amber
+            error: '#EF4444',     // Red
+          }
+        }
+      }
+    }
+  })
 
-// 3. ຟັງຊັນກົດປຸ່ມ Show Data
-const handleSubmit = () =&gt; {
-  // Clone ຂໍ້ມູນຈາກ formData ມາເກັບໄວ້ໃນ submittedData
-  submittedData.value = { ...formData }
-  isSubmitted.value = true
-}
+  // ລົງທະບຽນ Vuetify ເຂົ້າສູ່ Vue Instance
+  nuxtApp.vueApp.use(vuetify)
+})</code></pre>
+          </div>
 
-// 4. ຟັງຊັນລ້າງຄ່າ Reset
-const handleReset = () =&gt; {
-  formData.fullName = ''
-  formData.email = ''
-  formData.level = 'Beginner'
-  formData.message = ''
-  submittedData.value = null
-  isSubmitted.value = false
-}
-&lt;/script&gt;
+          <!-- Code Box: nuxt.config.ts -->
+          <p class="text-slate-600 text-sm pt-2">ຕໍ່ມາ, ເພີ່ມການຕັ້ງຄ່າ Build ໃນ <code class="font-mono text-indigo-700 bg-slate-100 px-1.5 py-0.5 rounded">nuxt.config.ts</code>:</p>
+          <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl">
+            <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span>nuxt.config.ts</span>
+              <button onclick="copyCmd(document.getElementById('code-vuetify-config').innerText)" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                Copy Code
+              </button>
+            </div>
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-vuetify-config">export default defineNuxtConfig({
+  compatibilityDate: '2027-01-01',
+  css: [
+    'vuetify/styles',
+    '@mdi/font/css/materialdesignicons.css'
+  ],
+  build: {
+    transpile: ['vuetify']
+  }
+})</code></pre>
+          </div>
+        </section>
 
-&lt;template&gt;
-  &lt;div class="max-w-4xl mx-auto p-6 space-y-6"&gt;
-    &lt;h1 class="text-3xl font-bold text-slate-900"&gt;ແບບຟອມຮັບຄ່າ Nuxt 4&lt;/h1&gt;
+        <!-- Section 4: Component Usage -->
+        <section id="section-4" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-indigo-600 text-white text-sm font-bold flex items-center justify-center">4</span>
+            ຕົວຢ່າງການນຳໃຊ້ Material Components ໃນ Nuxt
+          </h2>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            ໃນ Nuxt Template ໃຫ້ຄອບ Component ທັງໝົດດ້ວຍ <code class="font-mono text-indigo-700 font-bold bg-indigo-50 px-1.5 py-0.5 rounded">&lt;v-app&gt;</code> ສະເໝີ ເພື່ອໃຫ້ Theme ແລະ Font ເຮັດວຽກຖືກຕ້ອງ:
+          </p>
 
-    &lt;form @submit.prevent="handleSubmit" class="space-y-4 bg-white p-6 border rounded-2xl shadow"&gt;
-      &lt;div&gt;
-        &lt;label class="block text-sm font-bold"&gt;ຊື່:&lt;/label&gt;
-        &lt;input v-model="formData.fullName" required class="w-full border p-2 rounded mt-1" /&gt;
-      &lt;/div&gt;
+          <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl">
+            <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span>app/pages/vuetify-demo.vue</span>
+              <button onclick="copyCmd(document.getElementById('code-usage').innerText)" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                Copy Code
+              </button>
+            </div>
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-usage">&lt;template&gt;
+  &lt;v-app&gt;
+    &lt;v-container class="pa-6"&gt;
+      &lt;!-- 1. Material Buttons --&gt;
+      &lt;v-btn color="primary" prepend-icon="mdi-check" class="mr-3"&gt;
+        ປຸ່ມ Primary
+      &lt;/v-btn&gt;
+      &lt;v-btn variant="outlined" color="secondary"&gt;
+        ປຸ່ມ Outlined
+      &lt;/v-btn&gt;
 
-      &lt;div&gt;
-        &lt;label class="block text-sm font-bold"&gt;ອີເມວ:&lt;/label&gt;
-        &lt;input v-model="formData.email" type="email" required class="w-full border p-2 rounded mt-1" /&gt;
-      &lt;/div&gt;
+      &lt;!-- 2. Material Card --&gt;
+      &lt;v-card class="mt-6 pa-4" elevation="4" rounded="lg"&gt;
+        &lt;v-card-title class="font-weight-bold"&gt;
+          🚀 ຍິນດີຕ້ອນຮັບສູ່ Nuxt 4 + Vuetify 3
+        &lt;/v-card-title&gt;
+        &lt;v-card-text&gt;
+          ພັດທະນາ Web Application ດ້ວຍ Material Design Components ແບບງ່າຍດາຍ.
+        &lt;/v-card-text&gt;
+        &lt;v-card-actions&gt;
+          &lt;v-btn color="primary" variant="text"&gt;ອ່ານເພີ່ມເຕີມ&lt;/v-btn&gt;
+        &lt;/v-card-actions&gt;
+      &lt;/v-card&gt;
 
-      &lt;div&gt;
-        &lt;label class="block text-sm font-bold"&gt;ລະດັບ:&lt;/label&gt;
-        &lt;select v-model="formData.level" class="w-full border p-2 rounded mt-1"&gt;
-          &lt;option&gt;Beginner&lt;/option&gt;
-          &lt;option&gt;Intermediate&lt;/option&gt;
-          &lt;option&gt;Advanced&lt;/option&gt;
-        &lt;/select&gt;
-      &lt;/div&gt;
-
-      &lt;div&gt;
-        &lt;label class="block text-sm font-bold"&gt;ຂໍ້ຄວາມ:&lt;/label&gt;
-        &lt;textarea v-model="formData.message" rows="3" class="w-full border p-2 rounded mt-1"&gt;&lt;/textarea&gt;
-      &lt;/div&gt;
-
-      &lt;div class="flex gap-3"&gt;
-        &lt;button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white px-6 py-2.5 rounded-xl font-bold"&gt;
-          ສະແດງຜົນຂໍ້ມູນ (Show Data)
-        &lt;/button&gt;
-        &lt;button type="button" @click="handleReset" class="bg-slate-200 px-4 py-2.5 rounded-xl font-bold"&gt;
-          Reset
-        &lt;/button&gt;
-      &lt;/div&gt;
-    &lt;/form&gt;
-
-    &lt;!-- ສະແດງຜົນຂໍ້ມູນເມື່ອກົດ Submit ແລ້ວ --&gt;
-    &lt;div v-if="isSubmitted && submittedData" class="bg-slate-900 text-white p-6 rounded-2xl space-y-2"&gt;
-      &lt;h2 class="text-xl font-bold text-rose-400"&gt;ຂໍ້ມູນທີ່ໄດ້ຮັບ (Submitted Data):&lt;/h2&gt;
-      &lt;p&gt;&lt;strong&gt;ຊື່:&lt;/strong&gt; {{ submittedData.fullName }}&lt;/p&gt;
-      &lt;p&gt;&lt;strong&gt;ອີເມວ:&lt;/strong&gt; {{ submittedData.email }}&lt;/p&gt;
-      &lt;p&gt;&lt;strong&gt;ລະດັບ:&lt;/strong&gt; {{ submittedData.level }}&lt;/p&gt;
-      &lt;p&gt;&lt;strong&gt;ຂໍ້ຄວາມ:&lt;/strong&gt; {{ submittedData.message }}&lt;/p&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
+      &lt;!-- 3. Material Text Field --&gt;
+      &lt;v-text-field
+        label="ຊື່ຜູ້ໃຊ້ງານ (Username)"
+        prepend-inner-icon="mdi-account"
+        variant="outlined"
+        class="mt-6"
+      /&gt;
+    &lt;/v-container&gt;
+  &lt;/v-app&gt;
 &lt;/template&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- Section 5: Interactive Component Simulator -->
+        <section id="section-5" class="space-y-6 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-indigo-600 text-white text-sm font-bold flex items-center justify-center">5</span>
+            ທົດລອງ Material Components Simulator (Live Preview)
+          </h2>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            ທົດລອງກົດປ່ຽນ Variant ແລະ ສີ Theme ຂອງ Material Card & Buttons ດ້ານລຸ່ມນີ້:
+          </p>
+
+          <!-- Interactive UI Showcase -->
+          <div class="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-800 space-y-6">
+            
+            <!-- Controls Toolbar -->
+            <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800 text-xs">
+              <div class="flex items-center gap-2">
+                <span class="text-slate-400">ເລືອກ Theme Color:</span>
+                <button onclick="setPreviewColor('indigo')" class="w-6 h-6 rounded-full bg-indigo-500 border-2 border-white/40 focus:scale-110 transition"></button>
+                <button onclick="setPreviewColor('cyan')" class="w-6 h-6 rounded-full bg-cyan-500 border-2 border-white/40 focus:scale-110 transition"></button>
+                <button onclick="setPreviewColor('emerald')" class="w-6 h-6 rounded-full bg-emerald-500 border-2 border-white/40 focus:scale-110 transition"></button>
+                <button onclick="setPreviewColor('rose')" class="w-6 h-6 rounded-full bg-rose-500 border-2 border-white/40 focus:scale-110 transition"></button>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <span class="text-slate-400">Button Variant:</span>
+                <button onclick="setBtnVariant('elevated')" id="var-elevated" class="px-3 py-1 rounded-lg bg-indigo-600 text-white font-bold transition">Elevated</button>
+                <button onclick="setBtnVariant('outlined')" id="var-outlined" class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Outlined</button>
+                <button onclick="setBtnVariant('tonal')" id="var-tonal" class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Tonal</button>
+              </div>
+            </div>
+
+            <!-- Simulated Material Card Preview -->
+            <div id="material-card" class="bg-slate-950 rounded-2xl p-6 border border-slate-800 space-y-5 transition-all duration-300">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div id="preview-icon-bg" class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-md transition">
+                    ❖
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-white text-base">Vuetify 3 Material Card</h3>
+                    <p class="text-xs text-slate-400">Nuxt 4 + Material Design</p>
+                  </div>
+                </div>
+                <span id="preview-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-indigo-950 text-indigo-400 border border-indigo-500/40">v-card</span>
+              </div>
+
+              <p class="text-sm text-slate-300 leading-relaxed">
+                ນີ້ແມ່ນຕົວຢ່າງຂອງ <code class="text-indigo-400 font-mono">&lt;v-card&gt;</code> ທີ່ປະກອບດ້ວຍ Elevation Shadow, Hover Effect, ແລະ Responsive Layout.
+              </p>
+
+              <!-- Interactive Buttons Inside Card -->
+              <div class="flex flex-wrap items-center gap-3 pt-2">
+                <button id="preview-btn-main" onclick="simulateClick()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center gap-2">
+                  <span>ກົດທົດສອບ Ripple</span>
+                  <span>✨</span>
+                </button>
+                <button id="preview-btn-sub" class="px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-slate-300 font-bold text-xs sm:text-sm transition">
+                  Outlined Action
+                </button>
+                <span id="click-counter" class="text-xs text-slate-400 font-mono ml-auto">Clicks: 0</span>
+              </div>
+            </div>
+
           </div>
         </section>
 
         <!-- Navigation Footer -->
         <div class="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
           <a href="./N04.html" class="px-6 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition flex items-center gap-2">
-            ← ກັບໄປບົດທີ 4 (nuxt.config & Assets)
+            ← ກັບໄປບົດທີ 4 (nuxt.config & Plugins)
           </a>
-          <a href="./index.html" class="px-6 py-3 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-lg shadow-rose-500/20 transition flex items-center gap-2">
-            ສຳເລັດຫຼັກສູດ (ກັບຄືນໜ້າຫຼັກ) 🎓
+          <a href="./N06.html" class="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-lg shadow-indigo-500/20 transition flex items-center gap-2">
+            ໄປບົດທີ 6: Form Handling & State →
           </a>
         </div>
 
@@ -552,39 +544,64 @@ const handleReset = () =&gt; {
       });
     }
 
-    // Live Form Interactive Logic
-    function showFormResult() {
-      const name = document.getElementById('input-name').value;
-      const email = document.getElementById('input-email').value;
-      const level = document.getElementById('input-level').value;
-      const message = document.getElementById('input-message').value || 'ບໍ່ມີຂໍ້ຄວາມເພີ່ມເຕີມ';
+    // Material Simulator State
+    let clicks = 0;
+    let currentColor = 'indigo';
+    let currentVariant = 'elevated';
 
-      const formDataObj = {
-        fullName: name,
-        email: email,
-        level: level,
-        message: message,
-        submittedAt: new Date().toLocaleTimeString()
-      };
+    const colorMap = {
+      indigo: { bg: 'bg-indigo-600', hover: 'hover:bg-indigo-700', badgeBg: 'bg-indigo-950', badgeText: 'text-indigo-400', border: 'border-indigo-500/40', tonalBg: 'bg-indigo-950/80', tonalText: 'text-indigo-300' },
+      cyan: { bg: 'bg-cyan-600', hover: 'hover:bg-cyan-700', badgeBg: 'bg-cyan-950', badgeText: 'text-cyan-400', border: 'border-cyan-500/40', tonalBg: 'bg-cyan-950/80', tonalText: 'text-cyan-300' },
+      emerald: { bg: 'bg-emerald-600', hover: 'hover:bg-emerald-700', badgeBg: 'bg-emerald-950', badgeText: 'text-emerald-400', border: 'border-emerald-500/40', tonalBg: 'bg-emerald-950/80', tonalText: 'text-emerald-300' },
+      rose: { bg: 'bg-rose-600', hover: 'hover:bg-rose-700', badgeBg: 'bg-rose-950', badgeText: 'text-rose-400', border: 'border-rose-500/40', tonalBg: 'bg-rose-950/80', tonalText: 'text-rose-300' }
+    };
 
-      document.getElementById('display-name').textContent = name;
-      document.getElementById('display-email').textContent = email;
-      document.getElementById('display-level').textContent = level;
-      document.getElementById('display-message').textContent = message;
-      document.getElementById('display-json').textContent = JSON.stringify(formDataObj, null, 2);
-
-      document.getElementById('result-empty').classList.add('hidden');
-      document.getElementById('result-content').classList.remove('hidden');
-      document.getElementById('badge-status').textContent = 'ບັນທຶກສຳເລັດ ✔';
-      document.getElementById('badge-status').className = 'text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-500/40 px-2 py-0.5 rounded-full font-mono';
+    function setPreviewColor(color) {
+      currentColor = color;
+      applyStyles();
     }
 
-    function resetLiveForm() {
-      document.getElementById('live-course-form').reset();
-      document.getElementById('result-empty').classList.remove('hidden');
-      document.getElementById('result-content').classList.add('hidden');
-      document.getElementById('badge-status').textContent = 'ຍັງບໍ່ມີຂໍ້ມູນ';
-      document.getElementById('badge-status').className = 'text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full font-mono';
+    function setBtnVariant(variant) {
+      currentVariant = variant;
+      ['elevated', 'outlined', 'tonal'].forEach(v => {
+        const btn = document.getElementById('var-' + v);
+        if (v === variant) {
+          btn.className = 'px-3 py-1 rounded-lg bg-indigo-600 text-white font-bold transition';
+        } else {
+          btn.className = 'px-3 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition';
+        }
+      });
+      applyStyles();
+    }
+
+    function applyStyles() {
+      const cfg = colorMap[currentColor];
+      const icon = document.getElementById('preview-icon-bg');
+      const badge = document.getElementById('preview-badge');
+      const mainBtn = document.getElementById('preview-btn-main');
+
+      icon.className = `w-10 h-10 rounded-xl ${cfg.bg} text-white flex items-center justify-center font-bold text-lg shadow-md transition`;
+      badge.className = `px-3 py-1 rounded-full text-xs font-bold ${cfg.badgeBg} ${cfg.badgeText} border ${cfg.border}`;
+
+      if (currentVariant === 'elevated') {
+        mainBtn.className = `px-5 py-2.5 rounded-xl ${cfg.bg} ${cfg.hover} text-white font-bold text-xs sm:text-sm shadow-lg shadow-indigo-500/20 transition flex items-center gap-2`;
+      } else if (currentVariant === 'outlined') {
+        mainBtn.className = `px-5 py-2.5 rounded-xl bg-transparent border-2 border-white/60 hover:bg-white/10 text-white font-bold text-xs sm:text-sm transition flex items-center gap-2`;
+      } else {
+        mainBtn.className = `px-5 py-2.5 rounded-xl ${cfg.tonalBg} ${cfg.tonalText} hover:brightness-125 font-bold text-xs sm:text-sm border ${cfg.border} transition flex items-center gap-2`;
+      }
+    }
+
+    function simulateClick() {
+      clicks++;
+      document.getElementById('click-counter').textContent = `Clicks: ${clicks}`;
+      const toast = document.getElementById('toast');
+      toast.querySelector('span').textContent = `✨ Material Ripple Triggered (#${clicks})`;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.querySelector('span').textContent = '📋 ຄັດລອກໂຄດສຳເລັດແລ້ວ!';
+      }, 1500);
     }
   </script>
 

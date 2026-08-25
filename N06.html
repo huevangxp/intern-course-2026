@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="lo" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ບົດທີ 6: Form Handling & Reactive State - ຫຼັກສູດ Nuxt 4 (2027)</title>
+
+  <!-- Google Fonts: Noto Sans Lao, Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+Lao:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans Lao"', '"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-white text-slate-800 min-h-screen font-sans antialiased selection:bg-rose-500 selection:text-white">
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 text-sm border border-rose-500/40">
+    <span>📋 ຄັດລອກໂຄດສຳເລັດແລ້ວ!</span>
+  </div>
+
+  <!-- header (Full Width & White Background) -->
+  <header class="w-full bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
+      
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <!-- Mobile Sidebar Toggle Button -->
+        <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 transition" aria-label="Toggle Menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+
+        <a href="./index.html" class="flex items-center gap-3 group">
+          <span
+            class="w-9 h-9 rounded-lg bg-rose-500 text-white font-black flex items-center justify-center text-sm shadow-md shadow-rose-500/20 group-hover:scale-105 transition">N4</span>
+          <div>
+            <span class="font-bold text-lg text-slate-900 group-hover:text-rose-600 transition">ຫຼັກສູດ Nuxt 4</span>
+          </div>
+        </a>
+        <span class="hidden sm:inline-block text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-0.5 rounded-full ml-1">ບົດທີ 6</span>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold">
+        <a href="./index.html" class="text-slate-600 hover:text-rose-600 transition">ໜ້າຫຼັກ</a>
+        
+        <!-- Course Dropdown -->
+        <div class="relative group">
+          <button class="text-rose-600 font-bold flex items-center gap-1.5 py-2">
+            <span>ບົດຮຽນທັງໝົດ</span>
+            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="absolute left-0 top-full hidden group-hover:block w-64 bg-white border border-slate-200 rounded-2xl shadow-xl p-2 z-50 space-y-1">
+            <a href="./N00.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 0: ແນະນຳ Nuxt 4</a>
+            <a href="./N01.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 1: ຕິດຕັ້ງໂປຣເຈັກ</a>
+            <a href="./N02.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 2: ໜ້າເວັບ & Components</a>
+            <a href="./N03.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 3: Data Fetching & State</a>
+            <a href="./N04.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 4: nuxt.config, Plugins & Assets</a>
+            <a href="./N05.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</a>
+            <a href="./N06.html" class="block px-3 py-2 rounded-xl bg-rose-50 text-rose-700 font-bold text-xs">ບົດທີ 6: Form Handling & State</a>
+          </div>
+        </div>
+
+        <a href="./about.html" class="text-slate-600 hover:text-rose-600 transition">ກ່ຽວກັບ</a>
+        <a href="./contact.html" class="text-slate-600 hover:text-rose-600 transition">ຕິດຕໍ່</a>
+      </nav>
+
+      <!-- Action Button -->
+      <div class="flex items-center gap-3">
+        <a href="./index.html" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs shadow-md shadow-rose-500/20 transition">
+          <span>ສຳເລັດຫຼັກສູດ 🎓</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Sidebar Overlay & Drawer -->
+  <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden transition-opacity duration-300"></div>
+  <aside id="mobile-sidebar" class="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-white border-r border-slate-200 z-50 p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 space-y-6 shadow-2xl">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+      <div class="flex items-center gap-2">
+        <span class="w-8 h-8 rounded-lg bg-rose-500 text-white font-black flex items-center justify-center text-sm">N4</span>
+        <span class="font-bold text-slate-900 text-base">ຫຼັກສູດ Nuxt 4</span>
+      </div>
+      <button onclick="toggleMobileSidebar()" class="p-2 text-slate-400 hover:text-slate-700 rounded-lg">✕</button>
+    </div>
+
+    <!-- Navigation -->
+    <div class="space-y-1">
+      <div class="text-[11px] font-bold uppercase text-slate-400 px-3 pb-1">ເມນູຫຼັກ</div>
+      <a href="./index.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">🏠 ໜ້າຫຼັກ</a>
+      <a href="./about.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">ℹ️ ກ່ຽວກັບ</a>
+      <a href="./contact.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">📧 ຕິດຕໍ່</a>
+    </div>
+
+    <!-- Course List -->
+    <div class="space-y-1 pt-2">
+      <div class="text-[11px] font-bold uppercase text-slate-400 px-3 pb-1">ບົດຮຽນ Nuxt 4</div>
+      <a href="./N00.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        00. ແນະນຳ Nuxt 4
+      </a>
+      <a href="./N01.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        01. ຕິດຕັ້ງໂປຣເຈັກ
+      </a>
+      <a href="./N02.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        02. ໜ້າເວັບ ແລະ Components
+      </a>
+      <a href="./N03.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        03. Data Fetching & State
+      </a>
+      <a href="./N04.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        04. nuxt.config, Plugins & Assets
+      </a>
+      <a href="./N05.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        05. ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify
+      </a>
+      <a href="./N06.html" class="block px-3 py-2.5 rounded-xl bg-rose-50 text-rose-700 font-bold text-xs border border-rose-200">
+        06. Form Handling & State (ປັດຈຸບັນ)
+      </a>
+    </div>
+  </aside>
+
+  <!-- main container with Sidebar Layout -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- DESKTOP STICKY SIDEBAR (Left Column) -->
+      <aside class="hidden lg:block lg:col-span-4 sticky top-24 space-y-6">
+        
+        <!-- Course Outline Card -->
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+              <span>📚</span> ສາລະບານຫຼັກສູດ Nuxt 4
+            </h3>
+            <span class="text-[11px] font-semibold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full">7 ບົດຮຽນ</span>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <!-- Lesson 0 -->
+            <a href="./N00.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+              <span class="w-7 h-7 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0 border border-emerald-200/60">00</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 0: ແນະນຳ Nuxt 4</div>
+                <div class="text-[10px] text-slate-400">ພື້ນຖານ & Architecture</div>
+              </div>
+            </a>
+
+            <!-- Lesson 1 -->
+            <a href="./N01.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+              <span class="w-7 h-7 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-xs font-bold shrink-0 border border-cyan-200/60">01</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 1: ຕິດຕັ້ງໂປຣເຈັກ</div>
+                <div class="text-[10px] text-slate-400">Nuxi CLI & Setup</div>
+              </div>
+            </a>
+
+            <!-- Lesson 2 -->
+            <a href="./N02.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+              <span class="w-7 h-7 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xs font-bold shrink-0 border border-purple-200/60">02</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 2: ໜ້າເວັບ & Components</div>
+                <div class="text-[10px] text-slate-400">Pages, Routes & Layouts</div>
+              </div>
+            </a>
+
+            <!-- Lesson 3 -->
+            <a href="./N03.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+              <span class="w-7 h-7 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold shrink-0 border border-blue-200/60">03</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 3: Data Fetching & State</div>
+                <div class="text-[10px] text-slate-400">useFetch & useState</div>
+              </div>
+            </a>
+
+            <!-- Lesson 4 -->
+            <a href="./N04.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+              <span class="w-7 h-7 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xs font-bold shrink-0 border border-amber-200/60">04</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 4: Configuration & Plugins</div>
+                <div class="text-[10px] text-slate-400">nuxt.config, Plugins & Assets</div>
+              </div>
+            </a>
+
+            <!-- Lesson 5 -->
+            <a href="./N05.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+              <span class="w-7 h-7 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs font-bold shrink-0 border border-indigo-200/60">05</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</div>
+                <div class="text-[10px] text-slate-400">Vuetify 3, MDI Icons & Theme</div>
+              </div>
+            </a>
+
+            <!-- Lesson 6 (Active) -->
+            <a href="./N06.html" class="flex items-center gap-3 p-3 rounded-2xl bg-rose-50 text-rose-800 font-bold border border-rose-200 shadow-sm transition">
+              <span class="w-7 h-7 rounded-xl bg-rose-500 text-white flex items-center justify-center text-xs font-black shrink-0">06</span>
+              <div class="flex-grow">
+                <div>ບົດທີ 6: Form Handling & State</div>
+                <div class="text-[10px] text-rose-600 font-normal">v-model, const form & Show Data</div>
+              </div>
+              <span class="text-rose-600 font-bold">●</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- In-Page Jump Links -->
+        <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 space-y-3">
+          <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider text-slate-400">ຫົວຂໍ້ໃນບົດນີ້</h4>
+          <nav class="space-y-1.5 text-xs">
+            <a href="#section-1" class="block py-1 text-slate-600 hover:text-rose-600 transition">1. ຫຼັກການ Form ໃນ Vue / Nuxt 4</a>
+            <a href="#section-2" class="block py-1 text-slate-600 hover:text-rose-600 transition">2. ປະກາດ const form ດ້ວຍ reactive()</a>
+            <a href="#section-3" class="block py-1 text-slate-600 hover:text-rose-600 transition">3. ທົດລອງ Live Form Demo ຕົວຈິງ</a>
+            <a href="#section-4" class="block py-1 text-slate-600 hover:text-rose-600 transition">4. ໂຄດຕົວຢ່າງ Vue 3 Component</a>
+          </nav>
+        </div>
+
+      </aside>
+
+      <!-- MAIN CONTENT (Right Column) -->
+      <main class="lg:col-span-8 space-y-10">
+
+        <!-- Lesson Header Banner -->
+        <div class="bg-gradient-to-br from-rose-600 via-pink-700 to-slate-900 rounded-3xl p-8 sm:p-10 text-white shadow-xl space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-bold border border-rose-400/30">
+            <span>LESSON 06</span> • <span>Interactive Forms & State</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight">ບົດທີ 6: Form Handling, v-model ແລະ ການສະແດງຜົນຂໍ້ມູນ</h1>
+          <p class="text-rose-100 text-base sm:text-lg leading-relaxed">
+            ຮຽນຮູ້ການຮັບຄ່າຈາກຟອມດ້ວຍ <code class="text-white font-mono bg-rose-900/50 px-2 py-0.5 rounded">v-model</code>, ການສ້າງ Reactive State ດ້ວຍ <code class="text-white font-mono bg-rose-900/50 px-2 py-0.5 rounded">const formData = reactive({...})</code>, ແລະ ການກົດປຸ່ມເພື່ອສະແດງຜົນຂໍ້ມູນ Input ທັນທີ.
+          </p>
+        </div>
+
+        <!-- Section 1: Form Concept -->
+        <section id="section-1" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-rose-500 text-white text-sm font-bold flex items-center justify-center">1</span>
+            ຫຼັກການເຮັດວຽກຂອງ Form ໃນ Nuxt 4 / Vue 3
+          </h2>
+          <p class="text-slate-600 leading-relaxed">
+            ໃນ Nuxt 4 (Vue 3 Composition API), ການເຊື່ອມຕໍ່ຂໍ້ມູນລະຫວ່າງ Input Elements ແລະ JavaScript State ໃຊ້ລະບົບ <strong>Two-Way Data Binding</strong> ຜ່ານ Directive <code class="text-rose-700 font-mono bg-rose-50 px-1.5 py-0.5 rounded font-bold">v-model</code>:
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="w-8 h-8 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-sm">🔄</div>
+              <h3 class="font-bold text-slate-900 text-sm">v-model Two-Way Binding</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">ເມື່ອຜູ້ໃຊ້ພິມຂໍ້ຄວາມ, ຄ່າໃນຕົວປ່ຽນ `const` ຈະອັບເດດທັນທີ ແລະ ໃນທາງກັບກັນຫາກປ່ຽນຄ່າໃນໂຄດ Input ກໍຈະປ່ຽນຕາມ.</p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="w-8 h-8 rounded-lg bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold text-sm">📦</div>
+              <h3 class="font-bold text-slate-900 text-sm">reactive() vs ref()</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">ສຳລັບ Form ທີ່ມີຫຼາຍ Fields ແນະນຳໃຫ້ໃຊ້ `reactive({ name: '', email: '' })` ເພື່ອຮວບຮວມຂໍ້ມູນໄວ້ໃນ Object ດຽວ.</p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">⚡</div>
+              <h3 class="font-bold text-slate-900 text-sm">@submit.prevent</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">ປ້ອງກັນບໍ່ໃຫ້ Browser Reload ໜ້າຈໍໃໝ່ ເພື່ອໃຫ້ Vue ປະມວນຜົນ ແລະ ສະແດງຜົນຂໍ້ມູນໄດ້ແບບ Single Page App.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2: Code Breakdown -->
+        <section id="section-2" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-rose-500 text-white text-sm font-bold flex items-center justify-center">2</span>
+            ວິທີປະກາດ <code class="text-rose-600 font-mono text-xl">const form</code> ແລະ ຟັງຊັນກົດປຸ່ມ
+          </h2>
+          <p class="text-slate-600 leading-relaxed">
+            ສ້າງຕົວປ່ຽນ Reactive State ເພື່ອຮັບຄ່າ ແລະ ຕົວປ່ຽນສຳລັບເກັບຂໍ້ມູນທີ່ກົດບັນທຶກແລ້ວ:
+          </p>
+
+          <div class="bg-slate-900 rounded-2xl p-5 text-slate-200 font-mono text-xs sm:text-sm shadow-xl space-y-3">
+            <div class="text-slate-400">// 1. ປະກາດ Form State & Submitted State</div>
+            <div class="text-rose-300">
+              const form = reactive({<br>
+              &nbsp;&nbsp;fullName: '',<br>
+              &nbsp;&nbsp;email: '',<br>
+              &nbsp;&nbsp;level: 'ເລີ່ມຕົ້ນ',<br>
+              &nbsp;&nbsp;message: ''<br>
+              })
+            </div>
+
+            <div class="text-cyan-300 pt-2">
+              // 2. ຕົວປ່ຽນເກັບຂໍ້ມູນຫຼັງຈາກກົດປຸ່ມ Show Data<br>
+              const submittedData = ref&lt;typeof form | null&gt;(null)
+            </div>
+
+            <div class="text-emerald-300 pt-2">
+              // 3. ຟັງຊັນເມື່ອກົດປຸ່ມ Submit / Show<br>
+              const handleShowData = () =&gt; {<br>
+              &nbsp;&nbsp;submittedData.value = { ...form }<br>
+              }
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 3: Interactive Live Form Demo -->
+        <section id="section-3" class="space-y-6 scroll-mt-24">
+          <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-rose-500 text-white text-sm font-bold flex items-center justify-center">3</span>
+              ທົດລອງປ້ອນຂໍ້ມູນ ແລະ ກົດປຸ່ມສະແດງຜົນ (Interactive Demo)
+            </h2>
+          </div>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            ທົດລອງຕື່ມຂໍ້ມູນລົງໃນຟອມດ້ານລຸ່ມ ແລ້ວກົດປຸ່ມ <strong>"ສະແດງຜົນຂໍ້ມູນ (Show Data)"</strong> ເພື່ອເບິ່ງການດຶງຄ່າຈາກ <code class="font-mono text-rose-700 bg-rose-50 px-1 py-0.5 rounded">const</code> ມາສະແດງຜົນທັນທີ:
+          </p>
+
+          <!-- Live Interactive Form Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Left: Interactive Form -->
+            <div class="lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-lg space-y-5">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <span class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                  <span>📝</span> ແບບຟອມປ້ອນຂໍ້ມູນນັກຮຽນ
+                </span>
+                <span class="text-[11px] font-semibold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full">Live v-model</span>
+              </div>
+
+              <form id="live-course-form" onsubmit="event.preventDefault(); showFormResult();" class="space-y-4 text-xs sm:text-sm">
+                <!-- Name -->
+                <div class="space-y-1.5">
+                  <label class="block font-bold text-slate-700 text-xs">ຊື່ ແລະ ນາມສະກຸນ <span class="text-rose-500">*</span></label>
+                  <input type="text" id="input-name" required placeholder="ເຊັ່ນ: ສົມສັກ ໄຊຍະວົງ" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 transition text-slate-800" />
+                </div>
+
+                <!-- Email -->
+                <div class="space-y-1.5">
+                  <label class="block font-bold text-slate-700 text-xs">ອີເມວ (Email) <span class="text-rose-500">*</span></label>
+                  <input type="email" id="input-email" required placeholder="somsak@example.com" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 transition text-slate-800" />
+                </div>
+
+                <!-- Level Dropdown -->
+                <div class="space-y-1.5">
+                  <label class="block font-bold text-slate-700 text-xs">ລະດັບພື້ນຖານ Nuxt</label>
+                  <select id="input-level" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 transition text-slate-800">
+                    <option value="ເລີ່ມຕົ້ນ (Beginner)">ເລີ່ມຕົ້ນ (Beginner)</option>
+                    <option value="ປານກາງ (Intermediate)">ປານກາງ (Intermediate)</option>
+                    <option value="ຂັ້ນສູງ (Advanced)">ຂັ້ນສູງ (Advanced)</option>
+                  </select>
+                </div>
+
+                <!-- Message -->
+                <div class="space-y-1.5">
+                  <label class="block font-bold text-slate-700 text-xs">ເປົ້າໝາຍໃນການຮຽນ Nuxt 4</label>
+                  <textarea id="input-message" rows="3" placeholder="ຂຽນສິ່ງທີ່ທ່ານຢາກສ້າງດ້ວຍ Nuxt 4..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 transition text-slate-800"></textarea>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex items-center gap-3 pt-2">
+                  <button type="submit" class="px-6 py-3 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs sm:text-sm shadow-md shadow-rose-500/25 transition flex items-center gap-2">
+                    <span>ສະແດງຜົນຂໍ້ມູນ (Show Data)</span>
+                    <span>→</span>
+                  </button>
+                  <button type="button" onclick="resetLiveForm()" class="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs sm:text-sm transition">
+                    ລ້າງຂໍ້ມູນ (Reset)
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Right: Live Result Display Card -->
+            <div class="lg:col-span-5 space-y-4">
+              <div class="bg-slate-900 text-white rounded-3xl p-6 shadow-xl space-y-4 border border-slate-800">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <div class="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+                    <span>ຜົນລັບຈາກ const formData</span>
+                  </div>
+                  <span id="badge-status" class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full font-mono">ຍັງບໍ່ມີຂໍ້ມູນ</span>
+                </div>
+
+                <!-- Empty State Placeholder -->
+                <div id="result-empty" class="py-8 text-center text-slate-500 space-y-2">
+                  <div class="text-3xl">📥</div>
+                  <p class="text-xs">ກະລຸນາປ້ອນຂໍ້ມູນ ແລະ ກົດປຸ່ມ "Show Data" ເພື່ອເບິ່ງຜົນ</p>
+                </div>
+
+                <!-- Result Card (Shown on Submit) -->
+                <div id="result-content" class="hidden space-y-4 text-xs sm:text-sm">
+                  <div class="space-y-2 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+                    <div class="text-[11px] text-slate-400">ຊື່ ແລະ ນາມສະກຸນ:</div>
+                    <div id="display-name" class="font-bold text-rose-400 text-base">-</div>
+
+                    <div class="text-[11px] text-slate-400 pt-1">ອີເມວ:</div>
+                    <div id="display-email" class="font-mono text-cyan-300">-</div>
+
+                    <div class="text-[11px] text-slate-400 pt-1">ລະດັບພື້ນຖານ:</div>
+                    <div id="display-level" class="font-semibold text-emerald-400">-</div>
+
+                    <div class="text-[11px] text-slate-400 pt-1">ເປົ້າໝາຍ:</div>
+                    <div id="display-message" class="text-slate-300 italic">-</div>
+                  </div>
+
+                  <!-- Raw JSON preview -->
+                  <div class="space-y-1">
+                    <div class="text-[10px] text-slate-400 font-mono">JSON State Preview:</div>
+                    <pre id="display-json" class="bg-slate-950 p-3 rounded-xl text-[11px] font-mono text-emerald-400 overflow-x-auto border border-slate-800"></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Section 4: Full Vue 3 Component Code -->
+        <section id="section-4" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-rose-500 text-white text-sm font-bold flex items-center justify-center">4</span>
+            ໂຄດຕົວຢ່າງສົມບູນໃນ Nuxt 4 Component (<code class="text-rose-600 font-mono text-xl">app/pages/form-demo.vue</code>)
+          </h2>
+          <p class="text-slate-600 text-sm">ທ່ານສາມາດນຳໂຄດນີ້ໄປວາງໄວ້ໃນໂປຣເຈັກ Nuxt 4 ເພື່ອສ້າງໜ້າ Form ທີ່ສົມບູນແບບ:</p>
+
+          <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl">
+            <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span>app/pages/form-demo.vue</span>
+              <button onclick="copyCmd(document.getElementById('code-form-full').innerText)" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                Copy Code
+              </button>
+            </div>
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-form-full">&lt;script setup lang="ts"&gt;
+// 1. ສ້າງ Reactive Form Object ດ້ວຍ const
+const formData = reactive({
+  fullName: '',
+  email: '',
+  level: 'Beginner',
+  message: ''
+})
+
+// 2. ຕົວປ່ຽນເກັບຂໍ້ມູນທີ່ກົດ Submit ແລ້ວ
+const submittedData = ref&lt;typeof formData | null&gt;(null)
+const isSubmitted = ref(false)
+
+// 3. ຟັງຊັນກົດປຸ່ມ Show Data
+const handleSubmit = () =&gt; {
+  // Clone ຂໍ້ມູນຈາກ formData ມາເກັບໄວ້ໃນ submittedData
+  submittedData.value = { ...formData }
+  isSubmitted.value = true
+}
+
+// 4. ຟັງຊັນລ້າງຄ່າ Reset
+const handleReset = () =&gt; {
+  formData.fullName = ''
+  formData.email = ''
+  formData.level = 'Beginner'
+  formData.message = ''
+  submittedData.value = null
+  isSubmitted.value = false
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div class="max-w-4xl mx-auto p-6 space-y-6"&gt;
+    &lt;h1 class="text-3xl font-bold text-slate-900"&gt;ແບບຟອມຮັບຄ່າ Nuxt 4&lt;/h1&gt;
+
+    &lt;form @submit.prevent="handleSubmit" class="space-y-4 bg-white p-6 border rounded-2xl shadow"&gt;
+      &lt;div&gt;
+        &lt;label class="block text-sm font-bold"&gt;ຊື່:&lt;/label&gt;
+        &lt;input v-model="formData.fullName" required class="w-full border p-2 rounded mt-1" /&gt;
+      &lt;/div&gt;
+
+      &lt;div&gt;
+        &lt;label class="block text-sm font-bold"&gt;ອີເມວ:&lt;/label&gt;
+        &lt;input v-model="formData.email" type="email" required class="w-full border p-2 rounded mt-1" /&gt;
+      &lt;/div&gt;
+
+      &lt;div&gt;
+        &lt;label class="block text-sm font-bold"&gt;ລະດັບ:&lt;/label&gt;
+        &lt;select v-model="formData.level" class="w-full border p-2 rounded mt-1"&gt;
+          &lt;option&gt;Beginner&lt;/option&gt;
+          &lt;option&gt;Intermediate&lt;/option&gt;
+          &lt;option&gt;Advanced&lt;/option&gt;
+        &lt;/select&gt;
+      &lt;/div&gt;
+
+      &lt;div&gt;
+        &lt;label class="block text-sm font-bold"&gt;ຂໍ້ຄວາມ:&lt;/label&gt;
+        &lt;textarea v-model="formData.message" rows="3" class="w-full border p-2 rounded mt-1"&gt;&lt;/textarea&gt;
+      &lt;/div&gt;
+
+      &lt;div class="flex gap-3"&gt;
+        &lt;button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white px-6 py-2.5 rounded-xl font-bold"&gt;
+          ສະແດງຜົນຂໍ້ມູນ (Show Data)
+        &lt;/button&gt;
+        &lt;button type="button" @click="handleReset" class="bg-slate-200 px-4 py-2.5 rounded-xl font-bold"&gt;
+          Reset
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+
+    &lt;!-- ສະແດງຜົນຂໍ້ມູນເມື່ອກົດ Submit ແລ້ວ --&gt;
+    &lt;div v-if="isSubmitted && submittedData" class="bg-slate-900 text-white p-6 rounded-2xl space-y-2"&gt;
+      &lt;h2 class="text-xl font-bold text-rose-400"&gt;ຂໍ້ມູນທີ່ໄດ້ຮັບ (Submitted Data):&lt;/h2&gt;
+      &lt;p&gt;&lt;strong&gt;ຊື່:&lt;/strong&gt; {{ submittedData.fullName }}&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;ອີເມວ:&lt;/strong&gt; {{ submittedData.email }}&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;ລະດັບ:&lt;/strong&gt; {{ submittedData.level }}&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;ຂໍ້ຄວາມ:&lt;/strong&gt; {{ submittedData.message }}&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- Navigation Footer -->
+        <div class="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <a href="./N05.html" class="px-6 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition flex items-center gap-2">
+            ← ກັບໄປບົດທີ 5 (Vuetify Setup)
+          </a>
+          <a href="./index.html" class="px-6 py-3 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-lg shadow-rose-500/20 transition flex items-center gap-2">
+            ສຳເລັດຫຼັກສູດ (ກັບຄືນໜ້າຫຼັກ) 🎓
+          </a>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <footer class="border-t border-slate-200 mt-16 py-8 text-center text-xs text-slate-500">
+    ຫຼັກສູດ Nuxt 4 (2027) • ສອນດ້ວຍຄວາມເຂົ້າໃຈງ່າຍ
+  </footer>
+
+  <script>
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('mobile-sidebar');
+      const backdrop = document.getElementById('mobile-sidebar-backdrop');
+      if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function copyCmd(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.remove('translate-y-20', 'opacity-0');
+        setTimeout(() => {
+          toast.classList.add('translate-y-20', 'opacity-0');
+        }, 2200);
+      });
+    }
+
+    // Live Form Interactive Logic
+    function showFormResult() {
+      const name = document.getElementById('input-name').value;
+      const email = document.getElementById('input-email').value;
+      const level = document.getElementById('input-level').value;
+      const message = document.getElementById('input-message').value || 'ບໍ່ມີຂໍ້ຄວາມເພີ່ມເຕີມ';
+
+      const formDataObj = {
+        fullName: name,
+        email: email,
+        level: level,
+        message: message,
+        submittedAt: new Date().toLocaleTimeString()
+      };
+
+      document.getElementById('display-name').textContent = name;
+      document.getElementById('display-email').textContent = email;
+      document.getElementById('display-level').textContent = level;
+      document.getElementById('display-message').textContent = message;
+      document.getElementById('display-json').textContent = JSON.stringify(formDataObj, null, 2);
+
+      document.getElementById('result-empty').classList.add('hidden');
+      document.getElementById('result-content').classList.remove('hidden');
+      document.getElementById('badge-status').textContent = 'ບັນທຶກສຳເລັດ ✔';
+      document.getElementById('badge-status').className = 'text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-500/40 px-2 py-0.5 rounded-full font-mono';
+    }
+
+    function resetLiveForm() {
+      document.getElementById('live-course-form').reset();
+      document.getElementById('result-empty').classList.remove('hidden');
+      document.getElementById('result-content').classList.add('hidden');
+      document.getElementById('badge-status').textContent = 'ຍັງບໍ່ມີຂໍ້ມູນ';
+      document.getElementById('badge-status').className = 'text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full font-mono';
+    }
+  </script>
+
+</body>
+
+</html>
