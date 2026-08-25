@@ -1,0 +1,28 @@
+# ຫຼັກສູດ Nuxt 4 (Course 2027) 🚀
+
+ຫຼັກສູດການຮຽນຮູ້ການພັດທະນາ Full-Stack Web Application ດ້ວຍ **Nuxt 4 & Vue 3** ເປັນພາສາລາວ (Lao Language).
+
+---
+
+## 📚 ໂຄງສ້າງບົດຮຽນ (Course Curriculum)
+
+- **[N00: ບົດທີ 0](N00.html)** — ແນະນຳ Nuxt 4 (Architecture, Universal Rendering, Auto-imports)
+- **[N01: ບົດທີ 1](N01.html)** — ຕິດຕັ້ງໂປຣເຈັກ (Nuxi CLI, Directory Anatomy & Dev Server)
+- **[N02: ບົດທີ 2](N02.html)** — ໜ້າເວັບ ແລະ Components (Pages Routing, Layouts & Components)
+- **[N03: ບົດທີ 3](N03.html)** — Data Fetching & State (`useFetch`, `useState` & Nitro Server API)
+- **[N04: ບົດທີ 4](N04.html)** — nuxt.config.ts, Plugins & Assets Management
+
+---
+
+## 🛠️ ເຕັກໂນໂລຊີທີ່ນຳໃຊ້ (Tech Stack)
+
+- **Nuxt 4 & Vue 3.5+**
+- **Tailwind CSS CDN**
+- **Nitro Engine**
+- **Google Fonts (Noto Sans Lao & Plus Jakarta Sans)**
+
+---
+
+## 💻 ວິທີເປີດໃຊ້ງານ (Getting Started)
+
+ເປີດໄຟລ໌ `index.html` ໃນ Web Browser (Google Chrome, Microsoft Edge, Safari) ເພື່ອເລີ່ມຕົ້ນຮຽນໄດ້ທັນທີ.

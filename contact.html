@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="lo">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ຕິດຕໍ່ພວກເຮົາ - ຫຼັກສູດ Nuxt 4 (2027)</title>
+
+  <!-- Google Fonts: Noto Sans Lao, Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+Lao:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans Lao"', '"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-white text-slate-800 min-h-screen font-sans antialiased selection:bg-emerald-500 selection:text-white">
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 text-sm border border-emerald-500/40">
+    <span class="text-emerald-400 text-lg">✔</span>
+    <span>ຂໍຂອບໃຈ! ພວກເຮົາໄດ້ຮັບຂໍ້ຄວາມຂອງທ່ານແລ້ວ.</span>
+  </div>
+
+  <!-- header (Full Width & White Background) -->
+  <header class="w-full bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
+      
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <!-- Mobile Sidebar Toggle Button -->
+        <button onclick="toggleMobileSidebar()" class="md:hidden p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 transition" aria-label="Toggle Menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+
+        <a href="./index.html" class="flex items-center gap-3 group">
+          <span
+            class="w-9 h-9 rounded-lg bg-emerald-500 text-white font-black flex items-center justify-center text-sm shadow-md shadow-emerald-500/20 group-hover:scale-105 transition">N4</span>
+          <div>
+            <span class="font-bold text-lg text-slate-900 group-hover:text-emerald-600 transition">ຫຼັກສູດ Nuxt 4</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold">
+        <a href="./index.html" class="text-slate-600 hover:text-emerald-600 transition">ໜ້າຫຼັກ</a>
+        
+        <!-- Course Dropdown -->
+        <div class="relative group">
+          <button class="text-slate-600 hover:text-emerald-600 font-semibold flex items-center gap-1.5 py-2 transition">
+            <span>ບົດຮຽນ Nuxt 4</span>
+            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="absolute left-0 top-full hidden group-hover:block w-64 bg-white border border-slate-200 rounded-2xl shadow-xl p-2 z-50 space-y-1">
+            <a href="./N00.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 0: ແນະນຳ Nuxt 4</a>
+            <a href="./N01.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 1: ຕິດຕັ້ງໂປຣເຈັກ</a>
+            <a href="./N02.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 2: ໜ້າເວັບ & Components</a>
+            <a href="./N03.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 3: Data Fetching & State</a>
+            <a href="./N04.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 4: nuxt.config, Plugins & Assets</a>
+          </div>
+        </div>
+
+        <a href="./about.html" class="text-slate-600 hover:text-emerald-600 transition">ກ່ຽວກັບ</a>
+        <a href="./contact.html" class="text-emerald-600 font-bold hover:text-emerald-700 transition">ຕິດຕໍ່</a>
+      </nav>
+
+      <!-- Action Button -->
+      <div class="flex items-center gap-3">
+        <a href="./N00.html" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-md shadow-emerald-500/20 transition">
+          <span>ເລີ່ມຮຽນຟຣີ</span>
+          <span>→</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Sidebar Overlay & Drawer -->
+  <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden transition-opacity duration-300"></div>
+  <aside id="mobile-sidebar" class="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-white border-r border-slate-200 z-50 p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 space-y-6 shadow-2xl">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+      <div class="flex items-center gap-2">
+        <span class="w-8 h-8 rounded-lg bg-emerald-500 text-white font-black flex items-center justify-center text-sm">N4</span>
+        <span class="font-bold text-slate-900 text-base">ຫຼັກສູດ Nuxt 4</span>
+      </div>
+      <button onclick="toggleMobileSidebar()" class="p-2 text-slate-400 hover:text-slate-700 rounded-lg">✕</button>
+    </div>
+
+    <!-- Navigation -->
+    <div class="space-y-1">
+      <div class="text-[11px] font-bold uppercase text-slate-400 px-3 pb-1">ເມນູຫຼັກ</div>
+      <a href="./index.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">🏠 ໜ້າຫຼັກ</a>
+      <a href="./about.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">ℹ️ ກ່ຽວກັບ</a>
+      <a href="./contact.html" class="block px-3 py-2 rounded-xl bg-emerald-50 text-emerald-700 font-bold text-sm">📧 ຕິດຕໍ່</a>
+    </div>
+
+    <!-- Course List -->
+    <div class="space-y-1 pt-2">
+      <div class="text-[11px] font-bold uppercase text-slate-400 px-3 pb-1">ບົດຮຽນ Nuxt 4</div>
+      <a href="./N00.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        00. ແນະນຳ Nuxt 4
+      </a>
+      <a href="./N01.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        01. ຕິດຕັ້ງໂປຣເຈັກ
+      </a>
+      <a href="./N02.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        02. ໜ້າເວັບ ແລະ Components
+      </a>
+      <a href="./N03.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        03. Data Fetching & State
+      </a>
+      <a href="./N04.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        04. nuxt.config, Plugins & Assets
+      </a>
+    </div>
+  </aside>
+
+  <!-- main container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+    <!-- Contact Hero Banner -->
+    <div class="bg-gradient-to-br from-emerald-600 via-teal-700 to-slate-900 rounded-3xl p-8 sm:p-12 text-white shadow-xl space-y-4">
+      <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-400/30">
+        GET IN TOUCH
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight">ຕິດຕໍ່ພວກເຮົາ (Contact Us)</h1>
+      <p class="text-emerald-100 text-base sm:text-lg leading-relaxed max-w-3xl">
+        ຫາກທ່ານມີຄຳຖາມ, ຂໍ້ສົງໄສກ່ຽວກັບບົດຮຽນ, ຫຼື ຕ້ອງການປຶກສາການພັດທະນາໂປຣເຈັກ Nuxt 4 ສາມາດສົ່ງຂໍ້ຄວາມຫາພວກເຮົາໄດ້ຕະຫຼອດເວລາ.
+      </p>
+    </div>
+
+    <!-- Contact Information & Form Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Contact Details (Left Column) -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-4">
+          <h2 class="text-xl font-bold text-slate-900">ຊ່ອງທາງການຕິດຕໍ່</h2>
+          
+          <div class="space-y-4 text-sm">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">📧</div>
+              <div>
+                <div class="text-xs text-slate-500 font-medium">ອີເມວສຳລັບຕິດຕໍ່</div>
+                <div class="font-bold text-slate-800">contact@nuxt-course-laos.com</div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold">💬</div>
+              <div>
+                <div class="text-xs text-slate-500 font-medium">ຊຸມຊົນນັກພັດທະນາ (Telegram/WhatsApp)</div>
+                <div class="font-bold text-slate-800">+856 20 5555 xxxx</div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold">🌐</div>
+              <div>
+                <div class="text-xs text-slate-500 font-medium">GitHub Repository</div>
+                <div class="font-bold text-slate-800">github.com/nuxt-course-2027</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-3xl bg-emerald-50 border border-emerald-200 space-y-2">
+          <h3 class="font-bold text-emerald-900 text-sm">💡 ຄຳແນະນຳສຳລັບຜູ້ຮຽນ</h3>
+          <p class="text-xs text-emerald-800 leading-relaxed">
+            ທ່ານສາມາດຕິດຕາມບົດຮຽນ ແລະ ສອບຖາມໂຄດຕົວຢ່າງໄດ້ທຸກເວລາ ໂດຍເລີ່ມຮຽນຈາກ <strong>ບົດທີ 0</strong> ເຖິງ <strong>ບົດທີ 2</strong> ໄດ້ຟຣີ!
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Contact Form (Right Column) -->
+      <div class="lg:col-span-7">
+        <div class="p-8 rounded-3xl bg-white border border-slate-200 shadow-lg space-y-6">
+          <div>
+            <h2 class="text-2xl font-bold text-slate-900">ສົ່ງຂໍ້ຄວາມຫາພວກເຮົາ</h2>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">ກະລຸນາຕື່ມຂໍ້ມູນດ້ານລຸ່ມ ແລ້ວກົດປຸ່ມສົ່ງຂໍ້ຄວາມ</p>
+          </div>
+
+          <form id="contact-form" onsubmit="handleFormSubmit(event)" class="space-y-4 text-sm">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="space-y-1.5">
+                <label class="block font-semibold text-slate-700 text-xs">ຊື່ ແລະ ນາມສະກຸນ <span class="text-rose-500">*</span></label>
+                <input type="text" required placeholder="ປ້ອນຊື່ຂອງທ່ານ..." class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-sm text-slate-800" />
+              </div>
+              <div class="space-y-1.5">
+                <label class="block font-semibold text-slate-700 text-xs">ອີເມວ <span class="text-rose-500">*</span></label>
+                <input type="email" required placeholder="your.email@example.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-sm text-slate-800" />
+              </div>
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="block font-semibold text-slate-700 text-xs">ຫົວຂໍ້ທີ່ຕ້ອງການສອບຖາມ <span class="text-rose-500">*</span></label>
+              <input type="text" required placeholder="ເຊັ່ນ: ສອບຖາມບົດຮຽນທີ 1, ຂໍ້ຜິດພາດຕອນຕິດຕັ້ງ..." class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-sm text-slate-800" />
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="block font-semibold text-slate-700 text-xs">ຂໍ້ຄວາມ / ລາຍລະອຽດ <span class="text-rose-500">*</span></label>
+              <textarea rows="4" required placeholder="ຂຽນຂໍ້ຄວາມຂອງທ່ານຢູ່ນີ້..." class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-sm text-slate-800"></textarea>
+            </div>
+
+            <button type="submit" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-lg shadow-emerald-500/25 transition">
+              ສົ່ງຂໍ້ຄວາມ (Submit) →
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 mt-16 py-8 text-center text-xs text-slate-500">
+    ຫຼັກສູດ Nuxt 4 (2027) • ສອນດ້ວຍຄວາມເຂົ້າໃຈງ່າຍ
+  </footer>
+
+  <script>
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('mobile-sidebar');
+      const backdrop = document.getElementById('mobile-sidebar-backdrop');
+      if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const toast = document.getElementById('toast');
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      document.getElementById('contact-form').reset();
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3500);
+    }
+  </script>
+
+</body>
+
+</html>

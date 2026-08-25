@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="lo">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ຫຼັກສູດ Nuxt 4 (2027) - ຮຽນຮູ້ Nuxt</title>
+
+  <!-- Google Fonts: Noto Sans Lao & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans Lao"', '"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-white text-slate-800 min-h-screen font-sans antialiased">
+
+  <!-- header (Full Width & White Background) -->
+  <header class="w-full bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
+      
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <!-- Mobile Sidebar Toggle Button -->
+        <button onclick="toggleMobileSidebar()" class="md:hidden p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 transition" aria-label="Toggle Menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+
+        <a href="./index.html" class="flex items-center gap-3 group">
+          <span
+            class="w-9 h-9 rounded-lg bg-emerald-500 text-white font-black flex items-center justify-center text-sm shadow-md shadow-emerald-500/20 group-hover:scale-105 transition">N4</span>
+          <div>
+            <span class="font-bold text-lg text-slate-900 group-hover:text-emerald-600 transition">ຫຼັກສູດ Nuxt 4</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold">
+        <a href="./index.html" class="text-emerald-600 font-bold hover:text-emerald-700 transition">ໜ້າຫຼັກ</a>
+        
+        <!-- Course Dropdown -->
+        <div class="relative group">
+          <button class="text-slate-600 hover:text-emerald-600 font-semibold flex items-center gap-1.5 py-2 transition">
+            <span>ບົດຮຽນ Nuxt 4</span>
+            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="absolute left-0 top-full hidden group-hover:block w-64 bg-white border border-slate-200 rounded-2xl shadow-xl p-2 z-50 space-y-1">
+            <a href="./N00.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 0: ແນະນຳ Nuxt 4</a>
+            <a href="./N01.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 1: ຕິດຕັ້ງໂປຣເຈັກ</a>
+            <a href="./N02.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 2: ໜ້າເວັບ & Components</a>
+            <a href="./N03.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 3: Data Fetching & State</a>
+            <a href="./N04.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 4: nuxt.config, Plugins & Assets</a>
+          </div>
+        </div>
+
+        <a href="./about.html" class="text-slate-600 hover:text-emerald-600 transition">ກ່ຽວກັບ</a>
+        <a href="./contact.html" class="text-slate-600 hover:text-emerald-600 transition">ຕິດຕໍ່</a>
+      </nav>
+
+      <!-- Action Button -->
+      <div class="flex items-center gap-3">
+        <a href="./N00.html" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-md shadow-emerald-500/20 transition">
+          <span>ເລີ່ມຮຽນຟຣີ</span>
+          <span>→</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Sidebar Overlay & Drawer -->
+  <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden transition-opacity duration-300"></div>
+  <aside id="mobile-sidebar" class="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-white border-r border-slate-200 z-50 p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 space-y-6 shadow-2xl">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+      <div class="flex items-center gap-2">
+        <span class="w-8 h-8 rounded-lg bg-emerald-500 text-white font-black flex items-center justify-center text-sm">N4</span>
+        <span class="font-bold text-slate-900 text-base">ຫຼັກສູດ Nuxt 4</span>
+      </div>
+      <button onclick="toggleMobileSidebar()" class="p-2 text-slate-400 hover:text-slate-700 rounded-lg">✕</button>
+    </div>
+
+    <!-- Navigation -->
+    <div class="space-y-1">
+      <div class="text-[11px] font-bold uppercase text-slate-400 px-3 pb-1">ເມນູຫຼັກ</div>
+      <a href="./index.html" class="block px-3 py-2 rounded-xl bg-emerald-50 text-emerald-700 font-bold text-sm">🏠 ໜ້າຫຼັກ</a>
+      <a href="./about.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">ℹ️ ກ່ຽວກັບ</a>
+      <a href="./contact.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">📧 ຕິດຕໍ່</a>
+    </div>
+
+    <!-- Course List -->
+    <div class="space-y-1 pt-2">
+      <div class="text-[11px] font-bold uppercase text-slate-400 px-3 pb-1">ບົດຮຽນ Nuxt 4</div>
+      <a href="./N00.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        00. ແນະນຳ Nuxt 4
+      </a>
+      <a href="./N01.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        01. ຕິດຕັ້ງໂປຣເຈັກ
+      </a>
+      <a href="./N02.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        02. ໜ້າເວັບ ແລະ Components
+      </a>
+      <a href="./N03.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        03. Data Fetching & State
+      </a>
+      <a href="./N04.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        04. nuxt.config, Plugins & Assets
+      </a>
+    </div>
+  </aside>
+
+  <!-- main container -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+    <!-- banner image slides (Interactive Slider / Carousel) -->
+    <section id="banner-carousel"
+      class="relative overflow-hidden rounded-3xl bg-slate-950 border border-slate-200 shadow-xl group">
+      <!-- Slides Container -->
+      <div class="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden">
+
+        <!-- Slide 1 -->
+        <div class="slide-item absolute inset-0 transition-opacity duration-700 ease-in-out opacity-100 z-10">
+          <img src="./img/banner-slide-01.png" alt="Nuxt 4 & Vue 3 Framework"
+            class="w-full h-full object-cover rounded-3xl" />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/25 to-transparent flex flex-col justify-end p-6 sm:p-8 md:p-10 rounded-3xl">
+            <span
+              class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-3 py-1 rounded-lg w-max border border-emerald-500/40">ບົດຮຽນທີ
+              0</span>
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mt-2">ແນະນຳ Nuxt 4 & Vue 3 Framework
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1">ຮຽນຮູ້ພື້ນຖານເຕັກໂນໂລຊີເວັບຍຸກໃໝ່, Universal Rendering ແລະ
+              Auto-Imports</p>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div
+          class="slide-item absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 z-0 pointer-events-none">
+          <img src="./img/banner-slide-02.png" alt="Full-Stack Cloud Server Development"
+            class="w-full h-full object-cover rounded-3xl" />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/25 to-transparent flex flex-col justify-end p-6 sm:p-8 md:p-10 rounded-3xl">
+            <span
+              class="text-xs font-bold uppercase tracking-wider text-cyan-400 bg-cyan-950/80 px-3 py-1 rounded-lg w-max border border-cyan-500/40">ບົດຮຽນທີ
+              1</span>
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mt-2">Nitro Server Engine & Full-Stack
+              SSR</h2>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1">ຕິດຕັ້ງໂປຣເຈັກ ແລະ ສ້າງ API Endpoints ໄດ້ຢ່າງວ່ອງໄວ</p>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div
+          class="slide-item absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 z-0 pointer-events-none">
+          <img src="./img/banner-slide-03.png" alt="High-Performance Web Deployment 2027"
+            class="w-full h-full object-cover rounded-3xl" />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/25 to-transparent flex flex-col justify-end p-6 sm:p-8 md:p-10 rounded-3xl">
+            <span
+              class="text-xs font-bold uppercase tracking-wider text-purple-400 bg-purple-950/80 px-3 py-1 rounded-lg w-max border border-purple-500/40">ບົດຮຽນທີ
+              2</span>
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mt-2">ພັດທະນາ ແລະ Deploy ໂປຣເຈັກ 2027
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1">ກຽມພ້ອມສູ່ການເປັນ Full-Stack Developer ມືອາຊີບ</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Navigation Arrows -->
+      <button onclick="prevSlide()"
+        class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/80 hover:bg-emerald-500 text-slate-800 hover:text-white border border-slate-200/80 flex items-center justify-center transition duration-200 shadow-lg backdrop-blur"
+        aria-label="Previous Slide">
+        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <button onclick="nextSlide()"
+        class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/80 hover:bg-emerald-500 text-slate-800 hover:text-white border border-slate-200/80 flex items-center justify-center transition duration-200 shadow-lg backdrop-blur"
+        aria-label="Next Slide">
+        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
+      <!-- Pagination Dots -->
+      <div
+        class="absolute bottom-4 right-6 z-20 flex items-center gap-2 bg-slate-950/70 px-3.5 py-1.5 rounded-full border border-white/10 backdrop-blur">
+        <button onclick="goToSlide(0)" class="slide-dot w-6 h-2 rounded-full bg-emerald-400 transition-all duration-300"
+          aria-label="Slide 1"></button>
+        <button onclick="goToSlide(1)"
+          class="slide-dot w-2 h-2 rounded-full bg-white/40 hover:bg-white/70 transition-all duration-300"
+          aria-label="Slide 2"></button>
+        <button onclick="goToSlide(2)"
+          class="slide-dot w-2 h-2 rounded-full bg-white/40 hover:bg-white/70 transition-all duration-300"
+          aria-label="Slide 3"></button>
+      </div>
+    </section>
+
+    <!-- start course card -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      <!-- Card 0: N00.html -->
+      <a href="./N00.html"
+        class="course-card group bg-white border border-slate-200 p-6 sm:p-7 rounded-3xl shadow-sm hover:shadow-xl hover:border-emerald-500 transition duration-300 flex flex-col justify-between space-y-4">
+        <div class="space-y-3">
+          <div
+            class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 font-extrabold flex items-center justify-center text-sm border border-emerald-200/60 shadow-sm group-hover:bg-emerald-500 group-hover:text-white transition">
+            00</div>
+          <h2 class="text-xl font-bold text-slate-900 group-hover:text-emerald-600 transition">ບົດທີ 0: ແນະນຳ Nuxt 4</h2>
+          <p class="text-sm text-slate-600 leading-relaxed">ຮຽນຮູ້ພື້ນຖານຂອງ Nuxt 4, ລະບົບ Universal Rendering (SSR/SSG),
+            ລະບົບ Auto-imports ແລະ ໂຄງສ້າງໂຟລເດີ <code
+              class="text-emerald-700 font-mono bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded text-xs">app/</code>
+            ແບບໃໝ່.</p>
+        </div>
+        <div class="pt-2 flex items-center gap-1 text-emerald-600 font-bold text-sm group-hover:translate-x-1 transition">
+          <span>ເຂົ້າຮຽນບົດທີ 0</span>
+          <span>→</span>
+        </div>
+      </a>
+
+      <!-- Card 1: N01.html -->
+      <a href="./N01.html"
+        class="course-card group bg-white border border-slate-200 p-6 sm:p-7 rounded-3xl shadow-sm hover:shadow-xl hover:border-cyan-500 transition duration-300 flex flex-col justify-between space-y-4">
+        <div class="space-y-3">
+          <div
+            class="w-11 h-11 rounded-2xl bg-cyan-50 text-cyan-600 font-extrabold flex items-center justify-center text-sm border border-cyan-200/60 shadow-sm group-hover:bg-cyan-500 group-hover:text-white transition">
+            01</div>
+          <h2 class="text-xl font-bold text-slate-900 group-hover:text-cyan-600 transition">ບົດທີ 1: ຕິດຕັ້ງໂປຣເຈັກ</h2>
+          <p class="text-sm text-slate-600 leading-relaxed">ຂັ້ນຕອນການຕິດຕັ້ງຜ່ານ Nuxi CLI (<code
+              class="text-cyan-700 font-mono bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded text-xs">npx nuxi init</code>),
+            ການເລືອກ Package Manager (pnpm/npm), ສຳຫຼວດໂຄງສ້າງໄຟລ໌ ແລະ Run Dev Server.</p>
+        </div>
+        <div class="pt-2 flex items-center gap-1 text-cyan-600 font-bold text-sm group-hover:translate-x-1 transition">
+          <span>ເຂົ້າຮຽນບົດທີ 1</span>
+          <span>→</span>
+        </div>
+      </a>
+
+      <!-- Card 2: N02.html -->
+      <a href="./N02.html"
+        class="course-card group bg-white border border-slate-200 p-6 sm:p-7 rounded-3xl shadow-sm hover:shadow-xl hover:border-purple-500 transition duration-300 flex flex-col justify-between space-y-4">
+        <div class="space-y-3">
+          <div
+            class="w-11 h-11 rounded-2xl bg-purple-50 text-purple-600 font-extrabold flex items-center justify-center text-sm border border-purple-200/60 shadow-sm group-hover:bg-purple-500 group-hover:text-white transition">
+            02</div>
+          <h2 class="text-xl font-bold text-slate-900 group-hover:text-purple-600 transition">ບົດທີ 2: ໜ້າເວັບ ແລະ Components</h2>
+          <p class="text-sm text-slate-600 leading-relaxed">ສ້າງ Routing ອັດຕະໂນມັດຈາກໂຟລເດີ <code
+              class="text-purple-700 font-mono bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded text-xs">pages/</code>,
+            Dynamic Routes, Layouts ແລະ ການໃຊ້ງານ Vue Components ແບບບໍ່ຕ້ອງ Import.</p>
+        </div>
+        <div class="pt-2 flex items-center gap-1 text-purple-600 font-bold text-sm group-hover:translate-x-1 transition">
+          <span>ເຂົ້າຮຽນບົດທີ 2</span>
+          <span>→</span>
+        </div>
+      </a>
+
+      <!-- Card 3: N03.html -->
+      <a href="./N03.html"
+        class="course-card group bg-white border border-slate-200 p-6 sm:p-7 rounded-3xl shadow-sm hover:shadow-xl hover:border-blue-500 transition duration-300 flex flex-col justify-between space-y-4">
+        <div class="space-y-3">
+          <div
+            class="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 font-extrabold flex items-center justify-center text-sm border border-blue-200/60 shadow-sm group-hover:bg-blue-500 group-hover:text-white transition">
+            03</div>
+          <h2 class="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition">ບົດທີ 3: Data Fetching & State</h2>
+          <p class="text-sm text-slate-600 leading-relaxed">ດຶງຂໍ້ມູນດ້ວຍ <code
+              class="text-blue-700 font-mono bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded text-xs">useFetch()</code>,
+            ຈັດການ State ດ້ວຍ <code class="text-blue-700 font-mono bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded text-xs">useState()</code>, ແລະ ສ້າງ Nitro Server API.</p>
+        </div>
+        <div class="pt-2 flex items-center gap-1 text-blue-600 font-bold text-sm group-hover:translate-x-1 transition">
+          <span>ເຂົ້າຮຽນບົດທີ 3</span>
+          <span>→</span>
+        </div>
+      </a>
+
+      <!-- Card 4: N04.html -->
+      <a href="./N04.html"
+        class="course-card group bg-white border border-slate-200 p-6 sm:p-7 rounded-3xl shadow-sm hover:shadow-xl hover:border-amber-500 transition duration-300 flex flex-col justify-between space-y-4">
+        <div class="space-y-3">
+          <div
+            class="w-11 h-11 rounded-2xl bg-amber-50 text-amber-600 font-extrabold flex items-center justify-center text-sm border border-amber-200/60 shadow-sm group-hover:bg-amber-500 group-hover:text-white transition">
+            04</div>
+          <h2 class="text-xl font-bold text-slate-900 group-hover:text-amber-600 transition">ບົດທີ 4: nuxt.config, Plugins & Assets</h2>
+          <p class="text-sm text-slate-600 leading-relaxed">ຕັ້ງຄ່າ <code
+              class="text-amber-700 font-mono bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded text-xs">nuxt.config.ts</code>,
+            ສ້າງ Plugins ໃນ <code class="text-amber-700 font-mono bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded text-xs">app/plugins/</code> ແລະ ຈັດການ Assets & Public.</p>
+        </div>
+        <div class="pt-2 flex items-center gap-1 text-amber-600 font-bold text-sm group-hover:translate-x-1 transition">
+          <span>ເຂົ້າຮຽນບົດທີ 4</span>
+          <span>→</span>
+        </div>
+      </a>
+
+    </section>
+    <!-- end course card -->
+
+  </div>
+
+  <!-- Slider JavaScript Logic -->
+  <script>
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.slide-item');
+    const dots = document.querySelectorAll('.slide-dot');
+    let slideInterval = null;
+
+    function showSlide(index) {
+      if (!slides.length) return;
+      if (index >= slides.length) currentSlideIndex = 0;
+      else if (index < 0) currentSlideIndex = slides.length - 1;
+      else currentSlideIndex = index;
+
+      slides.forEach((slide, i) => {
+        if (i === currentSlideIndex) {
+          slide.classList.remove('opacity-0', 'pointer-events-none', 'z-0');
+          slide.classList.add('opacity-100', 'z-10');
+        } else {
+          slide.classList.remove('opacity-100', 'z-10');
+          slide.classList.add('opacity-0', 'pointer-events-none', 'z-0');
+        }
+      });
+
+      dots.forEach((dot, i) => {
+        if (i === currentSlideIndex) {
+          dot.className = 'slide-dot w-6 h-2 rounded-full bg-emerald-400 transition-all duration-300';
+        } else {
+          dot.className = 'slide-dot w-2 h-2 rounded-full bg-white/40 hover:bg-white/70 transition-all duration-300';
+        }
+      });
+    }
+
+    function nextSlide() {
+      showSlide(currentSlideIndex + 1);
+    }
+
+    function prevSlide() {
+      showSlide(currentSlideIndex - 1);
+    }
+
+    function goToSlide(index) {
+      showSlide(index);
+    }
+
+    function startAutoSlide() {
+      stopAutoSlide();
+      slideInterval = setInterval(nextSlide, 4000);
+    }
+
+    function stopAutoSlide() {
+      if (slideInterval) clearInterval(slideInterval);
+    }
+
+    const carouselEl = document.getElementById('banner-carousel');
+    if (carouselEl) {
+      carouselEl.addEventListener('mouseenter', stopAutoSlide);
+      carouselEl.addEventListener('mouseleave', startAutoSlide);
+    }
+
+    // Mobile Sidebar Drawer Controller
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('mobile-sidebar');
+      const backdrop = document.getElementById('mobile-sidebar-backdrop');
+      if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    // Initialize auto slider
+    showSlide(0);
+    startAutoSlide();
+  </script>
+</body>
+
+</html>
