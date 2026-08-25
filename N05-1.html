@@ -76,17 +76,17 @@
             <a href="./N02.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 2: ໜ້າເວັບ & Components</a>
             <a href="./N03.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 3: Data Fetching & State</a>
             <a href="./N04.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 4: nuxt.config, Plugins & Assets</a>
-            <!-- Lesson 5 Nested Dropdown -->
+            <!-- Lesson 5 Nested Dropdown in Header -->
             <div class="relative group/sub">
-              <a href="./N05.html" class="flex items-center justify-between px-3 py-2 rounded-xl bg-teal-50 text-teal-700 font-bold text-xs">
+              <button onclick="toggleNavSubmenu(event, 'nav-sub-n05')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-teal-50 text-teal-700 font-bold text-xs text-left">
                 <span>ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</span>
-                <svg class="w-3 h-3 text-teal-500 -rotate-90 group-hover/sub:rotate-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-              </a>
-              <!-- Sub-menu Dropdown on hover -->
-              <div class="hidden group-hover/sub:block pl-3 pr-1 py-1 space-y-1 bg-slate-50 rounded-xl border border-slate-200 my-0.5 ml-2">
-                <a href="./N05.html" class="block px-2.5 py-1 rounded-lg hover:bg-white text-slate-700 text-[11px] font-semibold">5. ພາບລວມ Vuetify 3</a>
-                <a href="./N05-0.html" class="block px-2.5 py-1 rounded-lg hover:bg-white text-slate-600 text-[11px]">5.0: ສະແດງຂໍ້ມູນແບບເກົ່າ (Old Data)</a>
-                <a href="./N05-1.html" class="block px-2.5 py-1 rounded-lg bg-teal-100 text-teal-900 font-bold text-[11px]">5.1: ໃຊ້ງານ Teal v-card</a>
+                <svg id="nav-arrow-n05" class="w-3.5 h-3.5 text-teal-500 transition-transform duration-200 group-hover/sub:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+              <!-- Sub-menu Dropdown -->
+              <div id="nav-sub-n05" class="hidden group-hover/sub:block pl-3 pr-1 py-1 space-y-1 bg-slate-50 rounded-xl border border-slate-200 my-0.5 ml-2">
+                <a href="./N05.html" class="block px-2.5 py-1.5 rounded-lg hover:bg-white text-slate-700 text-[11px] font-semibold">5. ພາບລວມ Vuetify 3</a>
+                <a href="./N05-0.html" class="block px-2.5 py-1.5 rounded-lg hover:bg-white text-slate-600 text-[11px]">5.0: ສະແດງຂໍ້ມູນແບບເກົ່າ (Old Data)</a>
+                <a href="./N05-1.html" class="block px-2.5 py-1.5 rounded-lg bg-teal-100 text-teal-900 font-bold text-[11px]">5.1: ໃຊ້ງານ Teal v-card</a>
               </div>
             </div>
             <a href="./N06.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 6: Form Handling & State</a>
@@ -132,16 +132,20 @@
     <!-- Course List -->
     <div class="space-y-1 pt-2">
       <div class="text-[11px] font-bold uppercase text-slate-400 px-3 pb-1">ບົດຮຽນ Nuxt 4</div>
-      <a href="./N00.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">00. ແນະນຳ Nuxt 4</a>
-      <a href="./N01.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">01. ຕິດຕັ້ງໂປຣເຈັກ</a>
-      <a href="./N02.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">02. ໜ້າເວັບ ແລະ Components</a>
-      <a href="./N03.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">03. Data Fetching & State</a>
-      <a href="./N04.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">04. nuxt.config, Plugins & Assets</a>
+      <a href="./N00.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">00. ແນະນຳ Nuxt 4</a>
+      <a href="./N01.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">01. ຕິດຕັ້ງໂປຣເຈັກ</a>
+      <a href="./N02.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">02. ໜ້າເວັບ ແລະ Components</a>
+      <a href="./N03.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">03. Data Fetching & State</a>
+      <a href="./N04.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">04. nuxt.config, Plugins & Assets</a>
+      
+      <!-- Mobile Lesson 5 Click Accordion -->
       <div class="space-y-1">
-        <a href="./N05.html" class="block px-3 py-2.5 rounded-xl bg-teal-50 text-teal-700 font-bold text-xs">
-          05. ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify
-        </a>
-        <div class="pl-4 pr-1 py-1 space-y-1 bg-slate-50 rounded-xl border border-slate-100 ml-2">
+        <button onclick="toggleMobileSubmenu('mobile-sub-n05')" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-teal-50 text-teal-700 font-bold text-xs border border-teal-200 text-left">
+          <span>05. ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</span>
+          <svg id="mobile-arrow-n05" class="w-3.5 h-3.5 text-teal-600 transition-transform duration-200 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="mobile-sub-n05" class="pl-4 space-y-1 py-1 bg-slate-50 rounded-xl border border-slate-100 ml-2">
+          <a href="./N05.html" class="block px-2.5 py-1.5 rounded-lg text-slate-700 hover:bg-white text-xs font-semibold">5. ພາບລວມ Vuetify 3</a>
           <a href="./N05-0.html" class="block px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-white text-xs">5.0: ສະແດງຂໍ້ມູນແບບເກົ່າ</a>
           <a href="./N05-1.html" class="block px-2.5 py-1.5 rounded-lg bg-teal-100 text-teal-900 font-bold text-xs border border-teal-200">5.1: ໃຊ້ງານ Teal v-card (ປັດຈຸບັນ)</a>
         </div>
@@ -451,6 +455,36 @@
       } else {
         sidebar.classList.add('-translate-x-full');
         backdrop.classList.add('hidden');
+      }
+    }
+
+    // Toggle Dropdown for Lesson 5 across Desktop Nav, Mobile Drawer & Sidebar
+    function toggleNavSubmenu(event, id) {
+      if (event) event.stopPropagation();
+      const sub = document.getElementById(id);
+      const arrow = document.getElementById('nav-arrow-n05');
+      if (sub) {
+        if (sub.classList.contains('hidden')) {
+          sub.classList.remove('hidden');
+          if (arrow) arrow.classList.add('rotate-180');
+        } else {
+          sub.classList.add('hidden');
+          if (arrow) arrow.classList.remove('rotate-180');
+        }
+      }
+    }
+
+    function toggleMobileSubmenu(id) {
+      const sub = document.getElementById(id);
+      const arrow = document.getElementById('mobile-arrow-n05');
+      if (sub) {
+        if (sub.classList.contains('hidden')) {
+          sub.classList.remove('hidden');
+          if (arrow) arrow.classList.add('rotate-180');
+        } else {
+          sub.classList.add('hidden');
+          if (arrow) arrow.classList.remove('rotate-180');
+        }
       }
     }
 
