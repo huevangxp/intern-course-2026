@@ -13,6 +13,7 @@
 - **[N04: ບົດທີ 4](N04.html)** — nuxt.config.ts, Plugins & Assets Management
 - **[N05: ບົດທີ 5](N05.html)** — ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify 3 (Material Design, Plugins & Components)
 - **[N06: ບົດທີ 6](N06.html)** — Form Handling & Reactive State (`v-model`, `const form` & Show Data)
+- **[N07: ບົດທີ 7](N07.html)** — ຕິດຕັ້ງ & ໃຊ້ງານ MDI Icons (`@mdi/font`, Vuetify Icon Sets, `v-icon` & Gallery)
 
 ---
 
