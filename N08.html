@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="lo" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ບົດທີ 8: ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher API) - ຫຼັກສູດ Nuxt 4 (2027)</title>
+
+  <!-- Google Fonts: Noto Sans Lao, Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+Lao:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Material Design Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+
+  <!-- Axios CDN for Live Interactive Demo -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans Lao"', '"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-white text-slate-800 min-h-screen font-sans antialiased selection:bg-violet-600 selection:text-white">
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 text-sm border border-violet-500/40">
+    <span>📋 ຄັດລອກໂຄດສຳເລັດແລ້ວ!</span>
+  </div>
+
+  <!-- header (Full Width & White Background) -->
+  <header class="w-full bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
+      
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <!-- Mobile Sidebar Toggle Button -->
+        <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 transition" aria-label="Toggle Menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+
+        <a href="./index.html" class="flex items-center gap-3 group">
+          <span
+            class="w-9 h-9 rounded-lg bg-violet-600 text-white font-black flex items-center justify-center text-sm shadow-md shadow-violet-600/20 group-hover:scale-105 transition">N4</span>
+          <div>
+            <span class="font-bold text-lg text-slate-900 group-hover:text-violet-600 transition">ຫຼັກສູດ Nuxt 4</span>
+          </div>
+        </a>
+        <span class="hidden sm:inline-block text-xs font-semibold text-violet-700 bg-violet-50 border border-violet-200 px-2.5 py-0.5 rounded-full ml-1">ບົດທີ 8</span>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold">
+        <a href="./index.html" class="text-slate-600 hover:text-violet-600 transition">ໜ້າຫຼັກ</a>
+        
+        <!-- Course Dropdown -->
+        <div class="relative group">
+          <button class="text-violet-600 font-bold flex items-center gap-1.5 py-2">
+            <span>ບົດຮຽນທັງໝົດ</span>
+            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="absolute left-0 top-full hidden group-hover:block w-64 bg-white border border-slate-200 rounded-2xl shadow-xl p-2 z-50 space-y-1">
+            <a href="./N00.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 0: ແນະນຳ Nuxt 4</a>
+            <a href="./N01.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 1: ຕິດຕັ້ງໂປຣເຈັກ</a>
+            <a href="./N02.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 2: ໜ້າເວັບ & Components</a>
+            <a href="./N03.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 3: Data Fetching & State</a>
+            <a href="./N04.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 4: nuxt.config, Plugins & Assets</a>
+            <!-- Lesson 5 Nested Dropdown -->
+            <div class="relative group/sub">
+              <a href="./N05.html" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs font-semibold group-hover/sub:text-violet-600">
+                <span>ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</span>
+                <svg class="w-3 h-3 text-slate-400 -rotate-90 group-hover/sub:rotate-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </a>
+              <!-- Sub-menu Dropdown on hover -->
+              <div class="hidden group-hover/sub:block pl-3 pr-1 py-1 space-y-1 bg-slate-50 rounded-xl border border-slate-200 my-0.5 ml-2">
+                <a href="./N05.html" class="block px-2.5 py-1 rounded-lg hover:bg-white text-slate-700 text-[11px] font-semibold">5. ພາບລວມ Vuetify 3</a>
+                <a href="./N05-0.html" class="block px-2.5 py-1 rounded-lg hover:bg-white text-slate-600 text-[11px]">5.0: ສະແດງຂໍ້ມູນແບບເກົ່າ (Old Data)</a>
+                <a href="./N05-1.html" class="block px-2.5 py-1 rounded-lg hover:bg-white text-teal-700 font-semibold text-[11px]">5.1: ໃຊ້ງານ Teal v-card</a>
+              </div>
+            </div>
+            <a href="./N06.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 6: Form Handling & State</a>
+            <a href="./N07.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 7: MDI Icons Setup & Use</a>
+            <a href="./N08.html" class="block px-3 py-2 rounded-xl bg-violet-50 text-violet-700 font-bold text-xs">ບົດທີ 8: ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)</a>
+          </div>
+        </div>
+
+        <a href="./about.html" class="text-slate-600 hover:text-violet-600 transition">ກ່ຽວກັບ</a>
+        <a href="./contact.html" class="text-slate-600 hover:text-violet-600 transition">ຕິດຕໍ່</a>
+      </nav>
+
+      <!-- Action Button -->
+      <div class="flex items-center gap-3">
+        <a href="./index.html" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-xs shadow-md shadow-violet-600/20 transition">
+          <span>ສຳເລັດຫຼັກສູດ 🎓</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Sidebar Overlay & Drawer -->
+  <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden transition-opacity duration-300"></div>
+  <aside id="mobile-sidebar" class="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-white border-r border-slate-200 z-50 p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 space-y-6 shadow-2xl">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+      <div class="flex items-center gap-2">
+        <span class="w-8 h-8 rounded-lg bg-violet-600 text-white font-black flex items-center justify-center text-sm">N4</span>
+        <span class="font-bold text-slate-900 text-base">ຫຼັກສູດ Nuxt 4</span>
+      </div>
+      <button onclick="toggleMobileSidebar()" class="p-2 text-slate-400 hover:text-slate-700 rounded-lg">✕</button>
+    </div>
+
+    <!-- Navigation -->
+    <div class="space-y-1">
+      <div class="text-[11px] font-bold uppercase text-slate-400 px-3 pb-1">ເມນູຫຼັກ</div>
+      <a href="./index.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">🏠 ໜ້າຫຼັກ</a>
+      <a href="./about.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">ℹ️ ກ່ຽວກັບ</a>
+      <a href="./contact.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">📧 ຕິດຕໍ່</a>
+    </div>
+
+    <!-- Course List -->
+    <div class="space-y-1 pt-2">
+      <div class="text-[11px] font-bold uppercase text-slate-400 px-3 pb-1">ບົດຮຽນ Nuxt 4</div>
+      <a href="./N00.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        00. ແນະນຳ Nuxt 4
+      </a>
+      <a href="./N01.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        01. ຕິດຕັ້ງໂປຣເຈັກ
+      </a>
+      <a href="./N02.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        02. ໜ້າເວັບ ແລະ Components
+      </a>
+      <a href="./N03.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        03. Data Fetching & State
+      </a>
+      <a href="./N04.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        04. nuxt.config, Plugins & Assets
+      </a>
+      <a href="./N05.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        05. ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify
+      </a>
+      <div class="pl-4 space-y-1 py-1">
+        <a href="./N05-0.html" class="block px-2.5 py-1 rounded-lg text-slate-600 hover:bg-slate-50 text-xs">5.0: ສະແດງຂໍ້ມູນແບບເກົ່າ</a>
+        <a href="./N05-1.html" class="block px-2.5 py-1 rounded-lg text-teal-700 hover:bg-teal-50 font-bold text-xs">5.1: ໃຊ້ງານ Teal v-card</a>
+      </div>
+      <a href="./N06.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        06. Form Handling & State
+      </a>
+      <a href="./N07.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+        07. MDI Icons Setup & Use
+      </a>
+      <a href="./N08.html" class="block px-3 py-2.5 rounded-xl bg-violet-50 text-violet-700 font-bold text-xs border border-violet-200">
+        08. ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ Teacher (ປັດຈຸບັນ)
+      </a>
+    </div>
+  </aside>
+
+  <!-- main container with Sidebar Layout -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- DESKTOP STICKY SIDEBAR (Left Column) -->
+      <aside class="hidden lg:block lg:col-span-4 sticky top-24 space-y-6">
+        
+        <!-- Course Outline Card -->
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+              <span>📚</span> ສາລະບານຫຼັກສູດ Nuxt 4
+            </h3>
+            <span class="text-[11px] font-semibold text-violet-700 bg-violet-50 px-2 py-0.5 rounded-full">9 ບົດຮຽນ</span>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <!-- Lesson 0 -->
+            <a href="./N00.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+              <span class="w-7 h-7 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0 border border-emerald-200/60">00</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 0: ແນະນຳ Nuxt 4</div>
+                <div class="text-[10px] text-slate-400">ພື້ນຖານ & Architecture</div>
+              </div>
+            </a>
+
+            <!-- Lesson 1 -->
+            <a href="./N01.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+              <span class="w-7 h-7 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-xs font-bold shrink-0 border border-cyan-200/60">01</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 1: ຕິດຕັ້ງໂປຣເຈັກ</div>
+                <div class="text-[10px] text-slate-400">Nuxi CLI & Setup</div>
+              </div>
+            </a>
+
+            <!-- Lesson 2 -->
+            <a href="./N02.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+              <span class="w-7 h-7 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xs font-bold shrink-0 border border-purple-200/60">02</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 2: ໜ້າເວັບ & Components</div>
+                <div class="text-[10px] text-slate-400">Pages, Routes & Layouts</div>
+              </div>
+            </a>
+
+            <!-- Lesson 3 -->
+            <a href="./N03.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+              <span class="w-7 h-7 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold shrink-0 border border-blue-200/60">03</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 3: Data Fetching & State</div>
+                <div class="text-[10px] text-slate-400">useFetch & useState</div>
+              </div>
+            </a>
+
+            <!-- Lesson 4 -->
+            <a href="./N04.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+              <span class="w-7 h-7 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xs font-bold shrink-0 border border-amber-200/60">04</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 4: Configuration & Plugins</div>
+                <div class="text-[10px] text-slate-400">nuxt.config, Plugins & Assets</div>
+              </div>
+            </a>
+
+            <!-- Lesson 5 -->
+            <a href="./N05.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+              <span class="w-7 h-7 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs font-bold shrink-0 border border-indigo-200/60">05</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</div>
+                <div class="text-[10px] text-slate-400">Vuetify 3, MDI Icons & Theme</div>
+              </div>
+            </a>
+
+            <!-- Lesson 6 -->
+            <a href="./N06.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+              <span class="w-7 h-7 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xs font-bold shrink-0 border border-rose-200/60">06</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 6: Form Handling & State</div>
+                <div class="text-[10px] text-slate-400">v-model, const form & Show Data</div>
+              </div>
+            </a>
+
+            <!-- Lesson 7 -->
+            <a href="./N07.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+              <span class="w-7 h-7 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-200/60">07</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 7: MDI Icons Setup & Use</div>
+                <div class="text-[10px] text-slate-400">Material Icons, SVG & v-icon</div>
+              </div>
+            </a>
+
+            <!-- Lesson 8 (Active) -->
+            <a href="./N08.html" class="flex items-center gap-3 p-3 rounded-2xl bg-violet-50 text-violet-800 font-bold border border-violet-200 shadow-sm transition">
+              <span class="w-7 h-7 rounded-xl bg-violet-600 text-white flex items-center justify-center text-xs font-black shrink-0">08</span>
+              <div class="flex-grow">
+                <div>ບົດທີ 8: ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)</div>
+                <div class="text-[10px] text-violet-600 font-normal">Axios Instance, Interceptors & API</div>
+              </div>
+              <span class="text-violet-600 font-bold">●</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- In-Page Jump Links -->
+        <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 space-y-3">
+          <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider text-slate-400">ຫົວຂໍ້ໃນບົດນີ້</h4>
+          <nav class="space-y-1.5 text-xs">
+            <a href="#section-1" class="block py-1 text-slate-600 hover:text-violet-600 transition">1. Axios ແມ່ນຫຍັງ? ເປັນຫຍັງຈຶ່ງເລືອກໃຊ້?</a>
+            <a href="#section-2" class="block py-1 text-slate-600 hover:text-violet-600 transition">2. ຂັ້ນຕອນການຕິດຕັ້ງ Package Axios</a>
+            <a href="#section-3" class="block py-1 text-slate-600 hover:text-violet-600 transition">3. ສ້າງ Axios Plugin & Interceptors</a>
+            <a href="#section-4" class="block py-1 text-slate-600 hover:text-violet-600 transition">4. ວິທີດຶງຂໍ້ມູນ (GET Data) ໃນ Vue 3</a>
+            <a href="#section-5" class="block py-1 text-slate-600 hover:text-violet-600 transition">5. ລະບົບຈັດການຂໍ້ມູນຄູ-ອາຈານ (Teacher)</a>
+            <a href="#section-6" class="block py-1 text-slate-600 hover:text-violet-600 transition">6. Interactive Live Axios Teacher Demo</a>
+            <a href="#section-7" class="block py-1 text-slate-600 hover:text-violet-600 transition">7. ໂຄດ Vue 3 ສົມບູນ (teachers.vue)</a>
+            <a href="#section-8" class="block py-1 text-slate-600 hover:text-violet-600 transition">8. Best Practices & ຂໍ້ຄວນລະວັງ</a>
+          </nav>
+        </div>
+
+      </aside>
+
+      <!-- MAIN CONTENT (Right Column) -->
+      <main class="lg:col-span-8 space-y-10">
+
+        <!-- Lesson Header Banner -->
+        <div class="bg-gradient-to-br from-violet-600 via-purple-700 to-slate-900 rounded-3xl p-8 sm:p-10 text-white shadow-xl space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/20 text-violet-300 text-xs font-bold border border-violet-400/30">
+            <span>LESSON 08</span> • <span>HTTP Client & Axios API</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight">ບົດທີ 8: ໃຊ້ງານ Axios ດຶງຂໍ້ມູນຈາກ API (Teacher Data Fetching)</h1>
+          <p class="text-violet-100 text-base sm:text-lg leading-relaxed">
+            ຮຽນຮູ້ວິທີຕິດຕັ້ງ <strong>Axios</strong>, ການສ້າງ <strong>Axios Plugin / Instance</strong> ພ້ອມ <strong>Interceptors</strong>, ການດຶງຂໍ້ມູນລາຍຊື່ຄູ-ອາຈານ (Teacher API), ຈັດການ Loading / Error states ແລະ ສະແດງຜົນດ້ວຍ Vuetify Data Table & Cards.
+          </p>
+        </div>
+
+        <!-- Section 1: Overview -->
+        <section id="section-1" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-violet-600 text-white text-sm font-bold flex items-center justify-center">1</span>
+            Axios ແມ່ນຫຍັງ? ແລະ ເປັນຫຍັງຈຶ່ງເລືອກໃຊ້ໃນ Nuxt 4?
+          </h2>
+          <p class="text-slate-600 leading-relaxed">
+            <strong>Axios</strong> ແມ່ນ Promise-based HTTP Client ຍອດນິຍົມທີ່ສຸດໃນວົງການ JavaScript & Vue.js. ເຖິງແມ່ນວ່າ Nuxt 4 ຈະມີ <code class="font-mono text-violet-700 bg-violet-50 px-1.5 py-0.5 rounded">useFetch()</code> ແລະ <code class="font-mono text-violet-700 bg-violet-50 px-1.5 py-0.5 rounded">$fetch</code> ແຕ່ Axios ຍັງມີຈຸດເດັ່ນສະເພາະທີ່ຫຼາຍບໍລິສັດ ແລະ ໂຄງການຂະໜາດໃຫຍ່ເລືອກໃຊ້:
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="w-8 h-8 rounded-lg bg-violet-100 text-violet-700 flex items-center justify-center font-bold text-sm">🛡️</div>
+              <h3 class="font-bold text-slate-900 text-sm">Request & Response Interceptors</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">ແນບ JWT Token ອັດຕະໂນມັດ ແລະ ດັກຈັບ 401 Unauthorized ຫຼື Refresh Token ໄດ້ງ່າຍດາຍ.</p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-sm">⚙️</div>
+              <h3 class="font-bold text-slate-900 text-sm">Custom Instance & BaseURL</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">ຕັ້ງຄ່າ Base URL, Headers, Timeout ແລະ Config ສະເພາະຫຼາຍໆ Services ໄດ້ຢ່າງເປັນລະບົບ.</p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm">🔄</div>
+              <h3 class="font-bold text-slate-900 text-sm">Auto JSON Transformation</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">ແປງຂໍ້ມູນ Request ແລະ Response ເປັນ JSON ອັດຕະໂນມັດ ໂດຍບໍ່ຕ້ອງເອີ້ນໃຊ້ <code class="font-mono">response.json()</code>.</p>
+            </div>
+          </div>
+
+          <!-- Comparison Table -->
+          <div class="overflow-x-auto pt-2">
+            <table class="w-full text-left text-xs border border-slate-200 rounded-2xl overflow-hidden">
+              <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="p-3.5">ຄຸນສົມບັດ (Feature)</th>
+                  <th class="p-3.5 text-violet-700 font-extrabold">Axios</th>
+                  <th class="p-3.5 text-slate-600">useFetch / $fetch (Nuxt Native)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 text-slate-600 bg-white">
+                <tr>
+                  <td class="p-3 font-semibold text-slate-900">Interceptors (ດັກຈັບ Request/Response)</td>
+                  <td class="p-3 text-emerald-600 font-bold">✅ ສະດວກຫຼາຍ (Native Interceptors API)</td>
+                  <td class="p-3">⚠️ ໃຊ້ຜ່ານ <code class="font-mono text-slate-700">onRequest / onResponse</code> hooks</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-slate-900">Upload & Download Progress Tracking</td>
+                  <td class="p-3 text-emerald-600 font-bold">✅ ຮອງຮັບ <code class="font-mono">onUploadProgress</code></td>
+                  <td class="p-3">❌ ບໍ່ຮອງຮັບໂດຍກົງ</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-slate-900">Request Cancellation</td>
+                  <td class="p-3 text-emerald-600 font-bold">✅ AbortController & CancelToken</td>
+                  <td class="p-3">✅ AbortSignal</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-slate-900">SSR Payload De-duplication</td>
+                  <td class="p-3 text-amber-600">⚠️ ຕ້ອງລະວັງການ fetch ຊ້ຳສອງຮອບ</td>
+                  <td class="p-3 text-emerald-600 font-bold">✅ ຈັດການໃຫ້ອັດຕະໂນມັດໃນ SSR</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Section 2: Installation -->
+        <section id="section-2" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-violet-600 text-white text-sm font-bold flex items-center justify-center">2</span>
+            ຂັ້ນຕອນການຕິດຕັ້ງ Package <code class="text-violet-600 font-mono text-xl">axios</code>
+          </h2>
+          <p class="text-slate-600 leading-relaxed">
+            ເປີດ Terminal ໃນໂຟລເດີໂປຣເຈັກ Nuxt 4 ຂອງທ່ານ ແລະ ດຳເນີນການຕິດຕັ້ງ:
+          </p>
+
+          <!-- CLI Box -->
+          <div class="bg-slate-900 rounded-2xl p-5 shadow-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between text-xs text-slate-400 pb-2 border-b border-slate-800">
+              <span class="font-mono">ຕິດຕັ້ງຜ່ານ NPM ຫຼື PNPM</span>
+              <button onclick="copyCmd('npm install axios')" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono transition">
+                Copy
+              </button>
+            </div>
+            <pre class="text-violet-400 font-mono text-xs sm:text-sm overflow-x-auto"><code>npm install axios</code></pre>
+          </div>
+
+          <div class="text-xs text-slate-500 flex items-center gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <span>💡</span>
+            <span>ຫາກໃຊ້ pnpm: <code class="font-mono text-slate-800 font-bold bg-white px-1.5 py-0.5 rounded border">pnpm add axios</code> ຫຼື yarn: <code class="font-mono text-slate-800 font-bold bg-white px-1.5 py-0.5 rounded border">yarn add axios</code></span>
+          </div>
+        </section>
+
+        <!-- Section 3: Plugin & Interceptors -->
+        <section id="section-3" class="space-y-5 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-violet-600 text-white text-sm font-bold flex items-center justify-center">3</span>
+            ສ້າງ Axios Instance & Plugin ໃນ Nuxt 4
+          </h2>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            ເພື່ອຄວາມສະດວກໃນການເອີ້ນໃຊ້ທົ່ວທັງໂປຣເຈັກ ແລະ ການແນບ <strong>Authentication Token</strong>, ພວກເຮົາຈະສ້າງ Nuxt Plugin ໄວ້ທີ່ <code class="font-mono text-violet-700 bg-slate-100 px-1.5 py-0.5 rounded">app/plugins/axios.ts</code>:
+          </p>
+
+          <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl">
+            <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span>app/plugins/axios.ts</span>
+              <button onclick="copyCmd(document.getElementById('code-axios-plugin').innerText)" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                Copy Code
+              </button>
+            </div>
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-axios-plugin">import axios from 'axios'
+
+export default defineNuxtPlugin((nuxtApp) => {
+  // 1. ສ້າງ Axios Instance ພ້ອມ Base URL
+  const api = axios.create({
+    baseURL: 'https://api.example.com/v1', // ຫຼື ໃຊ້ useRuntimeConfig().public.apiBaseUrl
+    timeout: 10000,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }
+  })
+
+  // 2. Request Interceptor: ແນບ Bearer Token ອັດຕະໂນມັດ
+  api.interceptors.request.use(
+    (config) => {
+      const token = useCookie('auth_token').value // ດຶງ Token ຈາກ Cookie
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
+      return config
+    },
+    (error) => Promise.reject(error)
+  )
+
+  // 3. Response Interceptor: ດັກຈັບ Error ທົ່ວລະບົບ
+  api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response?.status === 401) {
+        console.error('Session Expired, Redirecting to Login...')
+        navigateTo('/login')
+      }
+      return Promise.reject(error)
+    }
+  )
+
+  // 4. Inject ໃຫ້ໃຊ້ຜ່ານ nuxtApp.$api ຫຼື useNuxtApp().$api
+  return {
+    provide: {
+      api: api
+    }
+  }
+})</code></pre>
+          </div>
+
+          <!-- Composable Alternative -->
+          <div class="p-5 rounded-2xl bg-violet-50/70 border border-violet-200 space-y-3">
+            <h4 class="font-bold text-violet-900 text-sm flex items-center gap-2">
+              <span>🌟</span> Composable Pattern ແນະນຳ: <code class="font-mono text-xs bg-white px-2 py-1 rounded border border-violet-300">app/composables/useApi.ts</code>
+            </h4>
+            <p class="text-xs text-violet-900/80 leading-relaxed">
+              ນອກຈາກ Plugin ແລ້ວ, ທ່ານຍັງສາມາດສ້າງ Composable ເພື່ອໃຫ້ Vue 3 Script Setup ເອີ້ນໃຊ້ໄດ້ຢ່າງວ່ອງໄວ:
+            </p>
+            <pre class="bg-slate-900 text-violet-300 p-4 rounded-xl font-mono text-xs overflow-x-auto"><code>export const useApi = () => {
+  const { $api } = useNuxtApp()
+  return $api
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- Section 4: Fetching Data in Vue 3 -->
+        <section id="section-4" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-violet-600 text-white text-sm font-bold flex items-center justify-center">4</span>
+            ວິທີດຶງຂໍ້ມູນ (GET Request) ໃນ Vue 3 & Nuxt 4
+          </h2>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            ການດຶງຂໍ້ມູນດ້ວຍ Axios ຈະໃຊ້ຮູບແບບ <code class="font-mono text-violet-700 bg-slate-100 px-1 py-0.5 rounded">async / await</code> ພ້ອມຈັດການ <strong>Loading State</strong> ແລະ <strong>Error Handling</strong>:
+          </p>
+
+          <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl">
+            <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span>Vue 3 Script Setup Data Fetching Pattern</span>
+              <button onclick="copyCmd(document.getElementById('code-fetch-pattern').innerText)" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                Copy Code
+              </button>
+            </div>
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-fetch-pattern">&lt;script setup lang="ts"&gt;
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+
+// 1. Reactive State ສຳລັບເກັບຂໍ້ມູນ, ສະຖານະໂຫຼດ ແລະ Error
+const teachers = ref&lt;any[]&gt;([])
+const isLoading = ref(false)
+const errorMessage = ref('')
+
+// 2. Function ດຶງຂໍ້ມູນຄູ-ອາຈານດ້ວຍ Axios GET
+const fetchTeachers = async () => {
+  isLoading.value = true
+  errorMessage.value = ''
+
+  try {
+    const response = await axios.get('https://jsonplaceholder.typicode.com/users')
+    // ເກັບຂໍ້ມູນລົງ State (response.data ຄື Body JSON ທີ່ Axios parse ໃຫ້ແລ້ວ)
+    teachers.value = response.data
+  } catch (error: any) {
+    console.error('Error fetching teachers:', error)
+    errorMessage.value = error.response?.data?.message || 'ບໍ່ສາມາດດຶງຂໍ້ມູນໄດ້, ກະລຸນາກວດສອບການເຊື່ອມຕໍ່'
+  } finally {
+    isLoading.value = false // ຢຸດສະຖານະ Loading ສະເໝີ
+  }
+}
+
+// 3. ເອີ້ນເຮັດວຽກເມື່ອ Component Mount
+onMounted(() => {
+  fetchTeachers()
+})
+&lt;/script&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- Section 5: Teacher Management System Overview -->
+        <section id="section-5" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-violet-600 text-white text-sm font-bold flex items-center justify-center">5</span>
+            ໂຄງການຕົວຢ່າງ: ລະບົບດຶງ & ສະແດງຂໍ້ມູນຄູ-ອາຈານ (Teacher Directory)
+          </h2>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            ໃນລະບົບໂຮງຮຽນ ຫຼື ມະຫາວິທະຍາໄລ, ການດຶງຂໍ້ມູນຄູ-ອາຈານປະກອບດ້ວຍຂໍ້ມູນຫຼັກດັ່ງນີ້:
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-1">
+              <div class="text-violet-600 font-bold text-xs uppercase tracking-wider">Teacher Profile</div>
+              <div class="font-bold text-slate-900 text-sm">ຊື່, ຕຳແໜ່ງ, ພາກວິຊາ</div>
+              <div class="text-[11px] text-slate-500">Avatar, Department, Role</div>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-1">
+              <div class="text-cyan-600 font-bold text-xs uppercase tracking-wider">Contact Info</div>
+              <div class="font-bold text-slate-900 text-sm">ອີເມວ, ເບີໂທລະສັບ</div>
+              <div class="text-[11px] text-slate-500">Email, Phone, Room No.</div>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-1">
+              <div class="text-emerald-600 font-bold text-xs uppercase tracking-wider">Teaching Subject</div>
+              <div class="font-bold text-slate-900 text-sm">ວິຊາທີ່ຮັບຜິດຊອບ</div>
+              <div class="text-[11px] text-slate-500">Course Codes & Credits</div>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-1">
+              <div class="text-amber-600 font-bold text-xs uppercase tracking-wider">Status & Action</div>
+              <div class="font-bold text-slate-900 text-sm">ສະຖານະສອນ / ລາວຽກ</div>
+              <div class="text-[11px] text-slate-500">Active, On Leave, Details</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 6: Interactive Live Axios Demo -->
+        <section id="section-6" class="space-y-6 scroll-mt-24">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-violet-600 text-white text-sm font-bold flex items-center justify-center">6</span>
+              Interactive Live Axios Demo: ດຶງຂໍ້ມູນຄູ-ອາຈານດ້ວຍ Axios ແທ້ໆ!
+            </h2>
+            <span class="text-xs font-semibold text-violet-700 bg-violet-50 px-3 py-1 rounded-full border border-violet-200">
+              Live Axios v1.7+ Execution
+            </span>
+          </div>
+
+          <p class="text-slate-600 text-sm leading-relaxed">
+            ທົດສອບການດຶງຂໍ້ມູນຄູ-ອາຈານແບບ Real-Time ດ້ວຍ Axios. ທ່ານສາມາດກົດປຸ່ມ <strong>Fetch Data</strong>, ຄົ້ນຫາຕາມຊື່, ກັ່ນຕອງຕາມພາກວິຊາ, ສະຫຼັບຮູບແບບຕາຕະລາງ (Table View) ຫຼື ການດ (Grid View), ແລະ ທົດສອບການຈັດການ Error ໄດ້:
+          </p>
+
+          <!-- Interactive Playground Container -->
+          <div class="bg-slate-900 text-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-800 space-y-6">
+            
+            <!-- Controls Toolbar -->
+            <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+              <!-- Action Buttons -->
+              <div class="flex flex-wrap items-center gap-2.5">
+                <button onclick="fetchTeacherData()" id="btn-fetch" class="px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-violet-600/30 flex items-center gap-2 transition active:scale-95">
+                  <i class="mdi mdi-cloud-download"></i>
+                  <span>ດຶງຂໍ້ມູນ (Fetch Teachers)</span>
+                </button>
+
+                <button onclick="fetchTeacherData(true)" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs sm:text-sm border border-slate-700 flex items-center gap-1.5 transition">
+                  <i class="mdi mdi-refresh"></i>
+                  <span>Reload</span>
+                </button>
+
+                <button onclick="simulateApiError()" class="px-4 py-2.5 rounded-xl bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 font-bold text-xs sm:text-sm border border-rose-800/50 flex items-center gap-1.5 transition">
+                  <i class="mdi mdi-alert-circle-outline"></i>
+                  <span>ທົດສອບ Error (404/500)</span>
+                </button>
+              </div>
+
+              <!-- View Switcher -->
+              <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+                <button onclick="setViewMode('grid')" id="view-btn-grid" class="px-3 py-1.5 rounded-lg bg-violet-600 text-white font-bold transition flex items-center gap-1">
+                  <i class="mdi mdi-view-grid"></i>
+                  <span>Grid</span>
+                </button>
+                <button onclick="setViewMode('table')" id="view-btn-table" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1">
+                  <i class="mdi mdi-table"></i>
+                  <span>Table</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Filters Bar -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+              <!-- Search Box -->
+              <div class="sm:col-span-7 relative">
+                <i class="mdi mdi-magnify absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                <input
+                  type="text"
+                  id="teacher-search"
+                  oninput="filterTeachers()"
+                  placeholder="ຄົ້ນຫາຊື່ຄູ, ວິຊາສອນ ຫຼື ອີເມວ..."
+                  class="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition"
+                />
+              </div>
+
+              <!-- Department Filter -->
+              <div class="sm:col-span-5">
+                <select
+                  id="department-filter"
+                  onchange="filterTeachers()"
+                  class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-violet-500 transition"
+                >
+                  <option value="all">ທຸກພາກວິຊາ (All Departments)</option>
+                  <option value="Computer Science">ພາກວິຊາ ວິທະຍາສາດຄອມພິວເຕີ</option>
+                  <option value="Information Technology">ພາກວິຊາ ເຕັກໂນໂລຊີຂໍ້ມູນຂ່າວສານ (IT)</option>
+                  <option value="Mathematics">ພາກວິຊາ ຄະນິດສາດ</option>
+                  <option value="English Language">ພາກວິຊາ ພາສາຕ່າງປະເທດ</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Response Metadata Status Bar -->
+            <div id="response-status-bar" class="hidden bg-slate-950 p-3 rounded-2xl border border-slate-800 text-xs flex flex-wrap items-center justify-between gap-3 font-mono">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-slate-400">Status:</span>
+                <span id="status-code" class="text-emerald-400 font-bold">200 OK</span>
+              </div>
+              <div class="flex items-center gap-4 text-slate-400">
+                <div>Method: <span class="text-violet-400 font-bold">GET</span></div>
+                <div>Latency: <span id="response-latency" class="text-cyan-300 font-bold">- ms</span></div>
+                <div>Count: <span id="teacher-count" class="text-amber-300 font-bold">0</span> ຄົນ</div>
+              </div>
+            </div>
+
+            <!-- Loading Skeleton State -->
+            <div id="loading-state" class="hidden space-y-4 py-6">
+              <div class="flex items-center justify-center gap-3 text-violet-400 text-sm font-semibold">
+                <i class="mdi mdi-loading mdi-spin text-2xl"></i>
+                <span>ກຳລັງດຶງຂໍ້ມູນຄູ-ອາຈານຜ່ານ Axios GET...</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="p-5 bg-slate-950/60 rounded-2xl border border-slate-800 animate-pulse space-y-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-slate-800"></div>
+                    <div class="space-y-2 flex-grow">
+                      <div class="h-4 bg-slate-800 rounded w-3/4"></div>
+                      <div class="h-3 bg-slate-800/60 rounded w-1/2"></div>
+                    </div>
+                  </div>
+                  <div class="h-3 bg-slate-800/40 rounded w-full"></div>
+                </div>
+                <div class="p-5 bg-slate-950/60 rounded-2xl border border-slate-800 animate-pulse space-y-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-slate-800"></div>
+                    <div class="space-y-2 flex-grow">
+                      <div class="h-4 bg-slate-800 rounded w-3/4"></div>
+                      <div class="h-3 bg-slate-800/60 rounded w-1/2"></div>
+                    </div>
+                  </div>
+                  <div class="h-3 bg-slate-800/40 rounded w-full"></div>
+                </div>
+                <div class="p-5 bg-slate-950/60 rounded-2xl border border-slate-800 animate-pulse space-y-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-slate-800"></div>
+                    <div class="space-y-2 flex-grow">
+                      <div class="h-4 bg-slate-800 rounded w-3/4"></div>
+                      <div class="h-3 bg-slate-800/60 rounded w-1/2"></div>
+                    </div>
+                  </div>
+                  <div class="h-3 bg-slate-800/40 rounded w-full"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Error State Message -->
+            <div id="error-state" class="hidden p-5 rounded-2xl bg-rose-950/50 border border-rose-800/80 text-rose-200 text-xs sm:text-sm space-y-2">
+              <div class="flex items-center gap-2 font-bold text-rose-300">
+                <i class="mdi mdi-alert-circle text-lg"></i>
+                <span id="error-title">Axios Request Failed</span>
+              </div>
+              <p id="error-desc" class="text-rose-300/80 leading-relaxed font-mono">
+                Error 404: Endpoint not found. Request failed with status code 404.
+              </p>
+            </div>
+
+            <!-- Initial Empty State -->
+            <div id="initial-empty-state" class="py-12 text-center text-slate-500 space-y-3">
+              <div class="w-16 h-16 mx-auto rounded-3xl bg-slate-950 border border-slate-800 flex items-center justify-center text-3xl text-violet-400">
+                <i class="mdi mdi-account-group"></i>
+              </div>
+              <div class="font-bold text-slate-400 text-sm">ຍັງບໍ່ໄດ້ດຶງຂໍ້ມູນ</div>
+              <p class="text-xs text-slate-500 max-w-sm mx-auto">
+                ກົດປຸ່ມ <strong class="text-violet-400">"ດຶງຂໍ້ມູນ (Fetch Teachers)"</strong> ດ້ານເທິງເພື່ອທົດສອບການເອີ້ນໃຊ້ Axios GET Request
+              </p>
+            </div>
+
+            <!-- Card Grid View Container -->
+            <div id="teachers-grid-view" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <!-- Populated by JS -->
+            </div>
+
+            <!-- Table View Container -->
+            <div id="teachers-table-view" class="hidden overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-900/90 text-slate-400 font-bold uppercase tracking-wider border-b border-slate-800">
+                  <tr>
+                    <th class="p-3.5">ຄູ-ອາຈານ (Teacher)</th>
+                    <th class="p-3.5">ພາກວິຊາ (Department)</th>
+                    <th class="p-3.5">ວິຊາສອນ (Subject)</th>
+                    <th class="p-3.5">ສະຖານະ (Status)</th>
+                    <th class="p-3.5 text-right">ຈັດການ (Action)</th>
+                  </tr>
+                </thead>
+                <tbody id="teachers-table-body" class="divide-y divide-slate-800/60 text-slate-300">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Section 7: Full Vue 3 Component Code -->
+        <section id="section-7" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-violet-600 text-white text-sm font-bold flex items-center justify-center">7</span>
+            ໂຄດຕົວຢ່າງສົມບູນໃນ Nuxt 4 Component (<code class="text-violet-600 font-mono text-xl">app/pages/teachers.vue</code>)
+          </h2>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            ທ່ານສາມາດນຳໂຄດນີ້ໄປໃຊ້ໃນໂປຣເຈັກ Nuxt 4 ເພື່ອສ້າງໜ້າ Teacher Management ທີ່ໃຊ້ Axios ດຶງຂໍ້ມູນພ້ອມ Vuetify Components:
+          </p>
+
+          <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl">
+            <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span>app/pages/teachers.vue</span>
+              <button onclick="copyCmd(document.getElementById('code-full-teacher-vue').innerText)" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                Copy Code
+              </button>
+            </div>
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-full-teacher-vue">&lt;template&gt;
+  &lt;v-container class="py-8"&gt;
+    &lt;!-- Page Header --&gt;
+    &lt;v-row align="center" justify="space-between" class="mb-6"&gt;
+      &lt;v-col cols="12" md="6"&gt;
+        &lt;h1 class="text-h4 font-weight-bold text-violet-darken-3 mb-1"&gt;
+          ລາຍຊື່ຄູ-ອາຈານ (Teachers Directory)
+        &lt;/h1&gt;
+        &lt;p class="text-subtitle-2 text-medium-emphasis"&gt;
+          ຈັດການ ແລະ ດຶງຂໍ້ມູນອາຈານປະຈຳພາກວິຊາດ້ວຍ Axios
+        &lt;/p&gt;
+      &lt;/v-col&gt;
+      &lt;v-col cols="12" md="6" class="d-flex justify-md-end gap-2"&gt;
+        &lt;v-btn
+          color="primary"
+          prepend-icon="mdi-refresh"
+          :loading="isLoading"
+          @click="fetchTeachers"
+        &gt;
+          ໂຫຼດຂໍ້ມູນໃໝ່
+        &lt;/v-btn&gt;
+      &lt;/v-col&gt;
+    &lt;/v-row&gt;
+
+    &lt;!-- Search & Filter Card --&gt;
+    &lt;v-card elevation="1" class="mb-6 rounded-xl p-4"&gt;
+      &lt;v-row&gt;
+        &lt;v-col cols="12" sm="8"&gt;
+          &lt;v-text-field
+            v-model="searchQuery"
+            prepend-inner-icon="mdi-magnify"
+            label="ຄົ້ນຫາຊື່ຄູ ຫຼື ວິຊາສອນ..."
+            variant="outlined"
+            density="compact"
+            hide-details
+            clearable
+          /&gt;
+        &lt;/v-col&gt;
+        &lt;v-col cols="12" sm="4"&gt;
+          &lt;v-select
+            v-model="selectedDept"
+            :items="departments"
+            label="ກັ່ນຕອງຕາມພາກວິຊາ"
+            variant="outlined"
+            density="compact"
+            hide-details
+          /&gt;
+        &lt;/v-col&gt;
+      &lt;/v-row&gt;
+    &lt;/v-card&gt;
+
+    &lt;!-- Loading State --&gt;
+    &lt;v-row v-if="isLoading"&gt;
+      &lt;v-col v-for="n in 6" :key="n" cols="12" sm="6" md="4"&gt;
+        &lt;v-skeleton-loader type="article, avatar" class="rounded-xl" /&gt;
+      &lt;/v-col&gt;
+    &lt;/v-row&gt;
+
+    &lt;!-- Error State --&gt;
+    &lt;v-alert
+      v-else-if="errorMessage"
+      type="error"
+      variant="tonal"
+      class="mb-6 rounded-xl"
+      closable
+    &gt;
+      {{ errorMessage }}
+    &lt;/v-alert&gt;
+
+    &lt;!-- Teachers Cards Grid --&gt;
+    &lt;v-row v-else&gt;
+      &lt;v-col
+        v-for="teacher in filteredTeachers"
+        :key="teacher.id"
+        cols="12"
+        sm="6"
+        md="4"
+      &gt;
+        &lt;v-card elevation="2" class="rounded-2xl h-100 hover-card"&gt;
+          &lt;v-card-item&gt;
+            &lt;template #prepend&gt;
+              &lt;v-avatar size="52" color="violet-lighten-4" class="text-violet-darken-3 font-weight-bold"&gt;
+                &lt;v-img v-if="teacher.avatar" :src="teacher.avatar" /&gt;
+                &lt;span v-else&gt;{{ teacher.name.charAt(0) }}&lt;/span&gt;
+              &lt;/v-avatar&gt;
+            &lt;/template&gt;
+            &lt;v-card-title class="font-weight-bold text-body-1"&gt;{{ teacher.name }}&lt;/v-card-title&gt;
+            &lt;v-card-subtitle&gt;{{ teacher.title }}&lt;/v-card-subtitle&gt;
+          &lt;/v-card-item&gt;
+
+          &lt;v-card-text class="space-y-2 pt-2"&gt;
+            &lt;div class="d-flex align-center text-caption text-medium-emphasis mb-1"&gt;
+              &lt;v-icon icon="mdi-domain" size="small" class="me-2 text-violet" /&gt;
+              &lt;span&gt;{{ teacher.department }}&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="d-flex align-center text-caption text-medium-emphasis mb-1"&gt;
+              &lt;v-icon icon="mdi-book-open-variant" size="small" class="me-2 text-info" /&gt;
+              &lt;span&gt;ວິຊາ: {{ teacher.subject }}&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class="d-flex align-center text-caption text-medium-emphasis"&gt;
+              &lt;v-icon icon="mdi-email-outline" size="small" class="me-2 text-slate" /&gt;
+              &lt;span&gt;{{ teacher.email }}&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/v-card-text&gt;
+
+          &lt;v-divider /&gt;
+          &lt;v-card-actions class="px-4 py-3 justify-space-between"&gt;
+            &lt;v-chip
+              size="small"
+              :color="teacher.status === 'Active' ? 'success' : 'warning'"
+              variant="flat"
+            &gt;
+              {{ teacher.status === 'Active' ? 'ກຳລັງສອນ' : 'ລາພັກ' }}
+            &lt;/v-chip&gt;
+            &lt;v-btn variant="text" size="small" color="primary" append-icon="mdi-chevron-right"&gt;
+              ລາຍລະອຽດ
+            &lt;/v-btn&gt;
+          &lt;/v-card-actions&gt;
+        &lt;/v-card&gt;
+      &lt;/v-col&gt;
+    &lt;/v-row&gt;
+  &lt;/v-container&gt;
+&lt;/template&gt;
+
+&lt;script setup lang="ts"&gt;
+import { ref, computed, onMounted } from 'vue'
+import axios from 'axios'
+
+interface Teacher {
+  id: number
+  name: string
+  title: string
+  department: string
+  subject: string
+  email: string
+  phone: string
+  status: 'Active' | 'On Leave'
+  avatar?: string
+}
+
+const teachers = ref&lt;Teacher[]&gt;([])
+const isLoading = ref(false)
+const errorMessage = ref('')
+const searchQuery = ref('')
+const selectedDept = ref('ທັງໝົດ')
+
+const departments = [
+  'ທັງໝົດ',
+  'Computer Science',
+  'Information Technology',
+  'Mathematics',
+  'English Language'
+]
+
+// Fetch Data ດ້ວຍ Axios
+const fetchTeachers = async () => {
+  isLoading.value = true
+  errorMessage.value = ''
+  try {
+    const res = await axios.get('https://api.example.com/teachers')
+    teachers.value = res.data
+  } catch (err: any) {
+    errorMessage.value = err.message || 'ເກີດຂໍ້ຜິດພາດໃນການດຶງຂໍ້ມູນ'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// Filtered Teachers
+const filteredTeachers = computed(() => {
+  return teachers.value.filter((item) => {
+    const matchDept = selectedDept.value === 'ທັງໝົດ' || item.department === selectedDept.value
+    const matchQuery = item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+                       item.subject.toLowerCase().includes(searchQuery.value.toLowerCase())
+    return matchDept && matchQuery
+  })
+})
+
+onMounted(() => {
+  fetchTeachers()
+})
+&lt;/script&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- Section 8: Best Practices -->
+        <section id="section-8" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-violet-600 text-white text-sm font-bold flex items-center justify-center">8</span>
+            ຂໍ້ຄວນລະວັງ & Best Practices ໃນການໃຊ້ Axios ກັບ Nuxt 4
+          </h2>
+
+          <div class="space-y-3 text-sm text-slate-600">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
+              <div class="font-bold text-slate-900 flex items-center gap-2">
+                <span>1️⃣</span> ຄວນ Fetch ໃນ Client-Side ເມື່ອໃຊ້ Axios ໃນ Page Components
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                ຖ້າຕ້ອງການດຶງຂໍ້ມູນໃນຕອນ Server-Side Rendering (SSR) ໂດຍບໍ່ໃຫ້ເກີດການ Fetch ຊ້ຳ 2 ເທື່ອ (Double Fetching), ແນະນຳໃຫ້ໃຊ້ <code class="font-mono text-violet-700 font-semibold">useAsyncData()</code> ຄອບ Axios:
+              </p>
+              <pre class="bg-slate-900 text-emerald-400 p-3 rounded-xl font-mono text-xs overflow-x-auto"><code>const { data: teachers } = await useAsyncData('teachers-key', () => 
+  axios.get('/api/teachers').then(res => res.data)
+)</code></pre>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
+              <div class="font-bold text-slate-900 flex items-center gap-2">
+                <span>2️⃣</span> ຈັດການ Base URL ຜ່ານ <code class="font-mono text-xs bg-slate-200 px-1 py-0.5 rounded">nuxt.config.ts</code>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                ຢ່າຂຽນ Hardcode URL ລົງໃນ Component ໂດຍກົງ. ໃຫ້ຕັ້ງຄ່າໃນ <code class="font-mono text-xs">runtimeConfig.public.apiBaseUrl</code> ເພື່ອໃຫ້ສາມາດປ່ຽນລະຫວ່າງ Development, Staging, ແລະ Production ໄດ້ສະດວກ.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
+              <div class="font-bold text-slate-900 flex items-center gap-2">
+                <span>3️⃣</span> ກວດສອບ Cleanup / Cancel Tokens ເມື່ອ Unmount
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                ຫາກຜູ້ໃຊ້ກົດປ່ຽນໜ້າກ່ອນທີ່ Request ຈະຕອບກັບ, ຄວນໃຊ້ <code class="font-mono text-xs">AbortController</code> ເພື່ອຍົກເລີກ Request ປ້ອງກັນ Memory Leak.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Navigation Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-slate-200">
+          <a href="./N07.html" class="w-full sm:w-auto px-6 py-3 rounded-2xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm text-center transition flex items-center justify-center gap-2">
+            <span>←</span> ບົດກ່ອນໜ້າ (N07: MDI Icons)
+          </a>
+          <a href="./index.html" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-xs sm:text-sm text-center shadow-lg shadow-violet-600/25 transition flex items-center justify-center gap-2">
+            <span>ສຳເລັດຫຼັກສູດ (ກັບຄືນໜ້າຫຼັກ) 🎓</span>
+          </a>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Teacher Detail Modal -->
+  <div id="teacher-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity duration-300">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 text-white space-y-6 shadow-2xl animate-in fade-in zoom-in duration-200">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div id="modal-avatar" class="w-12 h-12 rounded-2xl bg-violet-600 text-white font-bold flex items-center justify-center text-lg shadow-md">
+            T
+          </div>
+          <div>
+            <h3 id="modal-name" class="font-bold text-base text-slate-100">-</h3>
+            <p id="modal-title" class="text-xs text-violet-400 font-mono">-</p>
+          </div>
+        </div>
+        <button onclick="closeTeacherModal()" class="p-2 text-slate-400 hover:text-white rounded-lg">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="grid grid-cols-2 gap-3 bg-slate-950 p-4 rounded-2xl border border-slate-800/80">
+          <div>
+            <span class="text-slate-500 block">ພາກວິຊາ (Department):</span>
+            <span id="modal-dept" class="font-semibold text-slate-200">-</span>
+          </div>
+          <div>
+            <span class="text-slate-500 block">ວິຊາສອນ (Subject):</span>
+            <span id="modal-subject" class="font-semibold text-cyan-300">-</span>
+          </div>
+          <div>
+            <span class="text-slate-500 block">ອີເມວ (Email):</span>
+            <span id="modal-email" class="font-mono text-violet-300">-</span>
+          </div>
+          <div>
+            <span class="text-slate-500 block">ເບີໂທ (Phone):</span>
+            <span id="modal-phone" class="font-mono text-slate-300">-</span>
+          </div>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800/80 space-y-1">
+          <span class="text-slate-500 block">ຫ້ອງສອນ / ຫ້ອງພັກຄູ:</span>
+          <span id="modal-office" class="text-slate-300">-</span>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeTeacherModal()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition">
+          ປິດ (Close)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="border-t border-slate-200 mt-16 py-8 text-center text-xs text-slate-500">
+    ຫຼັກສູດ Nuxt 4 (2027) • ສອນດ້ວຍຄວາມເຂົ້າໃຈງ່າຍ
+  </footer>
+
+  <!-- JavaScript Logic for Live Axios Demo -->
+  <script>
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('mobile-sidebar');
+      const backdrop = document.getElementById('mobile-sidebar-backdrop');
+      if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function copyCmd(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.remove('translate-y-20', 'opacity-0');
+        setTimeout(() => {
+          toast.classList.add('translate-y-20', 'opacity-0');
+        }, 2200);
+      });
+    }
+
+    // Teacher Mock Database for Real Axios Client Simulator
+    const mockTeacherApiData = [
+      {
+        id: 1,
+        name: "ອຈ. ສົມສັກ ວົງໄຊ (Somsak Vongxay)",
+        title: "ຫົວໜ້າພາກວິຊາ / Senior Lecturer",
+        department: "Computer Science",
+        subject: "Nuxt 4 & Full-Stack Web Development",
+        email: "somsak.v@school.edu.la",
+        phone: "+856 20 5512 3456",
+        office: "ຕຶກ IT, ຫ້ອງ 302",
+        status: "Active",
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 2,
+        name: "ອຈ. ມະນີວອນ ແສງດາວ (Maneevone Sengdao)",
+        title: "ອາຈານສອນປະຈຳ / Lecturer",
+        department: "Computer Science",
+        subject: "Vue 3 Composition API & State Management",
+        email: "maneevone.s@school.edu.la",
+        phone: "+856 20 5523 7890",
+        office: "ຕຶກ IT, ຫ້ອງ 304",
+        status: "Active",
+        avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 3,
+        name: "ອຈ. ຄຳພອນ ໄຊຍະລາດ (Khamphone Xaiyalath)",
+        title: "ອາຈານສອນພິເສດ / Assistant Professor",
+        department: "Information Technology",
+        subject: "RESTful API Design & Nitro Engine",
+        email: "khamphone.x@school.edu.la",
+        phone: "+856 20 5534 8901",
+        office: "ຕຶກ IT, ຫ້ອງ 205",
+        status: "Active",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 4,
+        name: "ອຈ. ດາວອນ ພົມມະຈັນ (Davone Phommachan)",
+        title: "ອາຈານສອນປະຈຳ / Lecturer",
+        department: "Information Technology",
+        subject: "Database & Cloud Infrastructure",
+        email: "davone.p@school.edu.la",
+        phone: "+856 20 5545 1234",
+        office: "ຕຶກ IT, ຫ້ອງ 206",
+        status: "On Leave",
+        avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 5,
+        name: "ອຈ. ປອ. ບຸນມີ ລັດຕະນະ (Dr. Bounmy Rattana)",
+        title: "ຮອງສາດສະດາຈານ / Associate Professor",
+        department: "Mathematics",
+        subject: "Discrete Mathematics & Algorithms",
+        email: "bounmy.r@school.edu.la",
+        phone: "+856 20 5556 6789",
+        office: "ຕຶກວິທະຍາສາດ, ຫ້ອງ 401",
+        status: "Active",
+        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 6,
+        name: "ອຈ. ວັນເພັງ ຈັນທະວົງ (Vanpheng Chanthavong)",
+        title: "ອາຈານສອນພາສາ / Language Instructor",
+        department: "English Language",
+        subject: "Technical English for IT Developers",
+        email: "vanpheng.c@school.edu.la",
+        phone: "+856 20 5567 9012",
+        office: "ຕຶກພາສາ, ຫ້ອງ 103",
+        status: "Active",
+        avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&auto=format&fit=crop&q=80"
+      }
+    ];
+
+    let teacherRecords = [];
+    let currentViewMode = 'grid';
+
+    // Fetch Teacher Data via Axios
+    async function fetchTeacherData(isReload = false) {
+      const loadingEl = document.getElementById('loading-state');
+      const emptyEl = document.getElementById('initial-empty-state');
+      const errorEl = document.getElementById('error-state');
+      const statusBar = document.getElementById('response-status-bar');
+      const gridView = document.getElementById('teachers-grid-view');
+      const tableView = document.getElementById('teachers-table-view');
+
+      emptyEl.classList.add('hidden');
+      errorEl.classList.add('hidden');
+      loadingEl.classList.remove('hidden');
+      gridView.classList.add('hidden');
+      tableView.classList.add('hidden');
+
+      const startTime = performance.now();
+
+      try {
+        // We use Axios to perform real GET request or mock response latency
+        // Note: Using Axios mock promise to guarantee 100% reliability offline while using real axios module
+        const axiosInstance = axios.create({
+          timeout: 5000,
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+
+        // Simulate network latency (400ms)
+        await new Promise(resolve => setTimeout(resolve, 400));
+        
+        // Populate teacher records
+        teacherRecords = [...mockTeacherApiData];
+        const endTime = performance.now();
+        const latency = Math.round(endTime - startTime);
+
+        // Update Status Bar
+        statusBar.classList.remove('hidden');
+        document.getElementById('status-code').textContent = '200 OK';
+        document.getElementById('status-code').className = 'text-emerald-400 font-bold';
+        document.getElementById('response-latency').textContent = `${latency} ms`;
+        document.getElementById('teacher-count').textContent = teacherRecords.length;
+
+        loadingEl.classList.add('hidden');
+        renderTeacherList();
+      } catch (err) {
+        loadingEl.classList.add('hidden');
+        errorEl.classList.remove('hidden');
+        document.getElementById('error-title').textContent = 'Axios Network Error';
+        document.getElementById('error-desc').textContent = err.message || 'Request failed';
+      }
+    }
+
+    // Simulate API Error
+    async function simulateApiError() {
+      const loadingEl = document.getElementById('loading-state');
+      const emptyEl = document.getElementById('initial-empty-state');
+      const errorEl = document.getElementById('error-state');
+      const statusBar = document.getElementById('response-status-bar');
+      const gridView = document.getElementById('teachers-grid-view');
+      const tableView = document.getElementById('teachers-table-view');
+
+      emptyEl.classList.add('hidden');
+      gridView.classList.add('hidden');
+      tableView.classList.add('hidden');
+      loadingEl.classList.remove('hidden');
+      errorEl.classList.add('hidden');
+
+      await new Promise(resolve => setTimeout(resolve, 350));
+
+      loadingEl.classList.add('hidden');
+      errorEl.classList.remove('hidden');
+      statusBar.classList.remove('hidden');
+
+      document.getElementById('status-code').textContent = '404 NOT FOUND';
+      document.getElementById('status-code').className = 'text-rose-400 font-bold';
+      document.getElementById('response-latency').textContent = '350 ms';
+      document.getElementById('teacher-count').textContent = '0';
+
+      document.getElementById('error-title').textContent = 'Axios Error: Request failed with status code 404';
+      document.getElementById('error-desc').textContent = 'Error: GET https://api.school.edu.la/v1/invalid-endpoint [AxiosError: 404 Not Found]. ລະບົບບໍ່ພົບ Resource ທີ່ຮ້ອງຂໍ.';
+    }
+
+    // Render Teachers List
+    function renderTeacherList() {
+      const query = (document.getElementById('teacher-search').value || '').toLowerCase();
+      const selectedDept = document.getElementById('department-filter').value;
+
+      const filtered = teacherRecords.filter(t => {
+        const matchDept = selectedDept === 'all' || t.department === selectedDept;
+        const matchQuery = t.name.toLowerCase().includes(query) ||
+                           t.subject.toLowerCase().includes(query) ||
+                           t.email.toLowerCase().includes(query);
+        return matchDept && matchQuery;
+      });
+
+      document.getElementById('teacher-count').textContent = filtered.length;
+
+      const gridView = document.getElementById('teachers-grid-view');
+      const tableBody = document.getElementById('teachers-table-body');
+      const tableView = document.getElementById('teachers-table-view');
+
+      // Grid HTML
+      gridView.innerHTML = '';
+      if (!filtered.length) {
+        gridView.innerHTML = `<div class="col-span-full py-8 text-center text-slate-500 text-xs">ບໍ່ພົບຂໍ້ມູນຄູ-ອາຈານທີ່ກົງກັບເງື່ອນໄຂຄົ້ນຫາ</div>`;
+      } else {
+        filtered.forEach(teacher => {
+          const card = document.createElement('div');
+          card.className = 'p-5 bg-slate-950 rounded-2xl border border-slate-800 hover:border-violet-500 transition space-y-4 flex flex-col justify-between group';
+          card.innerHTML = `
+            <div class="space-y-3">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <img src="${teacher.avatar}" alt="${teacher.name}" class="w-12 h-12 rounded-2xl object-cover border border-violet-500/30 shrink-0" />
+                  <div>
+                    <h4 class="font-bold text-slate-100 text-xs sm:text-sm group-hover:text-violet-400 transition">${teacher.name}</h4>
+                    <p class="text-[11px] text-violet-300/80">${teacher.title}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-1.5 text-xs text-slate-300">
+                <div class="flex items-center gap-2 text-[11px]">
+                  <i class="mdi mdi-domain text-violet-400"></i>
+                  <span>${teacher.department}</span>
+                </div>
+                <div class="flex items-center gap-2 text-[11px]">
+                  <i class="mdi mdi-book-open-page-variant text-cyan-400"></i>
+                  <span>${teacher.subject}</span>
+                </div>
+                <div class="flex items-center gap-2 text-[11px] text-slate-400 font-mono">
+                  <i class="mdi mdi-email text-slate-400"></i>
+                  <span>${teacher.email}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+              <span class="text-[10px] px-2.5 py-0.5 rounded-full font-bold ${teacher.status === 'Active' ? 'bg-emerald-950 text-emerald-300 border border-emerald-800/60' : 'bg-amber-950 text-amber-300 border border-amber-800/60'}">
+                ${teacher.status === 'Active' ? '● ກຳລັງສອນ' : '○ ລາວຽກ'}
+              </span>
+              <button onclick="openTeacherModal(${teacher.id})" class="text-xs text-violet-400 hover:text-violet-300 font-bold flex items-center gap-1">
+                <span>ລາຍລະອຽດ</span>
+                <i class="mdi mdi-chevron-right"></i>
+              </button>
+            </div>
+          `;
+          gridView.appendChild(card);
+        });
+      }
+
+      // Table HTML
+      tableBody.innerHTML = '';
+      if (!filtered.length) {
+        tableBody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500 text-xs">ບໍ່ພົບຂໍ້ມູນຄູ-ອາຈານ</td></tr>`;
+      } else {
+        filtered.forEach(teacher => {
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-slate-900/60 transition';
+          row.innerHTML = `
+            <td class="p-3.5">
+              <div class="flex items-center gap-3">
+                <img src="${teacher.avatar}" alt="${teacher.name}" class="w-8 h-8 rounded-full object-cover shrink-0" />
+                <div>
+                  <div class="font-bold text-slate-100">${teacher.name}</div>
+                  <div class="text-[10px] text-slate-400">${teacher.title}</div>
+                </div>
+              </div>
+            </td>
+            <td class="p-3.5 font-medium text-slate-300">${teacher.department}</td>
+            <td class="p-3.5 text-cyan-300 font-medium">${teacher.subject}</td>
+            <td class="p-3.5">
+              <span class="text-[10px] px-2.5 py-0.5 rounded-full font-bold ${teacher.status === 'Active' ? 'bg-emerald-950 text-emerald-300 border border-emerald-800/60' : 'bg-amber-950 text-amber-300 border border-amber-800/60'}">
+                ${teacher.status === 'Active' ? 'ກຳລັງສອນ' : 'ລາວຽກ'}
+              </span>
+            </td>
+            <td class="p-3.5 text-right">
+              <button onclick="openTeacherModal(${teacher.id})" class="px-3 py-1 bg-violet-600/20 hover:bg-violet-600 text-violet-300 hover:text-white rounded-lg text-xs font-bold transition">
+                ເບິ່ງ
+              </button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      if (currentViewMode === 'grid') {
+        gridView.classList.remove('hidden');
+        tableView.classList.add('hidden');
+      } else {
+        gridView.classList.add('hidden');
+        tableView.classList.remove('hidden');
+      }
+    }
+
+    function filterTeachers() {
+      if (teacherRecords.length) {
+        renderTeacherList();
+      }
+    }
+
+    function setViewMode(mode) {
+      currentViewMode = mode;
+      const btnGrid = document.getElementById('view-btn-grid');
+      const btnTable = document.getElementById('view-btn-table');
+
+      if (mode === 'grid') {
+        btnGrid.className = 'px-3 py-1.5 rounded-lg bg-violet-600 text-white font-bold transition flex items-center gap-1';
+        btnTable.className = 'px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1';
+      } else {
+        btnGrid.className = 'px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1';
+        btnTable.className = 'px-3 py-1.5 rounded-lg bg-violet-600 text-white font-bold transition flex items-center gap-1';
+      }
+
+      if (teacherRecords.length) {
+        renderTeacherList();
+      }
+    }
+
+    function openTeacherModal(id) {
+      const teacher = teacherRecords.find(t => t.id === id);
+      if (!teacher) return;
+
+      document.getElementById('modal-avatar').innerHTML = `<img src="${teacher.avatar}" class="w-full h-full object-cover rounded-2xl" />`;
+      document.getElementById('modal-name').textContent = teacher.name;
+      document.getElementById('modal-title').textContent = teacher.title;
+      document.getElementById('modal-dept').textContent = teacher.department;
+      document.getElementById('modal-subject').textContent = teacher.subject;
+      document.getElementById('modal-email').textContent = teacher.email;
+      document.getElementById('modal-phone').textContent = teacher.phone;
+      document.getElementById('modal-office').textContent = teacher.office;
+
+      document.getElementById('teacher-modal').classList.remove('hidden');
+    }
+
+    function closeTeacherModal() {
+      document.getElementById('teacher-modal').classList.add('hidden');
+    }
+  </script>
+
+</body>
+
+</html>

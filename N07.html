@@ -30,34 +30,69 @@
       }
     }
   </script>
+  <style>
+    /* Custom scrollbar for icon grids and code snippets */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(45, 212, 191, 0.4);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(45, 212, 191, 0.8);
+    }
+    .custom-light-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-light-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+    }
+  </style>
 </head>
 
-<body class="bg-white text-slate-800 min-h-screen font-sans antialiased selection:bg-teal-500 selection:text-white">
+<body class="bg-slate-50 text-slate-800 min-h-screen font-sans antialiased selection:bg-teal-500 selection:text-white">
+
+  <!-- Scroll Reading Progress Bar -->
+  <div id="progress-bar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-teal-400 via-emerald-400 to-cyan-500 z-50 transition-all duration-150" style="width: 0%"></div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 text-sm border border-teal-500/40">
-    <span>📋 ຄັດລອກໂຄດສຳເລັດແລ້ວ!</span>
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 text-sm border border-teal-500/50">
+    <span class="text-teal-400 text-base">✨</span>
+    <span id="toast-message">ຄັດລອກໂຄດສຳເລັດແລ້ວ!</span>
   </div>
 
-  <!-- header (Full Width & White Background) -->
-  <header class="w-full bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
+  <!-- Floating Back To Top Button -->
+  <button id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 left-6 z-40 w-11 h-11 rounded-2xl bg-white border border-slate-200 text-slate-700 shadow-xl flex items-center justify-center text-lg opacity-0 pointer-events-none transition-all duration-300 hover:bg-teal-500 hover:text-white hover:border-teal-500 hover:scale-110" aria-label="Back to Top">
+    <i class="mdi mdi-arrow-up"></i>
+  </button>
+
+  <!-- Header (Sticky Navbar) -->
+  <header class="w-full bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
       
-      <!-- Logo -->
+      <!-- Logo & Breadcrumb -->
       <div class="flex items-center gap-3">
         <!-- Mobile Sidebar Toggle Button -->
         <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 transition" aria-label="Toggle Menu">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
 
-        <a href="./index.html" class="flex items-center gap-3 group">
-          <span
-            class="w-9 h-9 rounded-lg bg-teal-500 text-white font-black flex items-center justify-center text-sm shadow-md shadow-teal-500/20 group-hover:scale-105 transition">N4</span>
+        <a href="./index.html" class="flex items-center gap-2.5 group">
+          <span class="w-9 h-9 rounded-xl bg-teal-500 text-white font-black flex items-center justify-center text-sm shadow-md shadow-teal-500/25 group-hover:scale-105 transition">N4</span>
           <div>
-            <span class="font-bold text-lg text-slate-900 group-hover:text-teal-600 transition">ຫຼັກສູດ Nuxt 4</span>
+            <span class="font-extrabold text-base sm:text-lg text-slate-900 group-hover:text-teal-600 transition">ຫຼັກສູດ Nuxt 4</span>
           </div>
         </a>
-        <span class="hidden sm:inline-block text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-2.5 py-0.5 rounded-full ml-1">ບົດທີ 7</span>
+        <span class="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-2.5 py-0.5 rounded-full ml-1">
+          <i class="mdi mdi-vector-square text-[13px]"></i>
+          ບົດທີ 7: MDI Icons
+        </span>
       </div>
 
       <!-- Desktop Nav -->
@@ -70,15 +105,27 @@
             <span>ບົດຮຽນທັງໝົດ</span>
             <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </button>
-          <div class="absolute left-0 top-full hidden group-hover:block w-64 bg-white border border-slate-200 rounded-2xl shadow-xl p-2 z-50 space-y-1">
+          <div class="absolute left-0 top-full hidden group-hover:block w-72 bg-white border border-slate-200 rounded-2xl shadow-xl p-2 z-50 space-y-1">
             <a href="./N00.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 0: ແນະນຳ Nuxt 4</a>
             <a href="./N01.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 1: ຕິດຕັ້ງໂປຣເຈັກ</a>
             <a href="./N02.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 2: ໜ້າເວັບ & Components</a>
             <a href="./N03.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 3: Data Fetching & State</a>
             <a href="./N04.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 4: nuxt.config, Plugins & Assets</a>
-            <a href="./N05.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</a>
+            <!-- Lesson 5 Nested Dropdown -->
+            <div class="relative group/sub">
+              <a href="./N05.html" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs font-semibold group-hover/sub:text-teal-600">
+                <span>ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</span>
+                <svg class="w-3 h-3 text-slate-400 -rotate-90 group-hover/sub:rotate-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </a>
+              <div class="hidden group-hover/sub:block pl-3 pr-1 py-1 space-y-1 bg-slate-50 rounded-xl border border-slate-200 my-0.5 ml-2">
+                <a href="./N05.html" class="block px-2.5 py-1 rounded-lg hover:bg-white text-slate-700 text-[11px] font-semibold">5. ພາບລວມ Vuetify 3</a>
+                <a href="./N05-0.html" class="block px-2.5 py-1 rounded-lg hover:bg-white text-slate-600 text-[11px]">5.0: ສະແດງຂໍ້ມູນແບບເກົ່າ (Old Data)</a>
+                <a href="./N05-1.html" class="block px-2.5 py-1 rounded-lg hover:bg-white text-teal-700 font-semibold text-[11px]">5.1: ໃຊ້ງານ Teal v-card</a>
+              </div>
+            </div>
             <a href="./N06.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 6: Form Handling & State</a>
-            <a href="./N07.html" class="block px-3 py-2 rounded-xl bg-teal-50 text-teal-700 font-bold text-xs">ບົດທີ 7: MDI Icons Setup & Use</a>
+            <a href="./N07.html" class="block px-3 py-2 rounded-xl bg-teal-50 text-teal-700 font-bold text-xs border border-teal-200">ບົດທີ 7: MDI Icons Setup & Use (ປັດຈຸບັນ)</a>
+            <a href="./N08.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 8: ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)</a>
           </div>
         </div>
 
@@ -86,10 +133,15 @@
         <a href="./contact.html" class="text-slate-600 hover:text-teal-600 transition">ຕິດຕໍ່</a>
       </nav>
 
-      <!-- Action Button -->
-      <div class="flex items-center gap-3">
-        <a href="./index.html" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold text-xs shadow-md shadow-teal-500/20 transition">
-          <span>ສຳເລັດຫຼັກສູດ 🎓</span>
+      <!-- Quick Action Buttons -->
+      <div class="flex items-center gap-2.5">
+        <a href="./N06.html" class="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs transition">
+          <i class="mdi mdi-chevron-left text-base"></i>
+          <span>ບົດທີ 6</span>
+        </a>
+        <a href="./N08.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold text-xs shadow-md shadow-teal-500/25 transition">
+          <span>ບົດຕໍ່ໄປ (N08)</span>
+          <i class="mdi mdi-arrow-right text-sm"></i>
         </a>
       </div>
 
@@ -97,19 +149,19 @@
   </header>
 
   <!-- Mobile Sidebar Overlay & Drawer -->
-  <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden transition-opacity duration-300"></div>
+  <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden transition-opacity duration-300"></div>
   <aside id="mobile-sidebar" class="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-white border-r border-slate-200 z-50 p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 space-y-6 shadow-2xl">
     <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-      <div class="flex items-center gap-2">
-        <span class="w-8 h-8 rounded-lg bg-teal-500 text-white font-black flex items-center justify-center text-sm">N4</span>
+      <div class="flex items-center gap-2.5">
+        <span class="w-8 h-8 rounded-xl bg-teal-500 text-white font-black flex items-center justify-center text-sm">N4</span>
         <span class="font-bold text-slate-900 text-base">ຫຼັກສູດ Nuxt 4</span>
       </div>
-      <button onclick="toggleMobileSidebar()" class="p-2 text-slate-400 hover:text-slate-700 rounded-lg">✕</button>
+      <button onclick="toggleMobileSidebar()" class="p-2 text-slate-400 hover:text-slate-700 rounded-xl" aria-label="Close Menu">✕</button>
     </div>
 
     <!-- Navigation -->
     <div class="space-y-1">
-      <div class="text-[11px] font-bold uppercase text-slate-400 px-3 pb-1">ເມນູຫຼັກ</div>
+      <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pb-1">ເມນູຫຼັກ</div>
       <a href="./index.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">🏠 ໜ້າຫຼັກ</a>
       <a href="./about.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">ℹ️ ກ່ຽວກັບ</a>
       <a href="./contact.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">📧 ຕິດຕໍ່</a>
@@ -117,35 +169,26 @@
 
     <!-- Course List -->
     <div class="space-y-1 pt-2">
-      <div class="text-[11px] font-bold uppercase text-slate-400 px-3 pb-1">ບົດຮຽນ Nuxt 4</div>
-      <a href="./N00.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
-        00. ແນະນຳ Nuxt 4
-      </a>
-      <a href="./N01.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
-        01. ຕິດຕັ້ງໂປຣເຈັກ
-      </a>
-      <a href="./N02.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
-        02. ໜ້າເວັບ ແລະ Components
-      </a>
-      <a href="./N03.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
-        03. Data Fetching & State
-      </a>
-      <a href="./N04.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
-        04. nuxt.config, Plugins & Assets
-      </a>
-      <a href="./N05.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
-        05. ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify
-      </a>
-      <a href="./N06.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
-        06. Form Handling & State
-      </a>
-      <a href="./N07.html" class="block px-3 py-2.5 rounded-xl bg-teal-50 text-teal-700 font-bold text-xs border border-teal-200">
-        07. MDI Icons Setup & Use (ປັດຈຸບັນ)
-      </a>
+      <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pb-1">ບົດຮຽນ Nuxt 4 (9 ບົດ)</div>
+      <a href="./N00.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">00. ແນະນຳ Nuxt 4</a>
+      <a href="./N01.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">01. ຕິດຕັ້ງໂປຣເຈັກ</a>
+      <a href="./N02.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">02. ໜ້າເວັບ ແລະ Components</a>
+      <a href="./N03.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">03. Data Fetching & State</a>
+      <a href="./N04.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">04. nuxt.config, Plugins & Assets</a>
+      <div class="space-y-1">
+        <a href="./N05.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">05. ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</a>
+        <div class="pl-4 pr-1 py-1 space-y-1 bg-slate-50 rounded-xl border border-slate-100 ml-2">
+          <a href="./N05-0.html" class="block px-2.5 py-1 rounded-lg text-slate-600 hover:bg-white text-xs">5.0: ສະແດງຂໍ້ມູນແບບເກົ່າ</a>
+          <a href="./N05-1.html" class="block px-2.5 py-1 rounded-lg text-teal-700 hover:bg-white font-bold text-xs">5.1: ໃຊ້ງານ Teal v-card</a>
+        </div>
+      </div>
+      <a href="./N06.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">06. Form Handling & State</a>
+      <a href="./N07.html" class="block px-3 py-2 rounded-xl bg-teal-50 text-teal-700 font-bold text-xs border border-teal-200">07. MDI Icons Setup & Use (ປັດຈຸບັນ)</a>
+      <a href="./N08.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">08. ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)</a>
     </div>
   </aside>
 
-  <!-- main container with Sidebar Layout -->
+  <!-- Main Container with Sidebar Layout -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       
@@ -153,17 +196,17 @@
       <aside class="hidden lg:block lg:col-span-4 sticky top-24 space-y-6">
         
         <!-- Course Outline Card -->
-        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
+        <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm space-y-3">
           <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
               <span>📚</span> ສາລະບານຫຼັກສູດ Nuxt 4
             </h3>
-            <span class="text-[11px] font-semibold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full">8 ບົດຮຽນ</span>
+            <span class="text-[11px] font-semibold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200/60">9 ບົດຮຽນ</span>
           </div>
 
-          <div class="space-y-2 text-xs">
+          <div class="space-y-1.5 text-xs max-h-[420px] overflow-y-auto pr-1 custom-light-scrollbar">
             <!-- Lesson 0 -->
-            <a href="./N00.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+            <a href="./N00.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition">
               <span class="w-7 h-7 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0 border border-emerald-200/60">00</span>
               <div class="flex-grow">
                 <div class="font-semibold">ບົດທີ 0: ແນະນຳ Nuxt 4</div>
@@ -172,7 +215,7 @@
             </a>
 
             <!-- Lesson 1 -->
-            <a href="./N01.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+            <a href="./N01.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition">
               <span class="w-7 h-7 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-xs font-bold shrink-0 border border-cyan-200/60">01</span>
               <div class="flex-grow">
                 <div class="font-semibold">ບົດທີ 1: ຕິດຕັ້ງໂປຣເຈັກ</div>
@@ -181,7 +224,7 @@
             </a>
 
             <!-- Lesson 2 -->
-            <a href="./N02.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+            <a href="./N02.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition">
               <span class="w-7 h-7 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xs font-bold shrink-0 border border-purple-200/60">02</span>
               <div class="flex-grow">
                 <div class="font-semibold">ບົດທີ 2: ໜ້າເວັບ & Components</div>
@@ -190,7 +233,7 @@
             </a>
 
             <!-- Lesson 3 -->
-            <a href="./N03.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+            <a href="./N03.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition">
               <span class="w-7 h-7 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold shrink-0 border border-blue-200/60">03</span>
               <div class="flex-grow">
                 <div class="font-semibold">ບົດທີ 3: Data Fetching & State</div>
@@ -199,7 +242,7 @@
             </a>
 
             <!-- Lesson 4 -->
-            <a href="./N04.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+            <a href="./N04.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition">
               <span class="w-7 h-7 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xs font-bold shrink-0 border border-amber-200/60">04</span>
               <div class="flex-grow">
                 <div class="font-semibold">ບົດທີ 4: Configuration & Plugins</div>
@@ -208,7 +251,7 @@
             </a>
 
             <!-- Lesson 5 -->
-            <a href="./N05.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+            <a href="./N05.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition">
               <span class="w-7 h-7 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs font-bold shrink-0 border border-indigo-200/60">05</span>
               <div class="flex-grow">
                 <div class="font-semibold">ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</div>
@@ -217,7 +260,7 @@
             </a>
 
             <!-- Lesson 6 -->
-            <a href="./N06.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
+            <a href="./N06.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition">
               <span class="w-7 h-7 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xs font-bold shrink-0 border border-rose-200/60">06</span>
               <div class="flex-grow">
                 <div class="font-semibold">ບົດທີ 6: Form Handling & State</div>
@@ -226,7 +269,7 @@
             </a>
 
             <!-- Lesson 7 (Active) -->
-            <a href="./N07.html" class="flex items-center gap-3 p-3 rounded-2xl bg-teal-50 text-teal-800 font-bold border border-teal-200 shadow-sm transition">
+            <a href="./N07.html" class="flex items-center gap-3 p-2.5 rounded-2xl bg-teal-50 text-teal-800 font-bold border border-teal-200 shadow-sm transition">
               <span class="w-7 h-7 rounded-xl bg-teal-500 text-white flex items-center justify-center text-xs font-black shrink-0">07</span>
               <div class="flex-grow">
                 <div>ບົດທີ 7: MDI Icons Setup & Use</div>
@@ -234,270 +277,1110 @@
               </div>
               <span class="text-teal-600 font-bold">●</span>
             </a>
+
+            <!-- Lesson 8 -->
+            <a href="./N08.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition">
+              <span class="w-7 h-7 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center text-xs font-bold shrink-0 border border-violet-200/60">08</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 8: ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)</div>
+                <div class="text-[10px] text-slate-400">Axios Instance, Interceptors & API</div>
+              </div>
+            </a>
           </div>
         </div>
 
-        <!-- In-Page Jump Links -->
-        <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 space-y-3">
-          <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider text-slate-400">ຫົວຂໍ້ໃນບົດນີ້</h4>
-          <nav class="space-y-1.5 text-xs">
-            <a href="#section-1" class="block py-1 text-slate-600 hover:text-teal-600 transition">1. Material Design Icons (MDI) ແມ່ນຫຍັງ?</a>
-            <a href="#section-2" class="block py-1 text-slate-600 hover:text-teal-600 transition">2. ການຕິດຕັ້ງ Package @mdi/font</a>
-            <a href="#section-3" class="block py-1 text-slate-600 hover:text-teal-600 transition">3. ວິທີຕັ້ງຄ່າໃນ nuxt.config & Vuetify</a>
-            <a href="#section-4" class="block py-1 text-slate-600 hover:text-teal-600 transition">4. ວິທີເອີ້ນໃຊ້ v-icon & CSS Class</a>
-            <a href="#section-5" class="block py-1 text-slate-600 hover:text-teal-600 transition">5. MDI Interactive Search & Live Gallery</a>
+        <!-- In-Page Jump Links with Active Scrollspy -->
+        <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider flex items-center gap-1.5">
+              <i class="mdi mdi-format-list-bulleted text-teal-500"></i>
+              ຫົວຂໍ້ໃນບົດນີ້
+            </h4>
+            <span class="text-[10px] text-slate-400">10 ຫົວຂໍ້</span>
+          </div>
+          <nav id="section-nav" class="space-y-1 text-xs">
+            <a href="#section-1" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-600 hover:bg-teal-50 hover:text-teal-700 transition">1. MDI ແມ່ນຫຍັງ? & ແຜນວາດ</a>
+            <a href="#section-2" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-600 hover:bg-teal-50 hover:text-teal-700 transition">2. ຕິດຕັ້ງ Package @mdi/font</a>
+            <a href="#section-3" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-600 hover:bg-teal-50 hover:text-teal-700 transition">3. ຕັ້ງຄ່າ nuxt.config & Plugin</a>
+            <a href="#section-4" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-600 hover:bg-teal-50 hover:text-teal-700 transition">4. 5 ຮູບແບບການນຳໃຊ້ໄອຄອນ</a>
+            <a href="#section-5" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-600 hover:bg-teal-50 hover:text-teal-700 transition font-bold text-teal-600">5. ⚡ Icon Studio & Props Generator</a>
+            <a href="#section-6" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-600 hover:bg-teal-50 hover:text-teal-700 transition">6. 🎨 Real-World UI Gallery</a>
+            <a href="#section-7" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-600 hover:bg-teal-50 hover:text-teal-700 transition">7. 🔍 ຄົ້ນຫາ 120+ ໄອຄອນ</a>
+            <a href="#section-8" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-600 hover:bg-teal-50 hover:text-teal-700 transition">8. ⚠️ ຂໍ້ຜິດພາດທີ່ພົບເລື້ອຍ</a>
+            <a href="#section-9" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-600 hover:bg-teal-50 hover:text-teal-700 transition">9. 📝 ທົດສອບຄວາມຮູ້ (Quiz)</a>
+            <a href="#section-10" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-600 hover:bg-teal-50 hover:text-teal-700 transition">10. 💻 Full Vue 3 Template</a>
           </nav>
+        </div>
+
+        <!-- Quick Tips Callout -->
+        <div class="bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200/80 rounded-3xl p-5 space-y-2.5 text-xs text-teal-900">
+          <div class="font-bold flex items-center gap-1.5 text-teal-800 text-sm">
+            <i class="mdi mdi-lightbulb-on text-amber-500 text-base"></i>
+            ເຄັດລັບການຈື່ຊື່ໄອຄອນ
+          </div>
+          <p class="leading-relaxed text-slate-600">
+            ໄອຄອນ MDI ທຸກຕົວຈະເລີ່ມຕົ້ນດ້ວຍ prefix <code class="font-mono bg-white px-1.5 py-0.5 rounded border border-teal-200 font-bold text-teal-700">mdi-</code> ເຊັ່ນ: <code class="font-mono text-slate-800">mdi-home</code>, <code class="font-mono text-slate-800">mdi-account</code>, <code class="font-mono text-slate-800">mdi-cog</code>.
+          </p>
         </div>
 
       </aside>
 
       <!-- MAIN CONTENT (Right Column) -->
-      <main class="lg:col-span-8 space-y-10">
+      <main class="lg:col-span-8 space-y-12">
 
         <!-- Lesson Header Banner -->
-        <div class="bg-gradient-to-br from-teal-600 via-emerald-700 to-slate-900 rounded-3xl p-8 sm:p-10 text-white shadow-xl space-y-4">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/20 text-teal-300 text-xs font-bold border border-teal-400/30">
-            <span>LESSON 07</span> • <span>Iconography & MDI</span>
+        <div class="relative overflow-hidden bg-gradient-to-br from-teal-600 via-emerald-700 to-slate-900 rounded-3xl p-8 sm:p-10 text-white shadow-xl space-y-5">
+          <!-- Background Decorative Icons -->
+          <i class="mdi mdi-vector-square absolute -right-6 -bottom-6 text-9xl text-white/5 pointer-events-none"></i>
+          <i class="mdi mdi-palette-swatch absolute right-16 top-6 text-7xl text-white/5 pointer-events-none"></i>
+          
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/30 text-teal-200 text-xs font-bold border border-teal-400/30">
+              <i class="mdi mdi-book-open-page-variant"></i>
+              ບົດທີ 07
+            </span>
+            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-semibold">
+              <i class="mdi mdi-clock-outline"></i>
+              ເວລາຮຽນ: 15 ນາທີ
+            </span>
+            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-400/20 text-emerald-200 text-xs font-semibold">
+              <i class="mdi mdi-check-decagram"></i>
+              ລະດັບ: ພື້ນຖານ - ປານກາງ
+            </span>
           </div>
-          <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight">ບົດທີ 7: ຕິດຕັ້ງ, ຕັ້ງຄ່າ ແລະ ໃຊ້ງານ Material Design Icons (MDI)</h1>
+
+          <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight tracking-tight">
+            ບົດທີ 7: ຕິດຕັ້ງ, ຕັ້ງຄ່າ ແລະ ໃຊ້ງານ Material Design Icons (MDI)
+          </h1>
+          
           <p class="text-teal-100 text-base sm:text-lg leading-relaxed">
-            ຮຽນຮູ້ວິທີຕິດຕັ້ງໄອຄອນ <strong>@mdi/font</strong>, ການເຊື່ອມຕໍ່ກັບ <strong>Vuetify 3</strong> ແລະ <strong>Nuxt 4</strong>, ວິທີເອີ້ນໃຊ້ຜ່ານ <code class="text-white font-mono bg-teal-900/50 px-2 py-0.5 rounded">&lt;v-icon&gt;</code>, class <code class="text-white font-mono bg-teal-900/50 px-2 py-0.5 rounded">mdi mdi-*</code>, ການປັບແຕ່ງສີ, ຂະໜາດ ແລະ Animations.
+            ຮຽນຮູ້ວິທີຕິດຕັ້ງໄອຄອນ <strong class="text-white">@mdi/font</strong>, ການເຊື່ອມຕໍ່ກັບ <strong class="text-white">Vuetify 3</strong> ແລະ <strong class="text-white">Nuxt 4</strong>, ວິທີເອີ້ນໃຊ້ຜ່ານ <code class="text-white font-mono bg-teal-900/60 px-2 py-0.5 rounded">&lt;v-icon&gt;</code>, class <code class="text-white font-mono bg-teal-900/60 px-2 py-0.5 rounded">mdi mdi-*</code>, ການປັບແຕ່ງສີ, ຂະໜາດ, ການໝຸນ ແລະ ອະນິເມຊັນ.
           </p>
+
+          <!-- Key Takeaways Bar -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-3 border-t border-teal-500/30 text-xs text-teal-100">
+            <div class="flex items-center gap-1.5">
+              <i class="mdi mdi-check-circle text-teal-300"></i>
+              <span>7,000+ ໄອຄອນຄົບ</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <i class="mdi mdi-check-circle text-teal-300"></i>
+              <span>Vuetify Native</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <i class="mdi mdi-check-circle text-teal-300"></i>
+              <span>Tailwind & CSS Class</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <i class="mdi mdi-check-circle text-teal-300"></i>
+              <span>Live Studio Generator</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Section 1: Overview -->
-        <section id="section-1" class="space-y-4 scroll-mt-24">
-          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-xl bg-teal-500 text-white text-sm font-bold flex items-center justify-center">1</span>
-            Material Design Icons (MDI) ແມ່ນຫຍັງ?
-          </h2>
-          <p class="text-slate-600 leading-relaxed">
-            <strong>Material Design Icons (MDI)</strong> ແມ່ນຄັງໄອຄອນ Vector ມາດຕະຖານສູງກວ່າ <strong>7,000+ ໄອຄອນ</strong> ທີ່ຖືກອອກແບບໃຫ້ເຂົ້າກັນໄດ້ຢ່າງສົມບູນແບບກັບ Google Material Design ແລະ Vuetify Framework. ມັນຮອງຮັບທັງແບບ Webfont (`@mdi/font`) ແລະ ແບບ SVG JavaScript Module (`@mdi/js`).
+        <!-- ========================================== -->
+        <!-- Section 1: Overview & Architecture Flow -->
+        <!-- ========================================== -->
+        <section id="section-1" class="space-y-6 scroll-mt-24 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <span class="w-9 h-9 rounded-2xl bg-teal-500 text-white text-sm font-bold flex items-center justify-center shadow-md shadow-teal-500/20">1</span>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Material Design Icons (MDI) ແມ່ນຫຍັງ?</h2>
+              <p class="text-xs text-slate-400">ພື້ນຖານຄວາມຮູ້ ແລະ ໂຄງສ້າງການເຮັດວຽກພາຍໃນ Nuxt 4</p>
+            </div>
+          </div>
+
+          <p class="text-slate-600 leading-relaxed text-sm sm:text-base">
+            <strong>Material Design Icons (MDI)</strong> ແມ່ນຄັງໄອຄອນ Vector ມາດຕະຖານສູງກວ່າ <strong>7,000+ ໄອຄອນ</strong> ທີ່ຖືກອອກແບບໃຫ້ເຂົ້າກັນໄດ້ຢ່າງສົມບູນແບບກັບ Google Material Design ແລະ Vuetify Framework. ມັນຮອງຮັບທັງແບບ Webfont (<code class="font-mono text-teal-700 bg-teal-50 px-1.5 py-0.5 rounded">@mdi/font</code>) ແລະ ແບບ SVG JavaScript Module (<code class="font-mono text-teal-700 bg-teal-50 px-1.5 py-0.5 rounded">@mdi/js</code>).
           </p>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-              <div class="w-8 h-8 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center font-bold text-sm">✨</div>
-              <h3 class="font-bold text-slate-900 text-sm">7,000+ Icons ຄົບຖ້ວນ</h3>
-              <p class="text-xs text-slate-600 leading-relaxed">ກວມເອົາທຸກປະເພດ UI ເຊັ່ນ Navigation, Actions, Social, Files, Hardware, ແລະ E-commerce.</p>
+          <!-- Visual Architecture Flow Diagram -->
+          <div class="bg-slate-900 text-white rounded-2xl p-5 sm:p-6 border border-slate-800 space-y-4">
+            <div class="flex items-center justify-between text-xs text-teal-400 font-bold uppercase tracking-wider">
+              <span class="flex items-center gap-1.5">
+                <i class="mdi mdi-sitemap"></i>
+                ແຜນວາດການເຮັດວຽກຂອງ MDI ໃນ Nuxt 4 (Architecture Flow)
+              </span>
+              <span class="text-slate-500">Pipeline</span>
             </div>
 
-            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-              <div class="w-8 h-8 rounded-lg bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold text-sm">⚡</div>
-              <h3 class="font-bold text-slate-900 text-sm">Vector Scalable</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+              <!-- Step 1 -->
+              <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 relative space-y-1.5">
+                <div class="w-6 h-6 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center font-mono font-bold text-[11px]">1</div>
+                <div class="font-bold text-white">1. Package Install</div>
+                <div class="text-slate-400 text-[11px] font-mono">npm i @mdi/font</div>
+                <div class="text-[10px] text-teal-400/80">ບັນຈຸ font files .woff2</div>
+              </div>
+
+              <!-- Step 2 -->
+              <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 relative space-y-1.5">
+                <div class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono font-bold text-[11px]">2</div>
+                <div class="font-bold text-white">2. Global CSS</div>
+                <div class="text-slate-400 text-[11px] font-mono">nuxt.config.ts</div>
+                <div class="text-[10px] text-emerald-400/80">Import stylesheet ເຂົ້າລະບົບ</div>
+              </div>
+
+              <!-- Step 3 -->
+              <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 relative space-y-1.5">
+                <div class="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-mono font-bold text-[11px]">3</div>
+                <div class="font-bold text-white">3. Vuetify Plugin</div>
+                <div class="text-slate-400 text-[11px] font-mono">plugins/vuetify.ts</div>
+                <div class="text-[10px] text-cyan-400/80">ກຳນົດ defaultSet: 'mdi'</div>
+              </div>
+
+              <!-- Step 4 -->
+              <div class="p-3.5 rounded-xl bg-teal-950/60 border border-teal-500/40 relative space-y-1.5 shadow-inner">
+                <div class="w-6 h-6 rounded-lg bg-teal-500 text-slate-950 flex items-center justify-center font-mono font-bold text-[11px]">4</div>
+                <div class="font-bold text-teal-300">4. Component Render</div>
+                <div class="text-slate-300 text-[11px] font-mono">&lt;v-icon&gt; & &lt;i&gt;</div>
+                <div class="text-[10px] text-teal-300">ສະແດງຜົນທັນທີເທິງໜ້າຈໍ</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature Cards Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 hover:border-teal-400 transition">
+              <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center text-xl">
+                <i class="mdi mdi-vector-combine"></i>
+              </div>
+              <h3 class="font-bold text-slate-900 text-sm">7,000+ Icons ຄົບທຸກໝວດ</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">ກວມເອົາທຸກປະເພດ UI ເຊັ່ນ Navigation, Actions, Social, Hardware, ແລະ E-commerce.</p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 hover:border-cyan-400 transition">
+              <div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center text-xl">
+                <i class="mdi mdi-monitor-screenshot"></i>
+              </div>
+              <h3 class="font-bold text-slate-900 text-sm">Vector Scalable คมชัด</h3>
               <p class="text-xs text-slate-600 leading-relaxed">ຄົມຊັດທຸກຂະໜາດຈໍ (Retina Display) ແລະ ສາມາດປ່ຽນສີໄດ້ຄືກັບຕົວໜັງສືຜ່ານ CSS <code class="font-mono text-cyan-700">color</code>.</p>
             </div>
 
-            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm">🔌</div>
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 hover:border-indigo-400 transition">
+              <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-xl">
+                <i class="mdi mdi-vuetify"></i>
+              </div>
               <h3 class="font-bold text-slate-900 text-sm">Vuetify Native Support</h3>
-              <p class="text-xs text-slate-600 leading-relaxed">ເຊື່ອມໂຍງເຂົ້າກັບ Vuetify ໄດ້ໂດຍອັດຕະໂນມັດ ໂດຍພຽງແຕ່ລະບຸຊື່ໄອຄອນ ເຊັ່ນ <code class="font-mono text-indigo-700">mdi-account</code>.</p>
+              <p class="text-xs text-slate-600 leading-relaxed">ເຊື່ອມໂຍງເຂົ້າກັບ Vuetify ໄດ້ໂດຍອັດຕະໂນມັດ ໂດຍພຽງແຕ່ລະບຸຊື່ໄອຄອນ ເຊັ່ນ <code class="font-mono text-indigo-700">icon="mdi-account"</code>.</p>
             </div>
           </div>
         </section>
 
-        <!-- Section 2: Installation -->
-        <section id="section-2" class="space-y-4 scroll-mt-24">
-          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-xl bg-teal-500 text-white text-sm font-bold flex items-center justify-center">2</span>
-            ຂັ້ນຕອນການຕິດຕັ້ງ Package <code class="text-teal-600 font-mono text-xl">@mdi/font</code>
-          </h2>
-          <p class="text-slate-600 leading-relaxed">
-            ທ່ານສາມາດຕິດຕັ້ງ Package ຜ່ານ Terminal ໃນໂຟລເດີໂປຣເຈັກຂອງທ່ານ:
-          </p>
-
-          <!-- CLI Box -->
-          <div class="bg-slate-900 rounded-2xl p-5 shadow-xl border border-slate-800 space-y-3">
-            <div class="flex items-center justify-between text-xs text-slate-400 pb-2 border-b border-slate-800">
-              <span class="font-mono">ຕິດຕັ້ງຜ່ານ NPM / PNPM</span>
-              <button onclick="copyCmd('npm i @mdi/font')" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono transition">
-                Copy
-              </button>
+        <!-- ========================================== -->
+        <!-- Section 2: Installation Step-by-Step -->
+        <!-- ========================================== -->
+        <section id="section-2" class="space-y-6 scroll-mt-24 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <span class="w-9 h-9 rounded-2xl bg-teal-500 text-white text-sm font-bold flex items-center justify-center shadow-md shadow-teal-500/20">2</span>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900">ຂັ້ນຕອນການຕິດຕັ້ງ Package <code class="text-teal-600 font-mono text-lg sm:text-xl">@mdi/font</code></h2>
+              <p class="text-xs text-slate-400">ເລືອກ Package Manager ທີ່ທ່ານນຳໃຊ້ໃນໂປຣເຈັກ</p>
             </div>
-            <pre class="text-teal-400 font-mono text-xs sm:text-sm overflow-x-auto"><code>npm i @mdi/font</code></pre>
           </div>
 
-          <p class="text-xs text-slate-500">
-            * ຫາກທ່ານຕິດຕັ້ງ Vuetify 3 ມາແລ້ວໃນບົດທີ 5, Package ນີ້ຈະຖືກລວມເຂົ້າໃນລະບົບແລ້ວ.
-          </p>
-        </section>
-
-        <!-- Section 3: Configuration -->
-        <section id="section-3" class="space-y-5 scroll-mt-24">
-          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-xl bg-teal-500 text-white text-sm font-bold flex items-center justify-center">3</span>
-            ວິທີຕັ້ງຄ່າໃນ <code class="text-teal-600 font-mono text-xl">nuxt.config.ts</code> ແລະ Vuetify Plugin
-          </h2>
           <p class="text-slate-600 text-sm leading-relaxed">
-            1. ນຳເຂົ້າ CSS Stylesheet ຂອງ MDI ໃນ <code class="font-mono text-teal-700 bg-slate-100 px-1.5 py-0.5 rounded">nuxt.config.ts</code>:
+            ເປີດ Terminal ໃນໂຟລເດີ Root ຂອງໂປຣເຈັກ Nuxt 4 ແລ້ວເລືອກຕິດຕັ້ງຜ່ານ Package Manager ທີ່ທ່ານຕ້ອງການ:
           </p>
 
-          <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl">
-            <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
-              <span>nuxt.config.ts</span>
-              <button onclick="copyCmd(document.getElementById('code-icon-config').innerText)" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
-                Copy Code
+          <!-- Interactive Package Manager Selector -->
+          <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl border border-slate-800 space-y-0">
+            <!-- Tabs Header -->
+            <div class="bg-slate-950 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between">
+              <div class="flex items-center gap-1 text-xs">
+                <button onclick="switchPkgTab('npm')" id="pkg-tab-npm" class="px-3 py-1.5 rounded-lg bg-teal-500 text-white font-bold transition">npm</button>
+                <button onclick="switchPkgTab('pnpm')" id="pkg-tab-pnpm" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">pnpm</button>
+                <button onclick="switchPkgTab('yarn')" id="pkg-tab-yarn" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">yarn</button>
+                <button onclick="switchPkgTab('bun')" id="pkg-tab-bun" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">bun</button>
+              </div>
+              <button onclick="copyPkgCmd()" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition flex items-center gap-1.5">
+                <i class="mdi mdi-content-copy text-teal-400"></i>
+                <span>Copy</span>
               </button>
             </div>
-            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-icon-config">export default defineNuxtConfig({
-  css: [
-    '@mdi/font/css/materialdesignicons.css' // Import MDI CSS ທົ່ວທັງເວັບ
-  ]
-})</code></pre>
+
+            <!-- Terminal Output Box -->
+            <div class="p-5 font-mono text-xs sm:text-sm text-teal-300 overflow-x-auto flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-slate-500">$</span>
+                <span id="pkg-command-text">npm i @mdi/font</span>
+              </div>
+            </div>
           </div>
 
-          <p class="text-slate-600 text-sm pt-2">
-            2. ຕັ້ງຄ່າ default icon set ໃນ <code class="font-mono text-teal-700 bg-slate-100 px-1.5 py-0.5 rounded">app/plugins/vuetify.ts</code>:
-          </p>
-
-          <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl">
-            <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
-              <span>app/plugins/vuetify.ts</span>
-              <button onclick="copyCmd(document.getElementById('code-icon-plugin').innerText)" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
-                Copy Code
-              </button>
+          <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3 text-xs text-amber-900">
+            <i class="mdi mdi-information text-amber-600 text-lg mt-0.5"></i>
+            <div>
+              <strong>ໝາຍເຫດສຳຄັນ:</strong> ຫາກທ່ານໄດ້ຕິດຕັ້ງ Vuetify 3 ຕາມບົດຮຽນທີ 5 (Lesson 05) ແລ້ວ, Package <code class="font-mono font-bold">@mdi/font</code> ອາດຈະຖືກຕິດຕັ້ງເຂົ້າໃນ <code class="font-mono">node_modules</code> ແລ້ວ. ທ່ານພຽງແຕ່ກວດສອບວ່າໄດ້ import CSS ໃນ <code class="font-mono font-bold">nuxt.config.ts</code> ແລ້ວຫຼືຍັງ.
             </div>
-            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-icon-plugin">import { createVuetify } from 'vuetify'
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- Section 3: Configuration nuxt.config & Plugin -->
+        <!-- ========================================== -->
+        <section id="section-3" class="space-y-6 scroll-mt-24 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <span class="w-9 h-9 rounded-2xl bg-teal-500 text-white text-sm font-bold flex items-center justify-center shadow-md shadow-teal-500/20">3</span>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900">ວິທີຕັ້ງຄ່າໃນ <code class="text-teal-600 font-mono text-lg sm:text-xl">nuxt.config.ts</code> ແລະ Vuetify Plugin</h2>
+              <p class="text-xs text-slate-400">ຕັ້ງຄ່າ 2 ໄຟລ໌ຫຼັກເພື່ອໃຫ້ໄອຄອນໃຊ້ງານໄດ້ທຸກໜ້າ</p>
+            </div>
+          </div>
+
+          <!-- Tabbed Configuration Files -->
+          <div class="space-y-4">
+            <!-- Step 1: nuxt.config.ts -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-700 flex items-center gap-2">
+                  <span class="w-5 h-5 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center text-[10px] font-bold">1</span>
+                  ໄຟລ໌ <code class="font-mono bg-slate-100 px-1.5 py-0.5 rounded text-teal-700">nuxt.config.ts</code> (Import MDI CSS Stylesheet):
+                </span>
+                <span class="text-[11px] text-slate-400">Global CSS</span>
+              </div>
+
+              <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl border border-slate-800">
+                <div class="bg-slate-950 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+                  <span class="text-teal-400 flex items-center gap-1.5">
+                    <i class="mdi mdi-file-code-outline"></i>
+                    nuxt.config.ts
+                  </span>
+                  <button onclick="copyCmd(document.getElementById('code-icon-config').innerText)" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1">
+                    <i class="mdi mdi-content-copy"></i>
+                    <span>Copy Code</span>
+                  </button>
+                </div>
+                <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-icon-config">export default defineNuxtConfig({
+  // 1. ນຳເຂົ້າ MDI CSS ເພື່ອໃຫ້ Browser ໂຫຼດ Font ໄອຄອນ
+  css: [
+    '@mdi/font/css/materialdesignicons.css'
+  ],
+
+  // 2. ປິດການໃຊ້ງານ SSR ສຳລັບ Vuetify (ຖ້າຕ້ອງການ)
+  build: {
+    transpile: ['vuetify']
+  }
+})</code></pre>
+              </div>
+            </div>
+
+            <!-- Step 2: vuetify plugin -->
+            <div class="space-y-2 pt-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-700 flex items-center gap-2">
+                  <span class="w-5 h-5 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center text-[10px] font-bold">2</span>
+                  ໄຟລ໌ <code class="font-mono bg-slate-100 px-1.5 py-0.5 rounded text-teal-700">app/plugins/vuetify.ts</code> (ຕັ້ງຄ່າ Icon Sets):
+                </span>
+                <span class="text-[11px] text-slate-400">Vuetify Integration</span>
+              </div>
+
+              <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl border border-slate-800">
+                <div class="bg-slate-950 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+                  <span class="text-cyan-400 flex items-center gap-1.5">
+                    <i class="mdi mdi-puzzle-outline"></i>
+                    app/plugins/vuetify.ts
+                  </span>
+                  <button onclick="copyCmd(document.getElementById('code-icon-plugin').innerText)" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1">
+                    <i class="mdi mdi-content-copy"></i>
+                    <span>Copy Code</span>
+                  </button>
+                </div>
+                <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-icon-plugin">import { createVuetify } from 'vuetify'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
+    ssr: true,
     icons: {
-      defaultSet: 'mdi',
+      defaultSet: 'mdi', // ກຳນົດໃຫ້ MDI ເປັນ Icon Set ຫຼັກ
       aliases,
       sets: {
         mdi
       }
     }
   })
+
   nuxtApp.vueApp.use(vuetify)
 })</code></pre>
-          </div>
-        </section>
-
-        <!-- Section 4: How to Use Icons -->
-        <section id="section-4" class="space-y-4 scroll-mt-24">
-          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-xl bg-teal-500 text-white text-sm font-bold flex items-center justify-center">4</span>
-            ວິທີເອີ້ນໃຊ້ MDI Icons ໃນ Nuxt & Vue Components
-          </h2>
-          <p class="text-slate-600 text-sm leading-relaxed">
-            ທ່ານສາມາດນຳໃຊ້ MDI Icons ໄດ້ 3 ຮູບແບບຫຼັກ:
-          </p>
-
-          <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl">
-            <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
-              <span>app/pages/icon-examples.vue</span>
-              <button onclick="copyCmd(document.getElementById('code-icon-use').innerText)" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
-                Copy Code
-              </button>
+              </div>
             </div>
-            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-icon-use">&lt;template&gt;
-  &lt;div class="p-6 space-y-6"&gt;
-    &lt;!-- ແບບທີ 1: ໃຊ້ຜ່ານ Vuetify &lt;v-icon&gt; --&gt;
-    &lt;v-icon icon="mdi-home" size="large" color="primary" /&gt;
-    &lt;v-icon icon="mdi-heart" color="red" /&gt;
-    &lt;v-icon icon="mdi-bell-ring" size="x-large" color="amber" /&gt;
-
-    &lt;!-- ແບບທີ 2: ໃຊ້ໃນ Vuetify Buttons & Text Fields --&gt;
-    &lt;v-btn color="primary" prepend-icon="mdi-account-plus"&gt;
-      ເພີ່ມສະມາຊິກ
-    &lt;/v-btn&gt;
-
-    &lt;v-text-field
-      label="ຄົ້ນຫາຂໍ້ມູນ..."
-      prepend-inner-icon="mdi-magnify"
-      append-inner-icon="mdi-microphone"
-      variant="outlined"
-    /&gt;
-
-    &lt;!-- ແບບທີ 3: ໃຊ້ຜ່ານ Standard HTML / Tailwind CSS Class --&gt;
-    &lt;i class="mdi mdi-github text-3xl text-slate-800 hover:text-emerald-500 transition"&gt;&lt;/i&gt;
-    &lt;i class="mdi mdi-loading mdi-spin text-2xl text-teal-600"&gt;&lt;/i&gt; &lt;!-- ໄອຄອນໝຸນ Spin --&gt;
-  &lt;/div&gt;
-&lt;/template&gt;</code></pre>
           </div>
         </section>
 
-        <!-- Section 5: Interactive MDI Icon Gallery & Search -->
-        <section id="section-5" class="space-y-6 scroll-mt-24">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
-              <span class="w-8 h-8 rounded-xl bg-teal-500 text-white text-sm font-bold flex items-center justify-center">5</span>
-              MDI Live Icon Gallery & Search Tool (ຄົ້ນຫາ ແລະ ກັອບປີ້)
-            </h2>
-            <span class="text-xs font-semibold text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-200">
-              ຄລິກທີ່ໄອຄອນເພື່ອ Copy ໂຄດ
+        <!-- ========================================== -->
+        <!-- Section 4: 5 Practical Usage Patterns -->
+        <!-- ========================================== -->
+        <section id="section-4" class="space-y-6 scroll-mt-24 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <span class="w-9 h-9 rounded-2xl bg-teal-500 text-white text-sm font-bold flex items-center justify-center shadow-md shadow-teal-500/20">4</span>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900">5 ຮູບແບບການເອີ້ນໃຊ້ MDI Icons ໃນ Nuxt & Vue</h2>
+              <p class="text-xs text-slate-400">ຕົວຢ່າງການນຳໃຊ້ຕົວຈິງໃນ Components ຕ່າງໆ</p>
+            </div>
+          </div>
+
+          <!-- 5 Pattern Cards -->
+          <div class="space-y-4">
+            
+            <!-- Pattern 1: Vuetify v-icon -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center text-xs font-bold">1</span>
+                  ໃຊ້ຜ່ານ Vuetify Component: <code class="text-teal-700 font-mono">&lt;v-icon&gt;</code>
+                </h3>
+                <span class="text-[10px] text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200">ມາດຕະຖານ Vuetify</span>
+              </div>
+              <p class="text-xs text-slate-600">ຮອງຮັບ Props ເຊັ່ນ <code class="font-mono">icon</code>, <code class="font-mono">size</code> (x-small, small, default, large, x-large), ແລະ <code class="font-mono">color</code>:</p>
+              
+              <div class="bg-slate-900 rounded-xl p-4 font-mono text-xs text-teal-300 overflow-x-auto space-y-1">
+                <div>&lt;v-icon icon="mdi-home" size="large" color="primary" /&gt;</div>
+                <div>&lt;v-icon icon="mdi-heart" color="red" /&gt;</div>
+                <div>&lt;v-icon icon="mdi-bell-ring" size="x-large" color="amber" /&gt;</div>
+              </div>
+            </div>
+
+            <!-- Pattern 2: Vuetify Buttons & Inputs -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-lg bg-cyan-100 text-cyan-700 flex items-center justify-center text-xs font-bold">2</span>
+                  ໃຊ້ໃນ Vuetify Buttons & Form Inputs
+                </h3>
+                <span class="text-[10px] text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-full border border-cyan-200">Prepend / Append</span>
+              </div>
+              <p class="text-xs text-slate-600">ໃຊ້ Prop <code class="font-mono">prepend-icon</code>, <code class="font-mono">append-icon</code>, <code class="font-mono">prepend-inner-icon</code>, <code class="font-mono">append-inner-icon</code>:</p>
+              
+              <div class="bg-slate-900 rounded-xl p-4 font-mono text-xs text-cyan-300 overflow-x-auto space-y-1">
+                <div>&lt;v-btn color="teal" prepend-icon="mdi-account-plus"&gt;ເພີ່ມສະມາຊິກ&lt;/v-btn&gt;</div>
+                <div>&lt;v-btn color="rose" append-icon="mdi-delete"&gt;ລຶບຂໍ້ມູນ&lt;/v-btn&gt;</div>
+                <div>&lt;v-text-field label="ຄົ້ນຫາ..." prepend-inner-icon="mdi-magnify" variant="outlined" /&gt;</div>
+              </div>
+            </div>
+
+            <!-- Pattern 3: Standard HTML & Tailwind CSS -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-bold">3</span>
+                  ໃຊ້ຜ່ານ Standard HTML Tag & Tailwind CSS Class
+                </h3>
+                <span class="text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200">ໄວກວ່າ & ຍືດຫຍຸ່ນ</span>
+              </div>
+              <p class="text-xs text-slate-600">ໃຊ້ Tag <code class="font-mono">&lt;i class="mdi mdi-..."&gt;&lt;/i&gt;</code> ຮ່ວມກັບ Tailwind utility classes ເຊັ່ນ <code class="font-mono">text-3xl</code>, <code class="font-mono">text-teal-500</code>, <code class="font-mono">hover:scale-110</code>:</p>
+              
+              <div class="bg-slate-900 rounded-xl p-4 font-mono text-xs text-indigo-300 overflow-x-auto space-y-1">
+                <div>&lt;i class="mdi mdi-github text-3xl text-slate-800 hover:text-teal-500 transition"&gt;&lt;/i&gt;</div>
+                <div>&lt;i class="mdi mdi-vuejs text-2xl text-emerald-500"&gt;&lt;/i&gt;</div>
+                <div>&lt;i class="mdi mdi-heart text-red-500 animate-pulse"&gt;&lt;/i&gt;</div>
+              </div>
+            </div>
+
+            <!-- Pattern 4: Dynamic Icons Binding -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold">4</span>
+                  Dynamic Icons ດ້ວຍ Vue Reactivity (`v-bind:icon`)
+                </h3>
+                <span class="text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">Reactivity</span>
+              </div>
+              <p class="text-xs text-slate-600">ປ່ຽນໄອຄອນຕາມເງື່ອນໄຂ State ເຊັ່ນ ປຸ່ມ Like/Favorite, ປຸ່ມສະແດງ/ເຊື່ອງລະຫັດຜ່ານ:</p>
+              
+              <div class="bg-slate-900 rounded-xl p-4 font-mono text-xs text-amber-300 overflow-x-auto space-y-1">
+                <div>&lt;!-- ປ່ຽນໄອຄອນຫົວໃຈເມື່ອຄລິກ Like --&gt;</div>
+                <div>&lt;v-icon :icon="isLiked ? 'mdi-heart' : 'mdi-heart-outline'" :color="isLiked ? 'red' : 'grey'" /&gt;</div>
+                <div>&lt;!-- ປ່ຽນໄອຄອນຕາຕອນສະແດງ/ເຊື່ອງລະຫັດຜ່ານ --&gt;</div>
+                <div>&lt;v-icon :icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" @click="showPassword = !showPassword" /&gt;</div>
+              </div>
+            </div>
+
+            <!-- Pattern 5: Animations & Transforms -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center text-xs font-bold">5</span>
+                  ການໃສ່ Animations (Spin ໝຸນ) & Transforms (Rotate / Flip)
+                </h3>
+                <span class="text-[10px] text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">Special Effects</span>
+              </div>
+              <p class="text-xs text-slate-600">MDI ມີ Built-in CSS Classes ສຳລັບການໝຸນ ແລະ ພິກໄອຄອນ:</p>
+              
+              <div class="bg-slate-900 rounded-xl p-4 font-mono text-xs text-rose-300 overflow-x-auto space-y-1">
+                <div>&lt;i class="mdi mdi-loading mdi-spin text-2xl text-teal-500"&gt;&lt;/i&gt; &lt;!-- ໄອຄອນໝຸນຕອນໂຫຼດ --&gt;</div>
+                <div>&lt;i class="mdi mdi-sync mdi-spin text-xl text-blue-500"&gt;&lt;/i&gt; &lt;!-- ໄອຄອນ Sync ໝຸນ --&gt;</div>
+                <div>&lt;i class="mdi mdi-arrow-right mdi-rotate-90"&gt;&lt;/i&gt; &lt;!-- ໝຸນ 90 ອົງສາ --&gt;</div>
+                <div>&lt;i class="mdi mdi-phone mdi-flip-h"&gt;&lt;/i&gt; &lt;!-- ພິກແນວນອນ Flip Horizontal --&gt;</div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- Section 5: Interactive Icon Studio & Generator -->
+        <!-- ========================================== -->
+        <section id="section-5" class="space-y-6 scroll-mt-24 bg-gradient-to-b from-slate-900 to-slate-950 text-white p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 rounded-2xl bg-teal-500 text-slate-900 text-sm font-black flex items-center justify-center shadow-lg shadow-teal-500/30">⚡</span>
+              <div>
+                <h2 class="text-xl sm:text-2xl font-bold text-white">MDI Interactive Studio & Props Generator</h2>
+                <p class="text-xs text-slate-400">ທົດລອງປັບແຕ່ງໄອຄອນແບບ Real-time ພ້ອມສ້າງໂຄດອັດຕະໂນມັດ</p>
+              </div>
+            </div>
+            <span class="text-xs font-semibold text-teal-400 bg-teal-950 px-3 py-1 rounded-full border border-teal-500/30 self-start sm:self-auto">
+              Live Playground
             </span>
           </div>
-          
-          <p class="text-slate-600 text-sm leading-relaxed">
-            ພິມຄຳຄົ້ນຫາ (ເຊັ່ນ: <code class="font-mono text-teal-700 bg-teal-50 px-1 py-0.5 rounded">home</code>, <code class="font-mono text-teal-700 bg-teal-50 px-1 py-0.5 rounded">account</code>, <code class="font-mono text-teal-700 bg-teal-50 px-1 py-0.5 rounded">settings</code>, <code class="font-mono text-teal-700 bg-teal-50 px-1 py-0.5 rounded">bell</code>, <code class="font-mono text-teal-700 bg-teal-50 px-1 py-0.5 rounded">vuejs</code>) ແລະ ປັບແຕ່ງຂະໜາດໄອຄອນໄດ້ທັນທີ:
-          </p>
 
-          <!-- Interactive Search & Filter Card -->
-          <div class="bg-slate-900 text-white rounded-3xl p-6 sm:p-7 shadow-xl border border-slate-800 space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- CONTROLS PANEL (Left Column) -->
+            <div class="lg:col-span-7 space-y-5">
+              
+              <!-- 1. Icon Selection Input -->
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-slate-300 flex items-center justify-between">
+                  <span>1. ຊື່ໄອຄອນ (Icon Name):</span>
+                  <span class="text-[11px] text-teal-400 font-mono" id="studio-icon-current">mdi-heart</span>
+                </label>
+                <div class="relative">
+                  <i class="mdi mdi-magnify absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                  <input
+                    type="text"
+                    id="studio-icon-input"
+                    value="mdi-heart"
+                    oninput="updateStudioIcon(this.value)"
+                    placeholder="ພິມຊື່ໄອຄອນ ເຊັ່ນ: mdi-home, mdi-star, mdi-vuejs"
+                    class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-teal-500 text-xs sm:text-sm font-mono transition"
+                  />
+                </div>
+              </div>
+
+              <!-- 2. Size Control -->
+              <div class="space-y-2">
+                <div class="flex items-center justify-between text-xs text-slate-300">
+                  <label class="font-bold">2. ຂະໜາດ (Size):</label>
+                  <span id="studio-size-badge" class="font-mono text-teal-400 font-bold">48px</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <input
+                    type="range"
+                    id="studio-size-slider"
+                    min="16"
+                    max="72"
+                    value="48"
+                    oninput="setStudioSize(this.value)"
+                    class="w-full accent-teal-500 cursor-pointer"
+                  />
+                </div>
+                <!-- Size Quick Presets -->
+                <div class="flex flex-wrap items-center gap-1.5 text-[11px]">
+                  <button onclick="setStudioSize(18)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono transition">x-small (18px)</button>
+                  <button onclick="setStudioSize(24)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono transition">small (24px)</button>
+                  <button onclick="setStudioSize(36)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono transition">default (36px)</button>
+                  <button onclick="setStudioSize(48)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono transition">large (48px)</button>
+                  <button onclick="setStudioSize(64)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono transition">x-large (64px)</button>
+                </div>
+              </div>
+
+              <!-- 3. Color Selection -->
+              <div class="space-y-2">
+                <label class="text-xs font-bold text-slate-300 block">3. ສີໄອຄອນ (Color Theme):</label>
+                <div class="flex flex-wrap items-center gap-2">
+                  <button onclick="setStudioColor('text-teal-400', 'teal')" class="w-7 h-7 rounded-full bg-teal-400 ring-2 ring-white ring-offset-2 ring-offset-slate-900 transition color-dot" title="Teal"></button>
+                  <button onclick="setStudioColor('text-rose-500', 'rose')" class="w-7 h-7 rounded-full bg-rose-500 transition color-dot" title="Rose / Red"></button>
+                  <button onclick="setStudioColor('text-amber-400', 'amber')" class="w-7 h-7 rounded-full bg-amber-400 transition color-dot" title="Amber / Warning"></button>
+                  <button onclick="setStudioColor('text-emerald-400', 'emerald')" class="w-7 h-7 rounded-full bg-emerald-400 transition color-dot" title="Emerald / Success"></button>
+                  <button onclick="setStudioColor('text-cyan-400', 'cyan')" class="w-7 h-7 rounded-full bg-cyan-400 transition color-dot" title="Cyan / Info"></button>
+                  <button onclick="setStudioColor('text-indigo-400', 'indigo')" class="w-7 h-7 rounded-full bg-indigo-400 transition color-dot" title="Indigo / Primary"></button>
+                  <button onclick="setStudioColor('text-purple-400', 'purple')" class="w-7 h-7 rounded-full bg-purple-400 transition color-dot" title="Purple"></button>
+                  <button onclick="setStudioColor('text-white', 'white')" class="w-7 h-7 rounded-full bg-white transition color-dot" title="White"></button>
+                  <button onclick="setStudioColor('text-slate-400', 'grey')" class="w-7 h-7 rounded-full bg-slate-400 transition color-dot" title="Grey / Slate"></button>
+                </div>
+              </div>
+
+              <!-- 4. Animation & Transform -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div class="space-y-1.5">
+                  <label class="text-xs font-bold text-slate-300 block">4. Animation (ການເຄື່ອນໄຫວ):</label>
+                  <select id="studio-anim-select" onchange="setStudioAnim(this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-teal-500 font-mono">
+                    <option value="">None (ປົກກະຕິ)</option>
+                    <option value="mdi-spin">mdi-spin (ໝຸນ Spin)</option>
+                    <option value="animate-pulse">animate-pulse (ກະພິບ)</option>
+                    <option value="animate-bounce">animate-bounce (ໂດດ Bounce)</option>
+                  </select>
+                </div>
+
+                <div class="space-y-1.5">
+                  <label class="text-xs font-bold text-slate-300 block">5. Transform (ການໝຸນ / ພິກ):</label>
+                  <select id="studio-transform-select" onchange="setStudioTransform(this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-teal-500 font-mono">
+                    <option value="">None (ປົກກະຕິ)</option>
+                    <option value="mdi-rotate-45">mdi-rotate-45 (ໝຸນ 45°)</option>
+                    <option value="mdi-rotate-90">mdi-rotate-90 (ໝຸນ 90°)</option>
+                    <option value="mdi-rotate-180">mdi-rotate-180 (ໝຸນ 180°)</option>
+                    <option value="mdi-rotate-270">mdi-rotate-270 (ໝຸນ 270°)</option>
+                    <option value="mdi-flip-h">mdi-flip-h (ພິກແນວນອນ)</option>
+                    <option value="mdi-flip-v">mdi-flip-v (ພິກແນວຕັ້ງ)</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- LIVE PREVIEW & CODE GENERATOR (Right Column) -->
+            <div class="lg:col-span-5 space-y-4">
+              
+              <!-- Live Visual Stage -->
+              <div class="h-48 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col items-center justify-center relative p-6 overflow-hidden shadow-inner group">
+                <!-- Background Grid Texture -->
+                <div class="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] opacity-40"></div>
+                
+                <!-- Main Preview Icon -->
+                <div class="relative z-10 flex flex-col items-center justify-center gap-2">
+                  <i id="studio-preview-icon" class="mdi mdi-heart text-teal-400 transition-all duration-200" style="font-size: 48px;"></i>
+                  <span id="studio-preview-caption" class="text-[11px] text-slate-400 font-mono">mdi-heart</span>
+                </div>
+              </div>
+
+              <!-- Multi-format Generated Code Box -->
+              <div class="bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
+                <!-- Format Switcher Tabs -->
+                <div class="bg-slate-900/90 px-3 py-2 border-b border-slate-800 flex items-center justify-between text-xs">
+                  <div class="flex items-center gap-1">
+                    <button onclick="switchStudioFormat('vuetify-icon')" id="fmt-vuetify-icon" class="px-2.5 py-1 rounded-lg bg-teal-500 text-white font-bold text-[11px] transition">&lt;v-icon&gt;</button>
+                    <button onclick="switchStudioFormat('vuetify-btn')" id="fmt-vuetify-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white text-[11px] transition">&lt;v-btn&gt;</button>
+                    <button onclick="switchStudioFormat('html-i')" id="fmt-html-i" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white text-[11px] transition">&lt;i&gt; Class</button>
+                    <button onclick="switchStudioFormat('nuxt-icon')" id="fmt-nuxt-icon" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white text-[11px] transition">&lt;Icon&gt;</button>
+                  </div>
+                  <button onclick="copyStudioGeneratedCode()" class="px-2.5 py-1 rounded-lg bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 text-[11px] font-bold transition flex items-center gap-1">
+                    <i class="mdi mdi-content-copy"></i>
+                    <span>Copy</span>
+                  </button>
+                </div>
+
+                <!-- Code Content -->
+                <pre class="p-4 font-mono text-xs text-teal-300 overflow-x-auto whitespace-pre-wrap"><code id="studio-generated-code">&lt;v-icon icon="mdi-heart" color="teal" size="large" /&gt;</code></pre>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- Section 6: Real-World UI Showcase -->
+        <!-- ========================================== -->
+        <section id="section-6" class="space-y-6 scroll-mt-24 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <span class="w-9 h-9 rounded-2xl bg-teal-500 text-white text-sm font-bold flex items-center justify-center shadow-md shadow-teal-500/20">6</span>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Real-World UI Gallery (ຕົວຢ່າງ UI ຕົວຈິງໃນຊີວິດປະຈຳວັນ)</h2>
+              <p class="text-xs text-slate-400">ເບິ່ງຕົວຢ່າງການນຳໃຊ້ໄອຄອນ MDI ໃນ Components ຍອດນິຍົມ</p>
+            </div>
+          </div>
+
+          <!-- UI Cards Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            
+            <!-- Demo 1: User Profile Card -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4 shadow-sm hover:border-teal-400 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Profile & Status Card</span>
+                <span class="flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                  <i class="mdi mdi-circle text-[8px] text-emerald-500"></i>
+                  Online
+                </span>
+              </div>
+
+              <div class="flex items-center gap-3.5">
+                <div class="relative">
+                  <div class="w-12 h-12 rounded-2xl bg-teal-500 text-white font-bold flex items-center justify-center text-lg shadow-md shadow-teal-500/20">
+                    <i class="mdi mdi-account"></i>
+                  </div>
+                  <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] border-2 border-white">
+                    <i class="mdi mdi-check"></i>
+                  </span>
+                </div>
+                <div>
+                  <h4 class="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                    Somxay Dev
+                    <i class="mdi mdi-check-decagram text-teal-500 text-sm" title="Verified"></i>
+                  </h4>
+                  <p class="text-xs text-slate-500">Full-Stack Nuxt 4 Developer</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 pt-1">
+                <a href="#" class="p-2 rounded-xl bg-white border border-slate-200 hover:bg-teal-50 hover:text-teal-600 text-slate-600 transition text-sm">
+                  <i class="mdi mdi-github"></i>
+                </a>
+                <a href="#" class="p-2 rounded-xl bg-white border border-slate-200 hover:bg-blue-50 hover:text-blue-600 text-slate-600 transition text-sm">
+                  <i class="mdi mdi-linkedin"></i>
+                </a>
+                <a href="#" class="p-2 rounded-xl bg-white border border-slate-200 hover:bg-rose-50 hover:text-rose-600 text-slate-600 transition text-sm">
+                  <i class="mdi mdi-email-outline"></i>
+                </a>
+                <button onclick="toggleFollow(this)" class="flex-grow py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold text-xs shadow-sm transition flex items-center justify-center gap-1.5">
+                  <i class="mdi mdi-account-plus"></i>
+                  <span>ຕິດຕາມ (Follow)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Demo 2: Modern Search Toolbar -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4 shadow-sm hover:border-teal-400 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Interactive Search Bar</span>
+                <span class="text-[11px] text-slate-400">Form UI</span>
+              </div>
+
+              <!-- Input with Icons -->
+              <div class="relative">
+                <i class="mdi mdi-magnify absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                <input
+                  type="text"
+                  placeholder="ຄົ້ນຫາບົດຮຽນ, ໂຄງການ..."
+                  class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm focus:outline-none focus:border-teal-500 transition"
+                />
+                <button class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-teal-600" title="Voice Search">
+                  <i class="mdi mdi-microphone"></i>
+                </button>
+              </div>
+
+              <!-- Action Filters -->
+              <div class="flex items-center justify-between text-xs pt-1">
+                <div class="flex items-center gap-1.5">
+                  <button class="px-2.5 py-1 rounded-lg bg-teal-50 text-teal-700 font-bold border border-teal-200 flex items-center gap-1">
+                    <i class="mdi mdi-filter-variant"></i>
+                    <span>ທັງໝົດ</span>
+                  </button>
+                  <button class="px-2.5 py-1 rounded-lg bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 flex items-center gap-1">
+                    <i class="mdi mdi-star-outline text-amber-500"></i>
+                    <span>ຍອດນິຍົມ</span>
+                  </button>
+                </div>
+                <div class="flex items-center gap-1 text-slate-400">
+                  <button class="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-700"><i class="mdi mdi-view-grid"></i></button>
+                  <button class="p-1.5 rounded-lg bg-white border border-slate-200 hover:text-slate-700"><i class="mdi mdi-format-list-bulleted"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Demo 3: Analytics Stat Card -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4 shadow-sm hover:border-teal-400 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Dashboard Metrics</span>
+                <span class="text-[11px] font-bold text-emerald-600 flex items-center gap-1">
+                  <i class="mdi mdi-trending-up"></i>
+                  +24.5%
+                </span>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-2xl font-black text-slate-900">₭ 48,500,000</div>
+                  <div class="text-xs text-slate-500">ລາຍຮັບລວມປະຈຳເດືອນ</div>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl shadow-sm">
+                  <i class="mdi mdi-cash-multiple"></i>
+                </div>
+              </div>
+
+              <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 78%"></div>
+              </div>
+            </div>
+
+            <!-- Demo 4: Notification / Alert Banner -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 shadow-sm hover:border-teal-400 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">System Alerts</span>
+                <span class="text-[11px] text-teal-600 font-semibold">Live Banners</span>
+              </div>
+
+              <div class="p-3 rounded-xl bg-teal-50 border border-teal-200 flex items-center gap-3 text-xs text-teal-900">
+                <i class="mdi mdi-check-circle text-teal-600 text-lg shrink-0"></i>
+                <div class="flex-grow">
+                  <strong>ສຳເລັດແລ້ວ!</strong> ລະບົບໄດ້ເຊື່ອມຕໍ່ API ເປັນທີ່ຮຽບຮ້ອຍ
+                </div>
+                <button class="text-teal-400 hover:text-teal-700"><i class="mdi mdi-close"></i></button>
+              </div>
+
+              <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 flex items-center gap-3 text-xs text-amber-900">
+                <i class="mdi mdi-alert text-amber-600 text-lg shrink-0"></i>
+                <div class="flex-grow">
+                  <strong>ແຈ້ງເຕືອນ:</strong> ກະລຸນາກວດສອບ nuxt.config.ts ກ່ອນ deploy
+                </div>
+                <button class="text-amber-400 hover:text-amber-700"><i class="mdi mdi-close"></i></button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- Section 7: Searchable 120+ MDI Directory -->
+        <!-- ========================================== -->
+        <section id="section-7" class="space-y-6 scroll-mt-24 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 rounded-2xl bg-teal-500 text-white text-sm font-bold flex items-center justify-center shadow-md shadow-teal-500/20">7</span>
+              <div>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">ຄັງໄອຄອນຍອດນິຍົມ 120+ Icons (Search & Pick)</h2>
+                <p class="text-xs text-slate-400">ຄລິກທີ່ໄອຄອນເພື່ອເລືອກໄປປັບແຕ່ງໃນ Studio ຫຼື Copy ໂຄດທັນທີ</p>
+              </div>
+            </div>
+            <span class="text-xs font-semibold text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-200 self-start sm:self-auto">
+              120+ Curated Icons
+            </span>
+          </div>
+
+          <!-- Interactive Search & Filter Tool -->
+          <div class="bg-slate-900 text-white rounded-3xl p-5 sm:p-7 shadow-xl border border-slate-800 space-y-5">
             
             <!-- Search & Controls Bar -->
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
               
               <!-- Search Input -->
-              <div class="md:col-span-6 relative">
-                <i class="mdi mdi-magnify absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xl"></i>
+              <div class="md:col-span-5 relative">
+                <i class="mdi mdi-magnify absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
                 <input
                   type="text"
                   id="icon-search-input"
                   oninput="filterIcons()"
-                  placeholder="ຄົ້ນຫາຊື່ໄອຄອນ MDI... (ເຊັ່ນ: home, user, edit)"
-                  class="w-full pl-11 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-teal-500 text-xs sm:text-sm transition"
+                  placeholder="ຄົ້ນຫາໄອຄອນ... (ເຊັ່ນ: home, user, edit, vue)"
+                  class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-teal-500 text-xs sm:text-sm transition"
                 />
               </div>
 
               <!-- Category Filter Tags -->
-              <div class="md:col-span-6 flex flex-wrap items-center gap-1.5 text-xs">
-                <button onclick="setCategory('all')" class="cat-btn px-3 py-1 rounded-lg bg-teal-500 text-white font-bold transition">ທັງໝົດ</button>
-                <button onclick="setCategory('ui')" class="cat-btn px-3 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">General UI</button>
-                <button onclick="setCategory('actions')" class="cat-btn px-3 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">Actions</button>
-                <button onclick="setCategory('dev')" class="cat-btn px-3 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">Tech & Dev</button>
+              <div class="md:col-span-7 flex flex-wrap items-center gap-1 text-xs">
+                <button onclick="setCategory('all')" class="cat-btn px-2.5 py-1 rounded-lg bg-teal-500 text-white font-bold transition">ທັງໝົດ</button>
+                <button onclick="setCategory('nav')" class="cat-btn px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">Nav & UI</button>
+                <button onclick="setCategory('actions')" class="cat-btn px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">Actions</button>
+                <button onclick="setCategory('dev')" class="cat-btn px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">Tech & Dev</button>
+                <button onclick="setCategory('social')" class="cat-btn px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">Social</button>
+                <button onclick="setCategory('files')" class="cat-btn px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">Media & Files</button>
+                <button onclick="setCategory('shop')" class="cat-btn px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">E-Commerce</button>
               </div>
             </div>
 
             <!-- Size Slider -->
-            <div class="flex items-center gap-4 text-xs text-slate-400 pt-1 border-t border-slate-800/80">
-              <span>ປັບຂະໜາດໄອຄອນ:</span>
-              <input type="range" id="size-slider" min="20" max="48" value="28" oninput="changeIconSize(this.value)" class="w-32 accent-teal-500 cursor-pointer">
-              <span id="size-label" class="font-mono text-teal-400">28px</span>
+            <div class="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800">
+              <div class="flex items-center gap-3">
+                <span>ຂະໜາດໄອຄອນ:</span>
+                <input type="range" id="size-slider" min="20" max="44" value="28" oninput="changeIconSize(this.value)" class="w-28 accent-teal-500 cursor-pointer">
+                <span id="size-label" class="font-mono text-teal-400">28px</span>
+              </div>
+              <span id="icons-count-label" class="text-slate-400 font-mono text-[11px]">ສະແດງ: 120 ໄອຄອນ</span>
             </div>
 
             <!-- Icons Grid -->
-            <div id="icons-container" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 pt-2 max-h-96 overflow-y-auto pr-1">
-              <!-- Icons will be dynamically populated here -->
+            <div id="icons-container" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2.5 pt-1 max-h-[380px] overflow-y-auto pr-1">
+              <!-- Dynamically populated -->
             </div>
 
-            <!-- Selected Icon Code Box -->
+            <!-- Selected Quick Action Bar -->
             <div id="selected-box" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
               <div class="flex items-center gap-3">
-                <i id="preview-active-icon" class="mdi mdi-home text-3xl text-teal-400"></i>
+                <div class="w-10 h-10 rounded-xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center">
+                  <i id="preview-active-icon" class="mdi mdi-home text-2xl text-teal-400"></i>
+                </div>
                 <div>
                   <div class="font-bold text-white text-sm" id="preview-active-name">mdi-home</div>
                   <div class="text-slate-400 font-mono text-[11px]" id="preview-active-code">&lt;v-icon icon="mdi-home" /&gt;</div>
                 </div>
               </div>
-              <button onclick="copyActiveIconCode()" class="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold transition shrink-0">
-                Copy Code
-              </button>
+              <div class="flex items-center gap-2 w-full sm:w-auto">
+                <button onclick="sendToStudio()" class="flex-1 sm:flex-none px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-teal-300 font-bold transition flex items-center justify-center gap-1">
+                  <i class="mdi mdi-tune"></i>
+                  <span>ແກ້ໄຂໃນ Studio</span>
+                </button>
+                <button onclick="copyActiveIconCode()" class="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold transition shadow-md shadow-teal-500/20 flex items-center justify-center gap-1">
+                  <i class="mdi mdi-content-copy"></i>
+                  <span>Copy Code</span>
+                </button>
+              </div>
             </div>
 
           </div>
         </section>
 
+        <!-- ========================================== -->
+        <!-- Section 8: Troubleshooting & 5 Pitfalls -->
+        <!-- ========================================== -->
+        <section id="section-8" class="space-y-6 scroll-mt-24 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <span class="w-9 h-9 rounded-2xl bg-teal-500 text-white text-sm font-bold flex items-center justify-center shadow-md shadow-teal-500/20">8</span>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900">5 ຂໍ້ຜິດພາດທີ່ພົບເລື້ອຍ & ວິທີແກ້ໄຂ (Troubleshooting)</h2>
+              <p class="text-xs text-slate-400">ແກ້ໄຂບັນຫາທີ່ມັກພົບໃນຕອນຕິດຕັ້ງ ແລະ ໃຊ້ງານ MDI Icons</p>
+            </div>
+          </div>
+
+          <div class="space-y-3.5">
+            
+            <!-- Issue 1 -->
+            <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                <i class="mdi mdi-alert-circle text-rose-500 text-lg"></i>
+                <span>1. ໄອຄອນສະແດງເປັນຮູບສີ່ຫຼ່ຽມວ່າງເປົ່າ (Square Box / Broken Glyph)</span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed pl-6">
+                <strong>ສາເຫດ:</strong> ຍັງບໍ່ໄດ້ Import ໄຟລ໌ CSS ຂອງ MDI ເຂົ້າໃນລະບົບ ຫຼື ຂຽນ path ຜິດ.<br>
+                <strong>ວິທີແກ້ໄຂ:</strong> ເຂົ້າໄປເພີ່ມ <code class="font-mono text-teal-700 bg-white px-1.5 py-0.5 rounded border">'@mdi/font/css/materialdesignicons.css'</code> ໃນ array <code class="font-mono">css: [...]</code> ຂອງ <code class="font-mono text-teal-700">nuxt.config.ts</code> ແລ້ວ restart dev server (<code class="font-mono">npm run dev</code>).
+              </p>
+            </div>
+
+            <!-- Issue 2 -->
+            <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                <i class="mdi mdi-alert-circle text-rose-500 text-lg"></i>
+                <span>2. ຄຳສັ່ງ &lt;v-icon&gt; ບໍ່ສະແດງຫຍັງເລີຍ (Icon Blank)</span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed pl-6">
+                <strong>ສາເຫດ:</strong> ບໍ່ໄດ້ກຳນົດ <code class="font-mono">defaultSet: 'mdi'</code> ໃນ plugin Vuetify.<br>
+                <strong>ວິທີແກ້ໄຂ:</strong> ໃນ <code class="font-mono text-teal-700">app/plugins/vuetify.ts</code>, ຕ້ອງກວດສອບວ່າມີ <code class="font-mono text-teal-700">icons: { defaultSet: 'mdi', aliases, sets: { mdi } }</code> ຢ່າງຖືກຕ້ອງ.
+              </p>
+            </div>
+
+            <!-- Issue 3 -->
+            <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                <i class="mdi mdi-alert-circle text-rose-500 text-lg"></i>
+                <span>3. ໄອຄອນບໍ່ກົງແນວກັບຕົວໜັງສື (Vertical Alignment Issue)</span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed pl-6">
+                <strong>ສາເຫດ:</strong> ໃນ Flexbox ຂອງ Tailwind CSS, ຕົວໜັງສື ແລະ ໄອຄອນອາດມີ baseline ຕ່າງກັນ.<br>
+                <strong>ວິທີແກ້ໄຂ:</strong> ໃສ່ class <code class="font-mono text-teal-700 bg-white px-1.5 py-0.5 rounded border">flex items-center gap-2</code> ໃນ container ທີ່ຫຸ້ມໄອຄອນ ແລະ ຕົວໜັງສື.
+              </p>
+            </div>
+
+            <!-- Issue 4 -->
+            <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                <i class="mdi mdi-alert-circle text-rose-500 text-lg"></i>
+                <span>4. SSR Hydration Mismatch ເວລານຳໃຊ້ Dynamic Icons</span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed pl-6">
+                <strong>ສາເຫດ:</strong> ການໃຊ້ <code class="font-mono">localStorage</code> ຫຼື <code class="font-mono">window</code> ຕັດສິນຊື່ໄອຄອນກ່ອນທີ່ client ຈະ render.<br>
+                <strong>ວິທີແກ້ໄຂ:</strong> ໃຊ້ <code class="font-mono">&lt;ClientOnly&gt;</code> ຫຸ້ມ ຫຼື ໃຊ້ <code class="font-mono">onMounted()</code> ເພື່ອກຳນົດຄ່າ state ເທິງ client.
+              </p>
+            </div>
+
+            <!-- Issue 5 -->
+            <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                <i class="mdi mdi-alert-circle text-rose-500 text-lg"></i>
+                <span>5. ວິທີຫຼຸດຂະໜາດ Font ສຳລັບ Production Build</span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed pl-6">
+                <strong>ຄຳແນະນຳ:</strong> <code class="font-mono">@mdi/font</code> ໃຊ້ໄຟລ໌ font ປະມານ 300KB-400KB ເຊິ່ງເໝາະສົມກັບເວັບທົ່ວໄປ. ແຕ່ຫາກຕ້ອງການ ultra-lightweight, ສາມາດພິຈາລະນາໃຊ້ <strong>@nuxt/icon</strong> ຮ່ວມກັບ Iconify ເພື່ອດຶງສະເພາະ SVG ທີ່ໃຊ້ຈິງ.
+              </p>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- Section 9: Interactive Quiz -->
+        <!-- ========================================== -->
+        <section id="section-9" class="space-y-6 scroll-mt-24 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 rounded-2xl bg-teal-500 text-white text-sm font-bold flex items-center justify-center shadow-md shadow-teal-500/20">9</span>
+              <div>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">ທົດສອບຄວາມຮູ້ (Knowledge Check)</h2>
+                <p class="text-xs text-slate-400">ກວດສອບຄວາມເຂົ້າໃຈ 5 ຂໍ້ ພ້ອມສະເລີຍທັນທີ</p>
+              </div>
+            </div>
+            <div id="quiz-score-badge" class="text-xs font-bold text-teal-700 bg-teal-50 px-3 py-1.5 rounded-full border border-teal-200 self-start sm:self-auto">
+              ຄະແນນ: 0 / 5
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            
+            <!-- Question 1 -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3" id="quiz-q1">
+              <div class="font-bold text-slate-900 text-sm">1. Package ໃດທີ່ນຳໃຊ້ສຳລັບ MDI Webfont ໃນ Nuxt 4 & Vuetify?</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <button onclick="checkQuiz(1, 0, false, this)" class="quiz-btn-1 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">A. @mdi/svg</button>
+                <button onclick="checkQuiz(1, 1, true, this)" class="quiz-btn-1 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">B. @mdi/font</button>
+                <button onclick="checkQuiz(1, 2, false, this)" class="quiz-btn-1 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">C. nuxt-material-icons</button>
+                <button onclick="checkQuiz(1, 3, false, this)" class="quiz-btn-1 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">D. vue-icons-mdi</button>
+              </div>
+              <div class="quiz-feedback hidden text-xs p-2.5 rounded-xl"></div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3" id="quiz-q2">
+              <div class="font-bold text-slate-900 text-sm">2. ໄຟລ໌ໃດທີ່ຕ້ອງ Import CSS ຂອງ MDI ເພື່ອໃຫ້ Browser ໂຫຼດ Font ໄດ້ທົ່ວເວັບ?</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <button onclick="checkQuiz(2, 0, false, this)" class="quiz-btn-2 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">A. package.json</button>
+                <button onclick="checkQuiz(2, 1, false, this)" class="quiz-btn-2 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">B. tsconfig.json</button>
+                <button onclick="checkQuiz(2, 2, true, this)" class="quiz-btn-2 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">C. nuxt.config.ts (ໃນ array css)</button>
+                <button onclick="checkQuiz(2, 3, false, this)" class="quiz-btn-2 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">D. server/api/icon.ts</button>
+              </div>
+              <div class="quiz-feedback hidden text-xs p-2.5 rounded-xl"></div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3" id="quiz-q3">
+              <div class="font-bold text-slate-900 text-sm">3. ຖ້າຕ້ອງການໃຫ້ໄອຄອນໝຸນ Spin ໃນຕອນກຳລັງໂຫຼດ ຕ້ອງເພີ່ມ class ໃດ?</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <button onclick="checkQuiz(3, 0, true, this)" class="quiz-btn-3 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">A. mdi-spin</button>
+                <button onclick="checkQuiz(3, 1, false, this)" class="quiz-btn-3 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">B. mdi-rotate-full</button>
+                <button onclick="checkQuiz(3, 2, false, this)" class="quiz-btn-3 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">C. mdi-loading-anim</button>
+                <button onclick="checkQuiz(3, 3, false, this)" class="quiz-btn-3 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">D. icon-circle-infinite</button>
+              </div>
+              <div class="quiz-feedback hidden text-xs p-2.5 rounded-xl"></div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3" id="quiz-q4">
+              <div class="font-bold text-slate-900 text-sm">4. ໃນ Vuetify 3, Property ໃດໃຊ້ລະບຸຊື່ໄອຄອນໃນ &lt;v-icon&gt;?</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <button onclick="checkQuiz(4, 0, false, this)" class="quiz-btn-4 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">A. name="..."</button>
+                <button onclick="checkQuiz(4, 1, true, this)" class="quiz-btn-4 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">B. icon="..."</button>
+                <button onclick="checkQuiz(4, 2, false, this)" class="quiz-btn-4 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">C. src="..."</button>
+                <button onclick="checkQuiz(4, 3, false, this)" class="quiz-btn-4 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">D. type="..."</button>
+              </div>
+              <div class="quiz-feedback hidden text-xs p-2.5 rounded-xl"></div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3" id="quiz-q5">
+              <div class="font-bold text-slate-900 text-sm">5. ຖ້າຕ້ອງການໃສ່ໄອຄອນດ້ານໜ້າຂອງປຸ່ມ &lt;v-btn&gt; ຕ້ອງໃຊ້ prop ໃດ?</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <button onclick="checkQuiz(5, 0, true, this)" class="quiz-btn-5 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">A. prepend-icon="..."</button>
+                <button onclick="checkQuiz(5, 1, false, this)" class="quiz-btn-5 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">B. append-icon="..."</button>
+                <button onclick="checkQuiz(5, 2, false, this)" class="quiz-btn-5 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">C. start-icon="..."</button>
+                <button onclick="checkQuiz(5, 3, false, this)" class="quiz-btn-5 text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-teal-400 transition">D. icon-left="..."</button>
+              </div>
+              <div class="quiz-feedback hidden text-xs p-2.5 rounded-xl"></div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- Section 10: Complete Code File Template -->
+        <!-- ========================================== -->
+        <section id="section-10" class="space-y-6 scroll-mt-24 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 rounded-2xl bg-teal-500 text-white text-sm font-bold flex items-center justify-center shadow-md shadow-teal-500/20">10</span>
+              <div>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">ໂຄດ Vue 3 ສົມບູນ (Ready-to-use Template)</h2>
+                <p class="text-xs text-slate-400">ກັອບປີ້ໄປວາງໃນ <code class="font-mono text-teal-700">app/pages/icon-demo.vue</code></p>
+              </div>
+            </div>
+            <button onclick="copyCmd(document.getElementById('code-full-template').innerText)" class="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold text-xs shadow-md shadow-teal-500/20 transition flex items-center gap-1.5">
+              <i class="mdi mdi-content-copy"></i>
+              <span>Copy File</span>
+            </button>
+          </div>
+
+          <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl border border-slate-800">
+            <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span class="text-teal-400 flex items-center gap-1.5">
+                <i class="mdi mdi-vuejs"></i>
+                app/pages/icon-demo.vue
+              </span>
+              <span>Vue 3 / Nuxt 4</span>
+            </div>
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto max-h-[360px]"><code id="code-full-template">&lt;script setup lang="ts"&gt;
+// Reactive State ສຳລັບການທົດລອງໄອຄອນ
+const isFavorite = ref(false)
+const showPassword = ref(false)
+const searchQuery = ref('')
+const isLoading = ref(false)
+
+const triggerLoading = () => {
+  isLoading.value = true
+  setTimeout(() =&gt; {
+    isLoading.value = false
+  }, 2000)
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div class="max-w-4xl mx-auto p-6 space-y-8 font-sans"&gt;
+    &lt;h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2"&gt;
+      &lt;v-icon icon="mdi-palette-swatch" color="teal" /&gt;
+      ທົດລອງ MDI Icons ໃນ Nuxt 4
+    &lt;/h1&gt;
+
+    &lt;!-- 1. Vuetify Buttons with Icons --&gt;
+    &lt;div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4"&gt;
+      &lt;h2 class="text-sm font-bold text-slate-700"&gt;1. Vuetify Buttons with Icons&lt;/h2&gt;
+      &lt;div class="flex flex-wrap items-center gap-3"&gt;
+        &lt;v-btn color="teal" prepend-icon="mdi-account-plus"&gt;
+          ເພີ່ມສະມາຊິກ
+        &lt;/v-btn&gt;
+        &lt;v-btn color="rose" append-icon="mdi-delete" variant="outlined"&gt;
+          ລຶບລາຍການ
+        &lt;/v-btn&gt;
+        &lt;v-btn :loading="isLoading" color="indigo" @click="triggerLoading"&gt;
+          &lt;template #prepend&gt;
+            &lt;v-icon icon="mdi-refresh" /&gt;
+          &lt;/template&gt;
+          ໂຫຼດຂໍ້ມູນໃໝ່
+        &lt;/v-btn&gt;
+        &lt;v-btn icon="mdi-heart" color="pink" variant="text" /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- 2. Form Inputs with Prefix/Suffix Icons --&gt;
+    &lt;div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4"&gt;
+      &lt;h2 class="text-sm font-bold text-slate-700"&gt;2. Text Fields with Icons&lt;/h2&gt;
+      &lt;div class="grid grid-cols-1 sm:grid-cols-2 gap-4"&gt;
+        &lt;v-text-field
+          v-model="searchQuery"
+          label="ຄົ້ນຫາຂໍ້ມູນ..."
+          prepend-inner-icon="mdi-magnify"
+          clearable
+          variant="outlined"
+        /&gt;
+        &lt;v-text-field
+          label="ລະຫັດຜ່ານ"
+          :type="showPassword ? 'text' : 'password'"
+          prepend-inner-icon="mdi-lock"
+          :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+          @click:append-inner="showPassword = !showPassword"
+          variant="outlined"
+        /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- 3. Standard HTML & Tailwind Icons --&gt;
+    &lt;div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4"&gt;
+      &lt;h2 class="text-sm font-bold text-slate-700"&gt;3. Standard HTML & Tailwind Icons&lt;/h2&gt;
+      &lt;div class="flex items-center gap-6 text-3xl"&gt;
+        &lt;i class="mdi mdi-vuejs text-emerald-500 hover:scale-125 transition"&gt;&lt;/i&gt;
+        &lt;i class="mdi mdi-nuxt text-teal-600 hover:scale-125 transition"&gt;&lt;/i&gt;
+        &lt;i class="mdi mdi-github text-slate-900 hover:scale-125 transition"&gt;&lt;/i&gt;
+        &lt;i class="mdi mdi-loading mdi-spin text-cyan-600"&gt;&lt;/i&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+          </div>
+        </section>
+
         <!-- Navigation Footer -->
         <div class="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <a href="./N06.html" class="px-6 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition flex items-center gap-2">
-            ← ກັບໄປບົດທີ 6 (Form Handling)
+          <a href="./N06.html" class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm transition flex items-center justify-center gap-2 shadow-sm">
+            <i class="mdi mdi-arrow-left"></i>
+            <span>ກັບໄປບົດທີ 6 (Form Handling & State)</span>
           </a>
-          <a href="./index.html" class="px-6 py-3 rounded-2xl bg-teal-500 hover:bg-teal-600 text-white font-bold text-sm shadow-lg shadow-teal-500/20 transition flex items-center gap-2">
-            ສຳເລັດຫຼັກສູດ (ກັບຄືນໜ້າຫຼັກ) 🎓
+          <a href="./N08.html" class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-teal-500 hover:bg-teal-600 text-white font-bold text-sm shadow-lg shadow-teal-500/25 transition flex items-center justify-center gap-2">
+            <span>ບົດຕໍ່ໄປ (N08: ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ)</span>
+            <i class="mdi mdi-arrow-right"></i>
           </a>
         </div>
 
@@ -506,11 +1389,18 @@ export default defineNuxtPlugin((nuxtApp) => {
     </div>
   </div>
 
-  <footer class="border-t border-slate-200 mt-16 py-8 text-center text-xs text-slate-500">
-    ຫຼັກສູດ Nuxt 4 (2027) • ສອນດ້ວຍຄວາມເຂົ້າໃຈງ່າຍ
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 mt-16 py-8 text-center text-xs text-slate-500 bg-white">
+    <div class="flex items-center justify-center gap-2 mb-2">
+      <span class="w-6 h-6 rounded-lg bg-teal-500 text-white font-bold flex items-center justify-center text-xs">N4</span>
+      <span class="font-bold text-slate-700">ຫຼັກສູດ Nuxt 4 (2027)</span>
+    </div>
+    <p>ສອນດ້ວຍຄວາມເຂົ້າໃຈງ່າຍ • ພາສາລາວ (Lao Language) • Open Source Learning</p>
   </footer>
 
+  <!-- Scripts for Interactivity -->
   <script>
+    // 1. Mobile Sidebar Toggle
     function toggleMobileSidebar() {
       const sidebar = document.getElementById('mobile-sidebar');
       const backdrop = document.getElementById('mobile-sidebar-backdrop');
@@ -523,54 +1413,305 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     }
 
-    function copyCmd(text) {
+    // 2. Toast Notification
+    function showToast(msg = 'ຄັດລອກໂຄດສຳເລັດແລ້ວ!') {
+      const toast = document.getElementById('toast');
+      const msgEl = document.getElementById('toast-message');
+      if (msgEl) msgEl.textContent = msg;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 2400);
+    }
+
+    function copyCmd(text, customMsg) {
       navigator.clipboard.writeText(text).then(() => {
-        const toast = document.getElementById('toast');
-        toast.classList.remove('translate-y-20', 'opacity-0');
-        setTimeout(() => {
-          toast.classList.add('translate-y-20', 'opacity-0');
-        }, 2200);
+        showToast(customMsg || 'ຄັດລອກໂຄດສຳເລັດແລ້ວ!');
       });
     }
 
-    // MDI Icon Database for Interactive Gallery
+    // 3. Package Manager Tabs
+    const pkgCommands = {
+      npm: 'npm i @mdi/font',
+      pnpm: 'pnpm add @mdi/font',
+      yarn: 'yarn add @mdi/font',
+      bun: 'bun add @mdi/font'
+    };
+    let currentPkg = 'npm';
+
+    function switchPkgTab(pkg) {
+      currentPkg = pkg;
+      ['npm', 'pnpm', 'yarn', 'bun'].forEach(p => {
+        const btn = document.getElementById(`pkg-tab-${p}`);
+        if (p === pkg) {
+          btn.className = 'px-3 py-1.5 rounded-lg bg-teal-500 text-white font-bold transition';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition';
+        }
+      });
+      document.getElementById('pkg-command-text').textContent = pkgCommands[pkg];
+    }
+
+    function copyPkgCmd() {
+      copyCmd(pkgCommands[currentPkg], `ຄັດລອກຄຳສັ່ງ ${currentPkg} ສຳເລັດ!`);
+    }
+
+    // 4. Scroll Reading Progress & Back to Top
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('progress-bar').style.width = scrolled + '%';
+
+      // Back to top button visibility
+      const backBtn = document.getElementById('back-to-top');
+      if (winScroll > 350) {
+        backBtn.classList.remove('opacity-0', 'pointer-events-none');
+      } else {
+        backBtn.classList.add('opacity-0', 'pointer-events-none');
+      }
+    });
+
+    // 5. MDI Icon Studio Logic
+    let studioState = {
+      name: 'mdi-heart',
+      size: 48,
+      colorClass: 'text-teal-400',
+      colorName: 'teal',
+      anim: '',
+      transform: '',
+      format: 'vuetify-icon'
+    };
+
+    function updateStudioIcon(name) {
+      if (!name) return;
+      const cleanName = name.startsWith('mdi-') ? name : `mdi-${name}`;
+      studioState.name = cleanName;
+      document.getElementById('studio-icon-current').textContent = cleanName;
+      refreshStudio();
+    }
+
+    function setStudioSize(size) {
+      studioState.size = size;
+      document.getElementById('studio-size-slider').value = size;
+      document.getElementById('studio-size-badge').textContent = `${size}px`;
+      refreshStudio();
+    }
+
+    function setStudioColor(twClass, vColor) {
+      studioState.colorClass = twClass;
+      studioState.colorName = vColor;
+      refreshStudio();
+    }
+
+    function setStudioAnim(anim) {
+      studioState.anim = anim;
+      refreshStudio();
+    }
+
+    function setStudioTransform(transform) {
+      studioState.transform = transform;
+      refreshStudio();
+    }
+
+    function switchStudioFormat(fmt) {
+      studioState.format = fmt;
+      ['vuetify-icon', 'vuetify-btn', 'html-i', 'nuxt-icon'].forEach(f => {
+        const btn = document.getElementById(`fmt-${f}`);
+        if (f === fmt) {
+          btn.className = 'px-2.5 py-1 rounded-lg bg-teal-500 text-white font-bold text-[11px] transition';
+        } else {
+          btn.className = 'px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white text-[11px] transition';
+        }
+      });
+      refreshStudioCodeOnly();
+    }
+
+    function refreshStudio() {
+      const previewIcon = document.getElementById('studio-preview-icon');
+      const caption = document.getElementById('studio-preview-caption');
+      
+      previewIcon.className = `mdi ${studioState.name} ${studioState.colorClass} ${studioState.anim} ${studioState.transform} transition-all duration-200`;
+      previewIcon.style.fontSize = `${studioState.size}px`;
+      caption.textContent = studioState.name;
+
+      refreshStudioCodeOnly();
+    }
+
+    function refreshStudioCodeOnly() {
+      const codeEl = document.getElementById('studio-generated-code');
+      let code = '';
+
+      let sizeProp = '';
+      if (studioState.size <= 20) sizeProp = ' size="x-small"';
+      else if (studioState.size <= 26) sizeProp = ' size="small"';
+      else if (studioState.size >= 56) sizeProp = ' size="x-large"';
+      else if (studioState.size >= 40) sizeProp = ' size="large"';
+
+      const colorProp = studioState.colorName !== 'white' ? ` color="${studioState.colorName}"` : '';
+      const extraClass = [studioState.anim, studioState.transform].filter(Boolean).join(' ');
+      const classAttr = extraClass ? ` class="${extraClass}"` : '';
+
+      switch (studioState.format) {
+        case 'vuetify-icon':
+          code = `<v-icon icon="${studioState.name}"${colorProp}${sizeProp}${classAttr} />`;
+          break;
+        case 'vuetify-btn':
+          code = `<v-btn prepend-icon="${studioState.name}" color="${studioState.colorName}">\n  ກົດທີ່ນີ້\n</v-btn>`;
+          break;
+        case 'html-i':
+          code = `<i class="mdi ${studioState.name} ${studioState.colorClass} ${extraClass}" style="font-size: ${studioState.size}px;"></i>`;
+          break;
+        case 'nuxt-icon':
+          const nuxtIconName = studioState.name.replace('mdi-', 'mdi:');
+          code = `<Icon name="${nuxtIconName}" size="${studioState.size}px"${colorProp} />`;
+          break;
+      }
+      codeEl.textContent = code;
+    }
+
+    function copyStudioGeneratedCode() {
+      const code = document.getElementById('studio-generated-code').textContent;
+      copyCmd(code, 'ຄັດລອກໂຄດຈາກ Studio ສຳເລັດແລ້ວ!');
+    }
+
+    // 6. Comprehensive 120+ MDI Icon Database
     const iconList = [
-      { name: 'mdi-home', cat: 'ui' },
-      { name: 'mdi-account', cat: 'ui' },
+      // Navigation & UI
+      { name: 'mdi-home', cat: 'nav' },
+      { name: 'mdi-home-outline', cat: 'nav' },
+      { name: 'mdi-menu', cat: 'nav' },
+      { name: 'mdi-dots-vertical', cat: 'nav' },
+      { name: 'mdi-dots-horizontal', cat: 'nav' },
+      { name: 'mdi-arrow-left', cat: 'nav' },
+      { name: 'mdi-arrow-right', cat: 'nav' },
+      { name: 'mdi-arrow-up', cat: 'nav' },
+      { name: 'mdi-arrow-down', cat: 'nav' },
+      { name: 'mdi-chevron-left', cat: 'nav' },
+      { name: 'mdi-chevron-right', cat: 'nav' },
+      { name: 'mdi-chevron-down', cat: 'nav' },
+      { name: 'mdi-chevron-up', cat: 'nav' },
+      { name: 'mdi-view-dashboard', cat: 'nav' },
+      { name: 'mdi-view-grid', cat: 'nav' },
+      { name: 'mdi-format-list-bulleted', cat: 'nav' },
+      { name: 'mdi-cog', cat: 'nav' },
+      { name: 'mdi-cog-outline', cat: 'nav' },
+      { name: 'mdi-tune', cat: 'nav' },
+      { name: 'mdi-filter-variant', cat: 'nav' },
+
+      // Actions & Controls
+      { name: 'mdi-account', cat: 'actions' },
+      { name: 'mdi-account-circle', cat: 'actions' },
       { name: 'mdi-account-plus', cat: 'actions' },
-      { name: 'mdi-bell', cat: 'ui' },
-      { name: 'mdi-bell-ring', cat: 'ui' },
+      { name: 'mdi-account-group', cat: 'actions' },
       { name: 'mdi-magnify', cat: 'actions' },
+      { name: 'mdi-plus', cat: 'actions' },
+      { name: 'mdi-plus-circle', cat: 'actions' },
+      { name: 'mdi-minus', cat: 'actions' },
+      { name: 'mdi-pencil', cat: 'actions' },
+      { name: 'mdi-pencil-outline', cat: 'actions' },
+      { name: 'mdi-delete', cat: 'actions' },
+      { name: 'mdi-delete-outline', cat: 'actions' },
+      { name: 'mdi-check', cat: 'actions' },
+      { name: 'mdi-check-circle', cat: 'actions' },
+      { name: 'mdi-check-decagram', cat: 'actions' },
+      { name: 'mdi-close', cat: 'actions' },
+      { name: 'mdi-close-circle', cat: 'actions' },
+      { name: 'mdi-refresh', cat: 'actions' },
+      { name: 'mdi-sync', cat: 'actions' },
+      { name: 'mdi-loading', cat: 'actions' },
       { name: 'mdi-heart', cat: 'actions' },
       { name: 'mdi-heart-outline', cat: 'actions' },
-      { name: 'mdi-star', cat: 'ui' },
-      { name: 'mdi-cog', cat: 'ui' },
-      { name: 'mdi-check-circle', cat: 'actions' },
-      { name: 'mdi-close-circle', cat: 'actions' },
-      { name: 'mdi-delete', cat: 'actions' },
-      { name: 'mdi-pencil', cat: 'actions' },
-      { name: 'mdi-email', cat: 'ui' },
-      { name: 'mdi-phone', cat: 'ui' },
+      { name: 'mdi-star', cat: 'actions' },
+      { name: 'mdi-star-outline', cat: 'actions' },
+      { name: 'mdi-bookmark', cat: 'actions' },
+      { name: 'mdi-thumb-up', cat: 'actions' },
+      { name: 'mdi-thumb-down', cat: 'actions' },
+      { name: 'mdi-share-variant', cat: 'actions' },
       { name: 'mdi-download', cat: 'actions' },
       { name: 'mdi-upload', cat: 'actions' },
-      { name: 'mdi-share-variant', cat: 'actions' },
-      { name: 'mdi-lock', cat: 'ui' },
-      { name: 'mdi-lock-open', cat: 'ui' },
+      { name: 'mdi-content-copy', cat: 'actions' },
+      { name: 'mdi-lock', cat: 'actions' },
+      { name: 'mdi-lock-open', cat: 'actions' },
       { name: 'mdi-eye', cat: 'actions' },
       { name: 'mdi-eye-off', cat: 'actions' },
+
+      // Dev & Technology
       { name: 'mdi-code-tags', cat: 'dev' },
       { name: 'mdi-vuejs', cat: 'dev' },
-      { name: 'mdi-github', cat: 'dev' },
       { name: 'mdi-nuxt', cat: 'dev' },
       { name: 'mdi-nodejs', cat: 'dev' },
+      { name: 'mdi-react', cat: 'dev' },
+      { name: 'mdi-language-javascript', cat: 'dev' },
+      { name: 'mdi-language-typescript', cat: 'dev' },
+      { name: 'mdi-language-html5', cat: 'dev' },
+      { name: 'mdi-language-css3', cat: 'dev' },
+      { name: 'mdi-language-python', cat: 'dev' },
+      { name: 'mdi-github', cat: 'dev' },
+      { name: 'mdi-git', cat: 'dev' },
       { name: 'mdi-database', cat: 'dev' },
+      { name: 'mdi-database-search', cat: 'dev' },
+      { name: 'mdi-api', cat: 'dev' },
+      { name: 'mdi-server', cat: 'dev' },
+      { name: 'mdi-server-network', cat: 'dev' },
+      { name: 'mdi-cloud', cat: 'dev' },
       { name: 'mdi-cloud-upload', cat: 'dev' },
-      { name: 'mdi-format-list-bulleted', cat: 'ui' },
-      { name: 'mdi-view-dashboard', cat: 'ui' },
-      { name: 'mdi-chart-bar', cat: 'ui' },
-      { name: 'mdi-cart', cat: 'actions' },
-      { name: 'mdi-credit-card', cat: 'actions' },
-      { name: 'mdi-loading', cat: 'ui' }
+      { name: 'mdi-cloud-download', cat: 'dev' },
+      { name: 'mdi-console', cat: 'dev' },
+      { name: 'mdi-bug', cat: 'dev' },
+      { name: 'mdi-vuetify', cat: 'dev' },
+      { name: 'mdi-tailwind', cat: 'dev' },
+
+      // Social & Communication
+      { name: 'mdi-email', cat: 'social' },
+      { name: 'mdi-email-outline', cat: 'social' },
+      { name: 'mdi-phone', cat: 'social' },
+      { name: 'mdi-phone-outline', cat: 'social' },
+      { name: 'mdi-message', cat: 'social' },
+      { name: 'mdi-chat', cat: 'social' },
+      { name: 'mdi-send', cat: 'social' },
+      { name: 'mdi-bell', cat: 'social' },
+      { name: 'mdi-bell-ring', cat: 'social' },
+      { name: 'mdi-facebook', cat: 'social' },
+      { name: 'mdi-twitter', cat: 'social' },
+      { name: 'mdi-instagram', cat: 'social' },
+      { name: 'mdi-youtube', cat: 'social' },
+      { name: 'mdi-linkedin', cat: 'social' },
+      { name: 'mdi-whatsapp', cat: 'social' },
+      { name: 'mdi-telegram', cat: 'social' },
+
+      // Media & Files
+      { name: 'mdi-folder', cat: 'files' },
+      { name: 'mdi-folder-open', cat: 'files' },
+      { name: 'mdi-file', cat: 'files' },
+      { name: 'mdi-file-document', cat: 'files' },
+      { name: 'mdi-file-code-outline', cat: 'files' },
+      { name: 'mdi-image', cat: 'files' },
+      { name: 'mdi-camera', cat: 'files' },
+      { name: 'mdi-video', cat: 'files' },
+      { name: 'mdi-music', cat: 'files' },
+      { name: 'mdi-play', cat: 'files' },
+      { name: 'mdi-pause', cat: 'files' },
+      { name: 'mdi-volume-high', cat: 'files' },
+      { name: 'mdi-microphone', cat: 'files' },
+
+      // E-Commerce & Finance
+      { name: 'mdi-cart', cat: 'shop' },
+      { name: 'mdi-cart-outline', cat: 'shop' },
+      { name: 'mdi-cart-plus', cat: 'shop' },
+      { name: 'mdi-credit-card', cat: 'shop' },
+      { name: 'mdi-credit-card-outline', cat: 'shop' },
+      { name: 'mdi-cash', cat: 'shop' },
+      { name: 'mdi-cash-multiple', cat: 'shop' },
+      { name: 'mdi-wallet', cat: 'shop' },
+      { name: 'mdi-store', cat: 'shop' },
+      { name: 'mdi-tag', cat: 'shop' },
+      { name: 'mdi-barcode', cat: 'shop' },
+      { name: 'mdi-qrcode', cat: 'shop' },
+      { name: 'mdi-trending-up', cat: 'shop' },
+      { name: 'mdi-chart-bar', cat: 'shop' },
+      { name: 'mdi-chart-line', cat: 'shop' },
+      { name: 'mdi-chart-pie', cat: 'shop' }
     ];
 
     let currentCategory = 'all';
@@ -581,19 +1722,22 @@ export default defineNuxtPlugin((nuxtApp) => {
       const container = document.getElementById('icons-container');
       container.innerHTML = '';
 
+      document.getElementById('icons-count-label').textContent = `ສະແດງ: ${list.length} ໄອຄອນ`;
+
       if (!list.length) {
-        container.innerHTML = '<div class="col-span-full py-8 text-center text-slate-500 text-xs">ບໍ່ພົບໄອຄອນທີ່ກົງກັບຄຳຄົ້ນຫາ</div>';
+        container.innerHTML = '<div class="col-span-full py-12 text-center text-slate-500 text-xs">ບໍ່ພົບໄອຄອນທີ່ກົງກັບຄຳຄົ້ນຫາ</div>';
         return;
       }
 
       list.forEach(item => {
         const div = document.createElement('div');
-        div.className = 'group p-3 rounded-2xl bg-slate-950 border border-slate-800/80 hover:border-teal-500 flex flex-col items-center justify-center gap-2 cursor-pointer transition text-center hover:scale-105';
+        const isSelected = item.name === selectedIcon;
+        div.className = `group p-2.5 rounded-2xl bg-slate-950 border ${isSelected ? 'border-teal-400 ring-1 ring-teal-400' : 'border-slate-800/80 hover:border-teal-500'} flex flex-col items-center justify-center gap-1.5 cursor-pointer transition text-center hover:scale-105 hover:bg-slate-900`;
         div.onclick = () => selectIcon(item.name);
 
         div.innerHTML = `
           <i class="mdi ${item.name} text-slate-200 group-hover:text-teal-400 transition" style="font-size: ${currentIconSize}px"></i>
-          <span class="text-[10px] text-slate-400 truncate w-full font-mono group-hover:text-white">${item.name.replace('mdi-', '')}</span>
+          <span class="text-[9.5px] text-slate-400 truncate w-full font-mono group-hover:text-white">${item.name.replace('mdi-', '')}</span>
         `;
         container.appendChild(div);
       });
@@ -601,9 +1745,20 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     function selectIcon(name) {
       selectedIcon = name;
-      document.getElementById('preview-active-icon').className = `mdi ${name} text-3xl text-teal-400`;
+      document.getElementById('preview-active-icon').className = `mdi ${name} text-2xl text-teal-400`;
       document.getElementById('preview-active-name').textContent = name;
-      document.getElementById('preview-active-code').textContent = `<v-icon icon="${name}" />  |  <i class="mdi ${name}"></i>`;
+      document.getElementById('preview-active-code').textContent = `<v-icon icon="${name}" />`;
+      
+      // Also update search active outline
+      filterIcons();
+    }
+
+    function sendToStudio() {
+      document.getElementById('studio-icon-input').value = selectedIcon;
+      updateStudioIcon(selectedIcon);
+      // Smooth scroll to studio section
+      document.getElementById('section-5').scrollIntoView({ behavior: 'smooth' });
+      showToast(`ສົ່ງ ${selectedIcon} ເຂົ້າ Studio ແລ້ວ!`);
     }
 
     function copyActiveIconCode() {
@@ -612,10 +1767,10 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
 
     function filterIcons() {
-      const query = document.getElementById('icon-search-input').value.toLowerCase();
+      const query = document.getElementById('icon-search-input').value.toLowerCase().trim();
       const filtered = iconList.filter(item => {
         const matchCat = (currentCategory === 'all' || item.cat === currentCategory);
-        const matchQuery = item.name.toLowerCase().includes(query);
+        const matchQuery = item.name.toLowerCase().includes(query) || item.cat.toLowerCase().includes(query);
         return matchCat && matchQuery;
       });
       renderIcons(filtered);
@@ -624,9 +1779,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     function setCategory(cat) {
       currentCategory = cat;
       document.querySelectorAll('.cat-btn').forEach(btn => {
-        btn.className = 'cat-btn px-3 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition';
+        btn.className = 'cat-btn px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition';
       });
-      event.target.className = 'cat-btn px-3 py-1 rounded-lg bg-teal-500 text-white font-bold transition';
+      event.target.className = 'cat-btn px-2.5 py-1 rounded-lg bg-teal-500 text-white font-bold transition';
       filterIcons();
     }
 
@@ -636,8 +1791,67 @@ export default defineNuxtPlugin((nuxtApp) => {
       filterIcons();
     }
 
-    // Initial Render
+    // 7. Interactive Follow Demo Button
+    function toggleFollow(btn) {
+      const isFollowing = btn.classList.contains('bg-slate-200');
+      if (isFollowing) {
+        btn.className = 'flex-grow py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold text-xs shadow-sm transition flex items-center justify-center gap-1.5';
+        btn.innerHTML = '<i class="mdi mdi-account-plus"></i><span>ຕິດຕາມ (Follow)</span>';
+      } else {
+        btn.className = 'flex-grow py-2 rounded-xl bg-slate-200 text-slate-700 font-bold text-xs shadow-sm transition flex items-center justify-center gap-1.5';
+        btn.innerHTML = '<i class="mdi mdi-check"></i><span>ກຳລັງຕິດຕາມ</span>';
+      }
+    }
+
+    // 8. Quiz Logic
+    const quizState = { 1: null, 2: null, 3: null, 4: null, 5: null };
+
+    function checkQuiz(qNum, optIdx, isCorrect, btnEl) {
+      if (quizState[qNum] !== null) return; // already answered
+
+      quizState[qNum] = isCorrect;
+      const parent = document.getElementById(`quiz-q${qNum}`);
+      const btns = parent.querySelectorAll(`.quiz-btn-${qNum}`);
+      const feedback = parent.querySelector('.quiz-feedback');
+
+      btns.forEach((b, idx) => {
+        b.disabled = true;
+        if (idx === optIdx) {
+          if (isCorrect) {
+            b.className = 'quiz-btn-' + qNum + ' text-left p-3 rounded-xl bg-emerald-50 border-2 border-emerald-500 text-emerald-900 font-bold';
+          } else {
+            b.className = 'quiz-btn-' + qNum + ' text-left p-3 rounded-xl bg-rose-50 border-2 border-rose-500 text-rose-900 font-bold';
+          }
+        }
+      });
+
+      feedback.classList.remove('hidden');
+      if (isCorrect) {
+        feedback.className = 'quiz-feedback text-xs p-2.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5';
+        feedback.innerHTML = '<i class="mdi mdi-check-circle text-emerald-600 text-base"></i> <span>ຖືກຕ້ອງແລ້ວ! ຍິນດີນຳ 🎉</span>';
+      } else {
+        feedback.className = 'quiz-feedback text-xs p-2.5 rounded-xl bg-rose-50 text-rose-800 border border-rose-200 flex items-center gap-1.5';
+        feedback.innerHTML = '<i class="mdi mdi-close-circle text-rose-600 text-base"></i> <span>ຍັງບໍ່ຖືກຕ້ອງ! ລອງທົບທວນເນື້ອຫາດ້ານເທິງອີກຄັ້ງ.</span>';
+      }
+
+      // Update total score badge
+      let score = 0;
+      let answered = 0;
+      for (let i = 1; i <= 5; i++) {
+        if (quizState[i] !== null) {
+          answered++;
+          if (quizState[i] === true) score++;
+        }
+      }
+      document.getElementById('quiz-score-badge').textContent = `ຄະແນນ: ${score} / 5 (${answered}/5 ຂໍ້)`;
+      if (answered === 5 && score === 5) {
+        showToast('🏆 ສຸດຍອດ! ທ່ານຕອບຖືກຄົບທັງ 5 ຂໍ້!');
+      }
+    }
+
+    // Initial Studio & Gallery Render
     renderIcons(iconList);
+    refreshStudio();
   </script>
 
 </body>

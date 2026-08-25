@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="lo" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ບົດທີ 5.0: ສະແດງຂໍ້ມູນແບບດັ້ງເດີມ (Show Old Data) - ຫຼັກສູດ Nuxt 4 (2027)</title>
+
+  <!-- Google Fonts: Noto Sans Lao, Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+Lao:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Material Design Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans Lao"', '"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-white text-slate-800 min-h-screen font-sans antialiased selection:bg-slate-700 selection:text-white">
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 text-sm border border-slate-700">
+    <span>📋 ຄັດລອກໂຄດສຳເລັດແລ້ວ!</span>
+  </div>
+
+  <!-- header (Full Width & White Background) -->
+  <header class="w-full bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
+      
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <!-- Mobile Sidebar Toggle Button -->
+        <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 transition" aria-label="Toggle Menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+
+        <a href="./index.html" class="flex items-center gap-3 group">
+          <span
+            class="w-9 h-9 rounded-lg bg-slate-800 text-white font-black flex items-center justify-center text-sm shadow-md shadow-slate-800/20 group-hover:scale-105 transition">N4</span>
+          <div>
+            <span class="font-bold text-lg text-slate-900 group-hover:text-slate-700 transition">ຫຼັກສູດ Nuxt 4</span>
+          </div>
+        </a>
+        <span class="hidden sm:inline-block text-xs font-semibold text-slate-700 bg-slate-100 border border-slate-300 px-2.5 py-0.5 rounded-full ml-1">ບົດທີ 5.0</span>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold">
+        <a href="./index.html" class="text-slate-600 hover:text-slate-900 transition">ໜ້າຫຼັກ</a>
+        
+        <!-- Course Dropdown -->
+        <div class="relative group">
+          <button class="text-slate-900 font-bold flex items-center gap-1.5 py-2">
+            <span>ບົດຮຽນທັງໝົດ</span>
+            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="absolute left-0 top-full hidden group-hover:block w-72 bg-white border border-slate-200 rounded-2xl shadow-xl p-2 z-50 space-y-1">
+            <a href="./N00.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 0: ແນະນຳ Nuxt 4</a>
+            <a href="./N01.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 1: ຕິດຕັ້ງໂປຣເຈັກ</a>
+            <a href="./N02.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 2: ໜ້າເວັບ & Components</a>
+            <a href="./N03.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 3: Data Fetching & State</a>
+            <a href="./N04.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 4: nuxt.config, Plugins & Assets</a>
+            <!-- Lesson 5 Nested Dropdown -->
+            <div class="relative group/sub">
+              <a href="./N05.html" class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-100 text-slate-900 font-bold text-xs">
+                <span>ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</span>
+                <svg class="w-3 h-3 text-slate-500 -rotate-90 group-hover/sub:rotate-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </a>
+              <!-- Sub-menu Dropdown on hover -->
+              <div class="hidden group-hover/sub:block pl-3 pr-1 py-1 space-y-1 bg-slate-50 rounded-xl border border-slate-200 my-0.5 ml-2">
+                <a href="./N05.html" class="block px-2.5 py-1 rounded-lg hover:bg-white text-slate-700 text-[11px] font-semibold">5. ພາບລວມ Vuetify 3</a>
+                <a href="./N05-0.html" class="block px-2.5 py-1 rounded-lg bg-slate-200 text-slate-900 font-bold text-[11px]">5.0: ສະແດງຂໍ້ມູນແບບເກົ່າ (Old Data)</a>
+                <a href="./N05-1.html" class="block px-2.5 py-1 rounded-lg hover:bg-white text-teal-700 font-semibold text-[11px]">5.1: ໃຊ້ງານ Teal v-card</a>
+              </div>
+            </div>
+            <a href="./N06.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 6: Form Handling & State</a>
+            <a href="./N07.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 7: MDI Icons Setup & Use</a>
+            <a href="./N08.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 8: ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)</a>
+          </div>
+        </div>
+
+        <a href="./about.html" class="text-slate-600 hover:text-slate-900 transition">ກ່ຽວກັບ</a>
+        <a href="./contact.html" class="text-slate-600 hover:text-slate-900 transition">ຕິດຕໍ່</a>
+      </nav>
+
+      <!-- Action Button -->
+      <div class="flex items-center gap-3">
+        <a href="./N05-1.html" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md shadow-teal-600/20 transition">
+          <span>ໄປບົດ 5.1 (Teal v-card)</span>
+          <span>→</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Sidebar Overlay & Drawer -->
+  <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden transition-opacity duration-300"></div>
+  <aside id="mobile-sidebar" class="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-white border-r border-slate-200 z-50 p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 space-y-6 shadow-2xl">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+      <div class="flex items-center gap-2">
+        <span class="w-8 h-8 rounded-lg bg-slate-800 text-white font-black flex items-center justify-center text-sm">N4</span>
+        <span class="font-bold text-slate-900 text-base">ຫຼັກສູດ Nuxt 4</span>
+      </div>
+      <button onclick="toggleMobileSidebar()" class="p-2 text-slate-400 hover:text-slate-700 rounded-lg">✕</button>
+    </div>
+
+    <!-- Navigation -->
+    <div class="space-y-1">
+      <div class="text-[11px] font-bold uppercase text-slate-400 px-3 pb-1">ເມນູຫຼັກ</div>
+      <a href="./index.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">🏠 ໜ້າຫຼັກ</a>
+      <a href="./about.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">ℹ️ ກ່ຽວກັບ</a>
+      <a href="./contact.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">📧 ຕິດຕໍ່</a>
+    </div>
+
+    <!-- Course List -->
+    <div class="space-y-1 pt-2">
+      <div class="text-[11px] font-bold uppercase text-slate-400 px-3 pb-1">ບົດຮຽນ Nuxt 4</div>
+      <a href="./N00.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">00. ແນະນຳ Nuxt 4</a>
+      <a href="./N01.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">01. ຕິດຕັ້ງໂປຣເຈັກ</a>
+      <a href="./N02.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">02. ໜ້າເວັບ ແລະ Components</a>
+      <a href="./N03.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">03. Data Fetching & State</a>
+      <a href="./N04.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">04. nuxt.config, Plugins & Assets</a>
+      <div class="space-y-1">
+        <a href="./N05.html" class="block px-3 py-2.5 rounded-xl bg-slate-100 text-slate-900 font-bold text-xs">
+          05. ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify
+        </a>
+        <div class="pl-4 pr-1 py-1 space-y-1 bg-slate-50 rounded-xl border border-slate-100 ml-2">
+          <a href="./N05-0.html" class="block px-2.5 py-1.5 rounded-lg bg-slate-200 text-slate-900 font-bold text-xs">5.0: ສະແດງຂໍ້ມູນແບບເກົ່າ (ປັດຈຸບັນ)</a>
+          <a href="./N05-1.html" class="block px-2.5 py-1.5 rounded-lg text-teal-700 hover:bg-white font-bold text-xs">5.1: ໃຊ້ງານ Teal v-card</a>
+        </div>
+      </div>
+      <a href="./N06.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">06. Form Handling & State</a>
+      <a href="./N07.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">07. MDI Icons Setup & Use</a>
+      <a href="./N08.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">08. ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)</a>
+    </div>
+  </aside>
+
+  <!-- main container with Sidebar Layout -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- DESKTOP STICKY SIDEBAR (Left Column) -->
+      <aside class="hidden lg:block lg:col-span-4 sticky top-24 space-y-6">
+        
+        <!-- Sub-Lesson Navigator -->
+        <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-5 text-white space-y-3 shadow-lg">
+          <div class="text-[11px] uppercase tracking-wider text-slate-400 font-bold">ໂຄງສ້າງບົດທີ 5 (Vuetify Sub-Series)</div>
+          <div class="space-y-2 text-xs">
+            <a href="./N05-0.html" class="flex items-center gap-2 p-2.5 rounded-xl bg-white/10 text-white font-bold border border-white/20">
+              <span class="w-5 h-5 rounded-md bg-slate-700 flex items-center justify-center text-[10px]">5.0</span>
+              <span>ສະແດງຂໍ້ມູນແບບເກົ່າ (Old Data)</span>
+              <span class="ml-auto text-emerald-400">●</span>
+            </a>
+            <a href="./N05-1.html" class="flex items-center gap-2 p-2.5 rounded-xl hover:bg-white/5 text-slate-300 transition">
+              <span class="w-5 h-5 rounded-md bg-teal-800 text-teal-200 flex items-center justify-center text-[10px]">5.1</span>
+              <span>ໃຊ້ງານ Teal &lt;v-card&gt;</span>
+              <span class="ml-auto text-teal-400">→</span>
+            </a>
+            <a href="./N05.html" class="flex items-center gap-2 p-2.5 rounded-xl hover:bg-white/5 text-slate-400 transition">
+              <span class="w-5 h-5 rounded-md bg-slate-800 text-slate-400 flex items-center justify-center text-[10px]">ALL</span>
+              <span>ພາບລວມ Vuetify 3 ຫຼັກ</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- In-Page Jump Links -->
+        <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 space-y-3">
+          <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider text-slate-400">ຫົວຂໍ້ໃນບົດນີ້</h4>
+          <nav class="space-y-1.5 text-xs">
+            <a href="#section-1" class="block py-1 text-slate-600 hover:text-slate-900 transition">1. ວິທີສະແດງຂໍ້ມູນແບບເກົ່າ (Traditional Data Render)</a>
+            <a href="#section-2" class="block py-1 text-slate-600 hover:text-slate-900 transition">2. ຂໍ້ຈຳກັດຂອງການໃຊ້ Plain HTML/CSS</a>
+            <a href="#section-3" class="block py-1 text-slate-600 hover:text-slate-900 transition">3. Interactive Playground: Old Table vs Old List</a>
+            <a href="#section-4" class="block py-1 text-slate-600 hover:text-slate-900 transition">4. ໂຄດ Vue 3 ຕົວຢ່າງແບບດັ້ງເດີມ</a>
+          </nav>
+        </div>
+
+      </aside>
+
+      <!-- MAIN CONTENT (Right Column) -->
+      <main class="lg:col-span-8 space-y-10">
+
+        <!-- Lesson Header Banner -->
+        <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 rounded-3xl p-8 sm:p-10 text-white shadow-xl space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-700/60 text-slate-200 text-xs font-bold border border-slate-600">
+            <span>LESSON 05.0</span> • <span>Classic Data Rendering</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight">ບົດທີ 5.0: ການສະແດງຜົນຂໍ້ມູນແບບດັ້ງເດີມ (Show Old Data)</h1>
+          <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
+            ຮຽນຮູ້ວິທີການສະແດງຜົນຂໍ້ມູນ Array / Object ແບບເກົ່າໃນ Vue 3 ໂດຍໃຊ້ Standard HTML Table, Unordered Lists (<code class="font-mono bg-slate-950 px-2 py-0.5 rounded">&lt;ul&gt;&lt;li&gt;</code>) ແລະ Custom CSS, ພ້ອມວິເຄາະຂໍ້ຈຳກັດກ່ອນທີ່ຈະປ່ຽນມາໃຊ້ Material UI Components.
+          </p>
+        </div>
+
+        <!-- Section 1: Overview -->
+        <section id="section-1" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-slate-800 text-white text-sm font-bold flex items-center justify-center">1</span>
+            ວິທີການສະແດງຜົນຂໍ້ມູນແບບດັ້ງເດີມ (Traditional Data Render)
+          </h2>
+          <p class="text-slate-600 leading-relaxed">
+            ກ່ອນທີ່ຈະມີ UI Component Frameworks ເຊັ່ນ Vuetify, ນັກພັດທະນາມັກຈະສະແດງຂໍ້ມູນທີ່ດຶງມາຈາກ Backend ຜ່ານ 3 ຮູບແບບຫຼັກ:
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="w-8 h-8 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-sm">📊</div>
+              <h3 class="font-bold text-slate-900 text-sm">HTML Table ທຳມະດາ</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">ໃຊ້ <code class="font-mono">&lt;table&gt;&lt;tr&gt;&lt;td&gt;</code> ຄູ່ກັບ <code class="font-mono">v-for</code>. ຕ້ອງຂຽນ CSS ປັບ Border ແລະ Padding ເອງ.</p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="w-8 h-8 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-sm">📋</div>
+              <h3 class="font-bold text-slate-900 text-sm">List Item Elements</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">ໃຊ້ <code class="font-mono">&lt;ul&gt; &lt;li&gt;</code> ສະແດງລາຍການຂໍ້ຄວາມຕໍ່ໆກັນແບບແຖວຕັ້ງ.</p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="w-8 h-8 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-sm">📦</div>
+              <h3 class="font-bold text-slate-900 text-sm">Div Boxes + Manual CSS</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">ສ້າງ <code class="font-mono">&lt;div class="box"&gt;</code> ພ້ອມຂຽນ CSS Shadow, Radius, Hover ດ້ວຍຕົນເອງ.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2: Limitations -->
+        <section id="section-2" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-slate-800 text-white text-sm font-bold flex items-center justify-center">2</span>
+            ຂໍ້ຈຳກັດຂອງການສະແດງຜົນຂໍ້ມູນແບບເກົ່າ
+          </h2>
+
+          <div class="space-y-3">
+            <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 flex items-start gap-3">
+              <span class="text-rose-600 font-bold text-base">⚠️</span>
+              <div>
+                <h4 class="font-bold text-rose-900 text-sm">ບໍ່ຮອງຮັບ Responsive ສົມບູນແບບ</h4>
+                <p class="text-xs text-rose-800/80 leading-relaxed">Table ທຳມະດາຈະລົ້ນຈໍມືຖື (Horizontal Overflow) ຖ້າບໍ່ມີການຂຽນ CSS Media Queries ສະເພາະ.</p>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 flex items-start gap-3">
+              <span class="text-amber-600 font-bold text-base">⚠️</span>
+              <div>
+                <h4 class="font-bold text-amber-900 text-sm">ຂາດ Micro-Interactions ແລະ Theme Dynamic</h4>
+                <p class="text-xs text-amber-800/80 leading-relaxed">ບໍ່ມີ Ripple Effects, Elevation Shadows, Skeleton Loading, ຫຼື Dark Mode ທີ່ປັບປ່ຽນໄດ້ທັນທີ.</p>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-100 border border-slate-300 flex items-start gap-3">
+              <span class="text-slate-700 font-bold text-base">💡</span>
+              <div>
+                <h4 class="font-bold text-slate-900 text-sm">ວິທີແກ້ໄຂທີ່ທັນສະໄໝ:</h4>
+                <p class="text-xs text-slate-700 leading-relaxed">
+                  ໃນບົດຕໍ່ໄປ (<strong>N05.1</strong>), ພວກເຮົາຈະປ່ຽນມາໃຊ້ <code class="font-mono text-teal-700 font-bold bg-white px-1.5 py-0.5 rounded border">&lt;v-card&gt;</code> ດ້ວຍ <strong>Teal Theme</strong> ທີ່ສວຍງາມ ແລະ ຮອງຮັບ Responsive ທຸກຂະໜາດຈໍ.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 3: Interactive Old Data Showcase -->
+        <section id="section-3" class="space-y-6 scroll-mt-24">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-slate-800 text-white text-sm font-bold flex items-center justify-center">3</span>
+              ທົດລອງລະບົບສະແດງຂໍ້ມູນແບບເກົ່າ (Old Data Showcase)
+            </h2>
+            <span class="text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-300">
+              Classic View Mode
+            </span>
+          </div>
+
+          <!-- Playground Box -->
+          <div class="bg-slate-900 text-white rounded-3xl p-6 sm:p-7 shadow-xl border border-slate-800 space-y-6">
+            
+            <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800 text-xs">
+              <div class="flex items-center gap-2">
+                <span class="text-slate-400">ເລືອກຮູບແບບແບບເກົ່າ:</span>
+                <button onclick="setOldView('table')" id="btn-old-table" class="px-3.5 py-1.5 rounded-lg bg-slate-700 text-white font-bold transition">
+                  HTML Table
+                </button>
+                <button onclick="setOldView('list')" id="btn-old-list" class="px-3.5 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">
+                  Unordered List (&lt;ul&gt;)
+                </button>
+                <button onclick="setOldView('json')" id="btn-old-json" class="px-3.5 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">
+                  Raw JSON Array
+                </button>
+              </div>
+            </div>
+
+            <!-- 1. HTML Table View -->
+            <div id="view-old-table" class="overflow-x-auto rounded-xl border border-slate-700 bg-slate-950">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-800 text-slate-300 font-bold border-b border-slate-700">
+                  <tr>
+                    <th class="p-3">ID</th>
+                    <th class="p-3">ຊື່ (Name)</th>
+                    <th class="p-3">ວິຊາ (Subject)</th>
+                    <th class="p-3">ຄະແນນ (Score)</th>
+                    <th class="p-3">ສະຖານະ (Status)</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 text-slate-300 font-mono">
+                  <tr>
+                    <td class="p-3">101</td>
+                    <td>ສົມສັກ ໄຊຍະວົງ</td>
+                    <td>Nuxt 4 Architecture</td>
+                    <td>95%</td>
+                    <td><span class="text-emerald-400">Pass</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-3">102</td>
+                    <td>ມະນີວອນ ແສງດາວ</td>
+                    <td>Vue 3 Reactive State</td>
+                    <td>88%</td>
+                    <td><span class="text-emerald-400">Pass</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-3">103</td>
+                    <td>ຄຳພອນ ວົງໄຊ</td>
+                    <td>Nitro Server Endpoints</td>
+                    <td>92%</td>
+                    <td><span class="text-emerald-400">Pass</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- 2. HTML List View -->
+            <div id="view-old-list" class="hidden bg-slate-950 p-5 rounded-xl border border-slate-700 text-xs space-y-2 font-mono">
+              <ul class="list-disc pl-5 space-y-2 text-slate-300">
+                <li><strong>ສົມສັກ ໄຊຍະວົງ:</strong> ວິຊາ Nuxt 4 Architecture - ຄະແນນ 95% (Pass)</li>
+                <li><strong>ມະນີວອນ ແສງດາວ:</strong> ວິຊາ Vue 3 Reactive State - ຄະແນນ 88% (Pass)</li>
+                <li><strong>ຄຳພອນ ວົງໄຊ:</strong> ວິຊາ Nitro Server Endpoints - ຄະແນນ 92% (Pass)</li>
+              </ul>
+            </div>
+
+            <!-- 3. Raw JSON View -->
+            <div id="view-old-json" class="hidden bg-slate-950 p-4 rounded-xl border border-slate-700 text-xs overflow-x-auto">
+              <pre class="font-mono text-emerald-400"><code>[
+  { "id": 101, "name": "ສົມສັກ ໄຊຍະວົງ", "subject": "Nuxt 4", "score": 95, "status": "Pass" },
+  { "id": 102, "name": "ມະນີວອນ ແສງດາວ", "subject": "Vue 3", "score": 88, "status": "Pass" },
+  { "id": 103, "name": "ຄຳພອນ ວົງໄຊ", "subject": "Nitro", "score": 92, "status": "Pass" }
+]</code></pre>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Section 4: Traditional Vue Code -->
+        <section id="section-4" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-slate-800 text-white text-sm font-bold flex items-center justify-center">4</span>
+            ໂຄດ Vue 3 ຕົວຢ່າງແບບດັ້ງເດີມ (<code class="text-slate-800 font-mono text-xl">app/pages/old-data.vue</code>)
+          </h2>
+
+          <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl">
+            <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span>app/pages/old-data.vue</span>
+              <button onclick="copyCmd(document.getElementById('code-old-vue').innerText)" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                Copy Code
+              </button>
+            </div>
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-old-vue">&lt;template&gt;
+  &lt;div class="old-container"&gt;
+    &lt;h1&gt;ລາຍຊື່ນັກຮຽນ (ສະແດງຜົນແບບເກົ່າ)&lt;/h1&gt;
+    
+    &lt;!-- Plain HTML Table --&gt;
+    &lt;table border="1" cellpadding="8" cellspacing="0"&gt;
+      &lt;thead&gt;
+        &lt;tr&gt;
+          &lt;th&gt;ລະຫັດ&lt;/th&gt;
+          &lt;th&gt;ຊື່ ແລະ ນາມສະກຸນ&lt;/th&gt;
+          &lt;th&gt;ວິຊາຮຽນ&lt;/th&gt;
+          &lt;th&gt;ຄະແນນ&lt;/th&gt;
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        &lt;tr v-for="student in students" :key="student.id"&gt;
+          &lt;td&gt;{{ student.id }}&lt;/td&gt;
+          &lt;td&gt;{{ student.name }}&lt;/td&gt;
+          &lt;td&gt;{{ student.subject }}&lt;/td&gt;
+          &lt;td&gt;{{ student.score }}%&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup lang="ts"&gt;
+import { ref } from 'vue'
+
+const students = ref([
+  { id: 101, name: 'ສົມສັກ ໄຊຍະວົງ', subject: 'Nuxt 4', score: 95 },
+  { id: 102, name: 'ມະນີວອນ ແສງດາວ', subject: 'Vue 3', score: 88 },
+  { id: 103, name: 'ຄຳພອນ ວົງໄຊ', subject: 'Nitro API', score: 92 }
+])
+&lt;/script&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- Navigation Footer -->
+        <div class="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <a href="./N04.html" class="px-6 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition flex items-center gap-2">
+            ← ກັບໄປບົດທີ 4 (nuxt.config)
+          </a>
+          <a href="./N05-1.html" class="px-6 py-3 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm shadow-lg shadow-teal-600/20 transition flex items-center gap-2">
+            <span>ໄປບົດ 5.1: ໃຊ້ງານ Teal v-card</span>
+            <span>→</span>
+          </a>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <footer class="border-t border-slate-200 mt-16 py-8 text-center text-xs text-slate-500">
+    ຫຼັກສູດ Nuxt 4 (2027) • ສອນດ້ວຍຄວາມເຂົ້າໃຈງ່າຍ
+  </footer>
+
+  <script>
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('mobile-sidebar');
+      const backdrop = document.getElementById('mobile-sidebar-backdrop');
+      if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function copyCmd(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.remove('translate-y-20', 'opacity-0');
+        setTimeout(() => {
+          toast.classList.add('translate-y-20', 'opacity-0');
+        }, 2200);
+      });
+    }
+
+    function setOldView(mode) {
+      document.getElementById('view-old-table').classList.add('hidden');
+      document.getElementById('view-old-list').classList.add('hidden');
+      document.getElementById('view-old-json').classList.add('hidden');
+
+      document.getElementById('btn-old-table').className = 'px-3.5 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition';
+      document.getElementById('btn-old-list').className = 'px-3.5 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition';
+      document.getElementById('btn-old-json').className = 'px-3.5 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition';
+
+      if (mode === 'table') {
+        document.getElementById('view-old-table').classList.remove('hidden');
+        document.getElementById('btn-old-table').className = 'px-3.5 py-1.5 rounded-lg bg-slate-700 text-white font-bold transition';
+      } else if (mode === 'list') {
+        document.getElementById('view-old-list').classList.remove('hidden');
+        document.getElementById('btn-old-list').className = 'px-3.5 py-1.5 rounded-lg bg-slate-700 text-white font-bold transition';
+      } else {
+        document.getElementById('view-old-json').classList.remove('hidden');
+        document.getElementById('btn-old-json').className = 'px-3.5 py-1.5 rounded-lg bg-slate-700 text-white font-bold transition';
+      }
+    }
+  </script>
+
+</body>
+
+</html>

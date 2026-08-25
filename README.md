@@ -12,8 +12,11 @@
 - **[N03: ບົດທີ 3](N03.html)** — Data Fetching & State (`useFetch`, `useState` & Nitro Server API)
 - **[N04: ບົດທີ 4](N04.html)** — nuxt.config.ts, Plugins & Assets Management
 - **[N05: ບົດທີ 5](N05.html)** — ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify 3 (Material Design, Plugins & Components)
+  - **[N05.0: ບົດທີ 5.0](N05-0.html)** — ສະແດງຂໍ້ມູນແບບເກົ່າ (Show Old Data: HTML Table & Plain Lists)
+  - **[N05.1: ບົດທີ 5.1](N05-1.html)** — ໃຊ້ງານ Vuetify `<v-card>` ດ້ວຍ Teal Theme (Teal Use v-card)
 - **[N06: ບົດທີ 6](N06.html)** — Form Handling & Reactive State (`v-model`, `const form` & Show Data)
 - **[N07: ບົດທີ 7](N07.html)** — ຕິດຕັ້ງ & ໃຊ້ງານ MDI Icons (`@mdi/font`, Vuetify Icon Sets, `v-icon` & Gallery)
+- **[N08: ບົດທີ 8](N08.html)** — ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Axios Instance, Interceptors & Teacher API Data Fetching)
 
 ---
 
