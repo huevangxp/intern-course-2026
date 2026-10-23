@@ -371,6 +371,7 @@
             <a href="#section-1" class="block py-1 text-slate-400 hover:text-teal-300 transition">1. Nuxt 4 ແມ່ນຫຍັງ?</a>
             <a href="#section-2" class="block py-1 text-slate-400 hover:text-teal-300 transition">2. ຮູບແບບ Universal Rendering</a>
             <a href="#section-3" class="block py-1 text-slate-400 hover:text-teal-300 transition">3. ປຽບທຽບ Vue 3 vs. Nuxt 4</a>
+            <a href="#section-4" class="block py-1 text-slate-400 hover:text-teal-300 transition">4. ຈຸດເດັ່ນ Nuxt 4.6.2 ລ່າສຸດ</a>
           </nav>
         </div>
 
@@ -507,6 +508,111 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+        </section>
+
+        <!-- Section 4: Nuxt 4.6.2 Highlights & Architecture -->
+        <section id="section-4" class="dark-card p-6 sm:p-8 rounded-3xl shadow-lg space-y-6 scroll-mt-24">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+            <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center shadow-md shadow-teal-500/25">4</span>
+              <span>ຈຸດເດັ່ນ & ຄຸນສົມບັດໃໝ່ໃນ Nuxt 4 (Nuxt 4.6.2 ລ່າສຸດ)</span>
+            </h2>
+            <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-teal-500/15 text-teal-300 border border-teal-500/30 w-fit">
+              v4.6.2 Latest Release
+            </span>
+          </div>
+
+          <p class="text-slate-300 leading-relaxed text-sm">
+            <strong>Nuxt 4.6</strong> (ພ້ອມ Patch Update <strong>4.6.2</strong>) ເປັນ Milestone ສຳຄັນທີ່ສຸດຂອງ Nuxt 4 ໂດຍມີການ Update ຫຼາຍກວ່າ <strong>420+ Commits</strong> ແລະ ເປີດໂຕພ້ອມ <strong>Nuxt CLI v4</strong>. ມັນຖືກອອກແບບມາເພື່ອຍົກລະດັບຄວາມໄວ (Performance), ຄວາມປອດໄພ, ແລະ ຄວາມຍືດຫຍຸ່ນໃຫ້ກັບ Developer:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Feature 1: app/ Directory -->
+            <div class="p-5 rounded-2xl bg-[#080d18] border border-slate-800/80 space-y-2 hover:border-teal-500/40 transition">
+              <div class="flex items-center gap-2 text-teal-400 font-bold text-sm">
+                <span class="text-lg">📂</span>
+                <span>1. ໂຄງສ້າງໃໝ່ `app/` Directory</span>
+              </div>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Nuxt 4 ແຍກ Source Code ຂອງແອັບພລິເຄຊັນທັງໝົດ (<code class="text-teal-300 font-mono">pages/</code>, <code class="text-teal-300 font-mono">components/</code>, <code class="text-teal-300 font-mono">composables/</code>) ເຂົ້າໄປໄວ້ໃນໂຟລເດີ <code class="text-teal-300 font-mono font-bold">app/</code> ເຮັດໃຫ້ Root Directory ສະອາດ ແລະ ຊ່ວຍໃຫ້ Vite File Watcher ເຮັດວຽກໄວຂຶ້ນເຖິງ 35%.
+              </p>
+            </div>
+
+            <!-- Feature 2: Server-Agnostic -->
+            <div class="p-5 rounded-2xl bg-[#080d18] border border-slate-800/80 space-y-2 hover:border-teal-500/40 transition">
+              <div class="flex items-center gap-2 text-teal-400 font-bold text-sm">
+                <span class="text-lg">⚡</span>
+                <span>2. Server-Agnostic (`nuxt/server`)</span>
+              </div>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                ແຍກ Server Logic ອອກມາເປັນ Package ເປັນກາງ ໂດຍບໍ່ຜູກມັດກັບ H3 ຫຼື Nitro ແບບ Hardcoded ອີກຕໍ່ໄປ, ເຮັດໃຫ້ Server Handlers ສາມາດ Portable ໄປ Run ເທິງ Runtime ໃດກໍໄດ້ຢ່າງອິດສະຫຼະ.
+              </p>
+            </div>
+
+            <!-- Feature 3: Rebuilt Typed $fetch -->
+            <div class="p-5 rounded-2xl bg-[#080d18] border border-slate-800/80 space-y-2 hover:border-teal-500/40 transition">
+              <div class="flex items-center gap-2 text-teal-400 font-bold text-sm">
+                <span class="text-lg">🎯</span>
+                <span>3. Rebuilt Typed `$fetch` (ແກ້ TS2589)</span>
+              </div>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                ຍົກເຄື່ອງລະບົບ Type-Check ໃໝ່ທັງໝົດເທິງ Route-Tree Architecture (<code class="text-teal-300 font-mono">fetchdts</code>), ແກ້ໄຂບັນຫາ Memory Leak ແລະ Error ການ Recursion ເກີນຂີດຈຳກັດ (<code class="text-red-400 font-mono">TS2589</code>) ໃນໂປຣເຈັກຂະໜາດໃຫຍ່.
+              </p>
+            </div>
+
+            <!-- Feature 4: Built-In Sessions -->
+            <div class="p-5 rounded-2xl bg-[#080d18] border border-slate-800/80 space-y-2 hover:border-teal-500/40 transition">
+              <div class="flex items-center gap-2 text-teal-400 font-bold text-sm">
+                <span class="text-lg">🔐</span>
+                <span>4. Native Built-In Sessions</span>
+              </div>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                ຮອງຮັບລະບົບຈັດການ Session ພາຍໃນຕົວຜ່ານ Encrypted App Secret ໂດຍບໍ່ຕ້ອງເພີ່ມ Library ພາຍນອກ ເພີ່ມຄວາມປອດໄພສູງສຸດສຳລັບລະບົບ Authentication ແລະ User State.
+              </p>
+            </div>
+
+            <!-- Feature 5: Vue Vapor Mode -->
+            <div class="p-5 rounded-2xl bg-[#080d18] border border-slate-800/80 space-y-2 hover:border-teal-500/40 transition">
+              <div class="flex items-center gap-2 text-teal-400 font-bold text-sm">
+                <span class="text-lg">💨</span>
+                <span>5. ຮອງຮັບ Vue Vapor Mode (Experimental)</span>
+              </div>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Nuxt 4.6 ເລີ່ມຮອງຮັບສະຖາປັດຕະຍະກຳ Vue Vapor Mode ທີ່ compile template ໄປເປັນ Native DOM ໂດຍກົງ ໂດຍບໍ່ຕ້ອງຜ່ານ Virtual DOM (No-VDOM), ໃຫ້ຄວາມໄວ ແລະ ປະຢັດ RAM ສູງສຸດ.
+              </p>
+            </div>
+
+            <!-- Feature 6: Nuxt CLI v4 -->
+            <div class="p-5 rounded-2xl bg-[#080d18] border border-slate-800/80 space-y-2 hover:border-teal-500/40 transition">
+              <div class="flex items-center gap-2 text-teal-400 font-bold text-sm">
+                <span class="text-lg">🛠️</span>
+                <span>6. "my-bad" Overlay & Nuxt CLI v4</span>
+              </div>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                ໜ້າຈໍແຈ້ງເຕືອນ Error ແບບໃໝ່ (Interactive Error Overlay) ທີ່ຊີ້ຈຸດຜິດພາດພ້ອມ Code Frame ແລະ ວິທີແກ້ໄຂທັນທີ ພ້ອມ Dev Server ທີ່ Start ໄວຂຶ້ນກວ່າເກົ່າ.
+              </p>
+            </div>
+          </div>
+
+          <!-- Compatibility Config Example -->
+          <div class="bg-[#050811] rounded-2xl overflow-hidden border border-slate-800 space-y-0">
+            <div class="bg-[#0c1220] px-4 py-2.5 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-red-500/80"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+                <span class="text-teal-400 font-semibold ml-1">nuxt.config.ts</span>
+              </div>
+              <span class="text-[11px] text-slate-500">Nuxt 4 Forward Compatibility Flag</span>
+            </div>
+            <pre class="p-4 font-mono text-xs text-slate-200 overflow-x-auto"><code>// ວິທີເປີດໃຊ້ງານສະຖາປັດຕະຍະກຳ Nuxt 4 ແບບ 100%
+export default defineNuxtConfig({
+  future: {
+    compatibilityVersion: 4 // ເປີດໃຊ້ app/ directory ແລະ Nuxt 4 architectural improvements
+  },
+  compatibilityDate: '2026-10-23'
+})</code></pre>
           </div>
         </section>
 
