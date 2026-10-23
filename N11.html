@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="lo" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ບົດທີ 11: Teacher Full CRUD Operations - ຫຼັກສູດ Nuxt 4 (2027)</title>
+
+  <!-- Google Fonts: Noto Sans Lao, Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+Lao:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Material Design Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+
+  <!-- Core Theme Stylesheet -->
+  <link rel="stylesheet" href="./theme.css">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            teal: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+              950: '#042f2e',
+            },
+            dark: {
+              canvas: '#070b12',
+              surface: '#0c1220',
+              card: '#0f172a',
+              border: '#1e293b',
+              muted: '#64748b',
+            }
+          },
+          fontFamily: {
+            sans: ['"Noto Sans Lao"', '"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom dark scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070b12;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(45, 212, 191, 0.4);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(45, 212, 191, 0.8);
+    }
+    .custom-dark-scrollbar::-webkit-scrollbar-track {
+      background: #050811;
+    }
+    .custom-dark-scrollbar::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+    .custom-dark-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #14b8a6;
+    }
+  </style>
+</head>
+
+<body class="bg-[#070b12] text-slate-200 min-h-screen font-sans antialiased selection:bg-teal-500 selection:text-slate-950">
+
+  <!-- Scroll Reading Progress Bar -->
+  <div id="progress-bar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-teal-400 via-emerald-400 to-cyan-500 z-50 transition-all duration-150" style="width: 0%"></div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none bg-[#0c1220] text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 text-sm border border-teal-500/50">
+    <span class="text-teal-400 text-base">✨</span>
+    <span id="toast-message">ຄັດລອກໂຄດສຳເລັດແລ້ວ!</span>
+  </div>
+
+  <!-- Floating Back To Top Button -->
+  <button id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 left-6 z-40 w-11 h-11 rounded-2xl bg-[#0c1220] border border-slate-700 text-teal-400 shadow-2xl flex items-center justify-center text-lg opacity-0 pointer-events-none transition-all duration-300 hover:bg-teal-500 hover:text-slate-950 hover:border-teal-500 hover:scale-110" aria-label="Back to Top">
+    <i class="mdi mdi-arrow-up"></i>
+  </button>
+
+  <!-- Header (Sticky Dark Glass Navbar) -->
+  <header class="w-full bg-[#070b12]/90 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
+      
+      <!-- Logo & Breadcrumb -->
+      <div class="flex items-center gap-3">
+        <!-- Mobile Sidebar Toggle Button -->
+        <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 rounded-xl border border-slate-800 hover:bg-slate-800/60 text-slate-300 hover:text-teal-300 transition" aria-label="Toggle Menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+
+        <a href="./index.html" class="flex items-center gap-2.5 group">
+          <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-400 to-teal-600 text-slate-950 font-black flex items-center justify-center text-sm shadow-md shadow-teal-500/25 group-hover:scale-105 transition">N4</span>
+          <div>
+            <span class="font-extrabold text-base sm:text-lg text-white group-hover:text-teal-400 transition">ຫຼັກສູດ Nuxt 4</span>
+          </div>
+        </a>
+        <span class="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-teal-300 bg-teal-950/70 border border-teal-500/30 px-2.5 py-0.5 rounded-full ml-1">
+          <i class="mdi mdi-database-edit-outline text-[13px]"></i>
+          ບົດທີ 11: Teacher Full CRUD
+        </span>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold">
+        <a href="./index.html" class="text-slate-300 hover:text-teal-400 transition">ໜ້າຫຼັກ</a>
+        
+        <!-- Course Dropdown -->
+        <div class="relative group">
+          <button class="text-teal-400 font-bold flex items-center gap-1.5 py-2">
+            <span>ບົດຮຽນທັງໝົດ</span>
+            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="absolute left-0 top-full hidden group-hover:block w-72 bg-[#0c1220] border border-slate-800 rounded-2xl shadow-2xl p-2 z-50 space-y-1">
+            <a href="./N00.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 0: ແນະນຳ Nuxt 4</a>
+            <a href="./N01.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 1: ຕິດຕັ້ງໂປຣເຈັກ</a>
+            <a href="./N02.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 2: ໜ້າເວັບ & Components</a>
+            <a href="./N03.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 3: Data Fetching & State</a>
+            <a href="./N04.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 4: nuxt.config, Plugins & Assets</a>
+            <a href="./N05.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</a>
+            <a href="./N06.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 6: Form Handling & State</a>
+            <a href="./N07.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 7: MDI Icons Setup & Use</a>
+            <a href="./N08.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 8: ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)</a>
+            <a href="./N09.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 9: Route Middleware & Auth Guard</a>
+            <a href="./N10.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 10: State Management ດ້ວຍ Pinia</a>
+            <a href="./N11.html" class="block px-3 py-2 rounded-xl bg-teal-500/15 text-teal-300 font-bold text-xs border border-teal-500/30">ບົດທີ 11: Teacher Full CRUD Operations</a>
+            <a href="./N12.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 12: Nitro Server Engine & API Routes</a>
+            <a href="./N13.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 13: SEO & Production Deployment</a>
+          </div>
+        </div>
+
+        <a href="./about.html" class="text-slate-300 hover:text-teal-400 transition">ກ່ຽວກັບ</a>
+        <a href="./contact.html" class="text-slate-300 hover:text-teal-400 transition">ຕິດຕໍ່</a>
+      </nav>
+
+      <!-- Action Button -->
+      <div class="flex items-center gap-2.5">
+        <a href="./N10.html" class="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-slate-800 hover:bg-slate-800/60 text-slate-300 hover:text-teal-300 font-semibold text-xs transition">
+          <i class="mdi mdi-chevron-left text-base"></i>
+          <span>ບົດທີ 10</span>
+        </a>
+        <a href="./N12.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs shadow-md shadow-teal-500/25 transition">
+          <span>ບົດຕໍ່ໄປ (N12)</span>
+          <i class="mdi mdi-arrow-right text-sm"></i>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Sidebar Overlay & Drawer -->
+  <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden transition-opacity duration-300"></div>
+  <aside id="mobile-sidebar" class="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-[#0c1220] border-r border-slate-800 z-50 p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 space-y-6 shadow-2xl">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+      <div class="flex items-center gap-2.5">
+        <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-teal-400 to-teal-600 text-slate-950 font-black flex items-center justify-center text-sm">N4</span>
+        <span class="font-bold text-white text-base">ຫຼັກສູດ Nuxt 4</span>
+      </div>
+      <button onclick="toggleMobileSidebar()" class="p-2 text-slate-400 hover:text-white rounded-xl" aria-label="Close Menu">✕</button>
+    </div>
+
+    <!-- Navigation -->
+    <div class="space-y-1">
+      <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pb-1">ເມນູຫຼັກ</div>
+      <a href="./index.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-sm font-semibold transition">🏠 ໜ້າຫຼັກ</a>
+      <a href="./about.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-sm font-semibold transition">ℹ️ ກ່ຽວກັບ</a>
+      <a href="./contact.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-sm font-semibold transition">📧 ຕິດຕໍ່</a>
+    </div>
+
+    <!-- Course List -->
+    <div class="space-y-1 pt-2">
+      <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pb-1">ບົດຮຽນ Nuxt 4 (14 ບົດ)</div>
+      <a href="./N00.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">00. ແນະນຳ Nuxt 4</a>
+      <a href="./N01.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">01. ຕິດຕັ້ງໂປຣເຈັກ</a>
+      <a href="./N02.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">02. ໜ້າເວັບ ແລະ Components</a>
+      <a href="./N03.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">03. Data Fetching & State</a>
+      <a href="./N04.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">04. nuxt.config, Plugins & Assets</a>
+      <a href="./N05.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">05. ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</a>
+      <a href="./N06.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">06. Form Handling & State</a>
+      <a href="./N07.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">07. MDI Icons Setup & Use</a>
+      <a href="./N08.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">08. ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)</a>
+      <a href="./N09.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">09. Route Middleware & Auth Guard</a>
+      <a href="./N10.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">10. State Management ດ້ວຍ Pinia</a>
+      <a href="./N11.html" class="block px-3 py-2.5 rounded-xl bg-teal-500/15 text-teal-300 font-bold text-xs border border-teal-500/30">11. Teacher Full CRUD Operations</a>
+      <a href="./N12.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">12. Nitro Server Engine & API Routes</a>
+      <a href="./N13.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">13. SEO & Production Deployment</a>
+    </div>
+  </aside>
+
+  <!-- Main Container with Sidebar Layout -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- DESKTOP STICKY SIDEBAR (Left Column) -->
+      <aside class="hidden lg:block lg:col-span-4 sticky top-24 space-y-6">
+        
+        <!-- Course Outline Card -->
+        <div class="bg-[#0c1220] border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+              <span class="text-teal-400">📚</span> ສາລະບານຫຼັກສູດ Nuxt 4
+            </h3>
+            <span class="text-[11px] font-semibold text-teal-300 bg-teal-950/80 border border-teal-500/30 px-2 py-0.5 rounded-full">14 ບົດຮຽນ</span>
+          </div>
+
+          <div class="space-y-1.5 text-xs max-h-[420px] overflow-y-auto pr-1 custom-dark-scrollbar">
+            <a href="./N00.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">00</span>
+              <div class="truncate">00. ແນະນຳ Nuxt 4 & Architecture</div>
+            </a>
+            <a href="./N01.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">01</span>
+              <div class="truncate">01. ຕິດຕັ້ງໂປຣເຈັກ & CLI</div>
+            </a>
+            <a href="./N02.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">02</span>
+              <div class="truncate">02. ໜ້າເວັບ, Routing & Layouts</div>
+            </a>
+            <a href="./N03.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">03</span>
+              <div class="truncate">03. Data Fetching & useState</div>
+            </a>
+            <a href="./N04.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">04</span>
+              <div class="truncate">04. nuxt.config, Plugins & Assets</div>
+            </a>
+            <a href="./N05.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">05</span>
+              <div class="truncate">05. ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</div>
+            </a>
+            <a href="./N06.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">06</span>
+              <div class="truncate">06. Form Handling & State</div>
+            </a>
+            <a href="./N07.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">07</span>
+              <div class="truncate">07. MDI Icons Setup & Use</div>
+            </a>
+            <a href="./N08.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">08</span>
+              <div class="truncate">08. ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ</div>
+            </a>
+            <a href="./N09.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">09</span>
+              <div class="truncate">09. Route Middleware & Auth Guard</div>
+            </a>
+            <a href="./N10.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">10</span>
+              <div class="truncate">10. State Management (Pinia)</div>
+            </a>
+
+            <!-- Lesson 11 (Active) -->
+            <a href="./N11.html" class="flex items-center gap-3 p-2 rounded-xl bg-teal-500/15 text-teal-300 font-bold border border-teal-500/40 shadow-sm shadow-teal-500/10 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-500 text-slate-950 flex items-center justify-center text-xs font-black shrink-0">11</span>
+              <div class="truncate">11. Teacher Full CRUD Operations</div>
+              <span class="text-teal-400 font-bold ml-auto">●</span>
+            </a>
+
+            <a href="./N12.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">12</span>
+              <div class="truncate">12. Nitro Server Engine & APIs</div>
+            </a>
+            <a href="./N13.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">13</span>
+              <div class="truncate">13. SEO & Production Deploy</div>
+            </a>
+          </div>
+        </div>
+
+        <!-- In-Page Jump Links with Active Scrollspy -->
+        <div class="bg-[#0c1220] border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+            <h4 class="font-bold text-white text-xs uppercase tracking-wider flex items-center gap-1.5">
+              <i class="mdi mdi-format-list-bulleted text-teal-400"></i>
+              ຫົວຂໍ້ໃນບົດນີ້
+            </h4>
+            <span class="text-[10px] text-teal-400 font-mono">8 ຫົວຂໍ້</span>
+          </div>
+          <nav id="section-nav" class="space-y-1 text-xs">
+            <a href="#section-1" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">1. ພາບລວມ CRUD & HTTP Methods</a>
+            <a href="#section-2" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">2. Create (POST): ຟອມເພີ່ມຂໍ້ມູນຄູ</a>
+            <a href="#section-3" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">3. Read (GET): ລາຍຊື່ & ລາຍລະອຽດ</a>
+            <a href="#section-4" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">4. Update (PUT/PATCH): ແກ້ໄຂຂໍ້ມູນ</a>
+            <a href="#section-5" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">5. Delete (DELETE): ຢືນຢັນການລຶບ</a>
+            <a href="#section-6" class="toc-link block px-2.5 py-1.5 rounded-xl text-teal-300 bg-teal-500/10 border border-teal-500/30 transition font-bold">6. ⚡ Interactive Live Full CRUD Demo</a>
+            <a href="#section-7" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">7. ໂຄດ Vue 3 + Vuetify ສົມບູນ</a>
+            <a href="#section-8" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">8. Best Practices & Optimistic UI</a>
+          </nav>
+        </div>
+
+      </aside>
+
+      <!-- MAIN CONTENT (Right Column) -->
+      <main class="lg:col-span-8 space-y-10">
+
+        <!-- Lesson Header Banner -->
+        <div class="relative overflow-hidden bg-gradient-to-br from-teal-950/70 via-slate-900 to-[#070b12] rounded-3xl p-8 sm:p-10 text-white shadow-2xl border border-teal-500/30 space-y-4">
+          <div class="absolute -right-16 -top-16 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/15 text-teal-300 text-xs font-bold border border-teal-500/30">
+            <span>LESSON 11</span> • <span>Full-Stack Teacher Management</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight tracking-tight">
+            ບົດທີ 11: Teacher Full CRUD Operations (Create, Read, Update, Delete)
+          </h1>
+          <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
+            ຮຽນຮູ້ການສ້າງລະບົບຈັດການຂໍ້ມູນຄູ-ອາຈານແບບຄົບວົງຈອນ (Full CRUD): ການເພີ່ມ (<strong class="text-teal-300">Create / POST</strong>), ການສະແດງ (<strong class="text-teal-300">Read / GET</strong>), ການແກ້ໄຂ (<strong class="text-teal-300">Update / PUT</strong>), ແລະ ການລຶບ (<strong class="text-teal-300">Delete / DELETE</strong>) ພ້ອມ Dialog Popups ແລະ Feedback Notifications.
+          </p>
+        </div>
+
+        <!-- Section 1: Overview -->
+        <section id="section-1" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center">1</span>
+            CRUD ແມ່ນຫຍັງ? ແລະ ການຈັບຄູ່ກັບ HTTP Methods
+          </h2>
+          <p class="text-slate-300 leading-relaxed text-sm">
+            <strong>CRUD</strong> ຄື 4 ການກະທຳພື້ນຖານທີ່ສຸດຂອງທຸກໆ Web Application ໃນການໂຕ້ຕອບກັບຖານຂໍ້ມູນ (Database):
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2">
+            <div class="p-4 rounded-2xl bg-[#0c1220] border border-slate-800 space-y-1 hover:border-emerald-500/40 transition">
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 font-bold">POST</span>
+              <div class="font-bold text-white text-sm">Create (ສ້າງ/ເພີ່ມ)</div>
+              <p class="text-[11px] text-slate-400">ສົ່ງ Body JSON ໄປບັນທຶກຂໍ້ມູນຄູໃໝ່ລົງ DB</p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-[#0c1220] border border-slate-800 space-y-1 hover:border-teal-500/40 transition">
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-teal-950 text-teal-300 font-bold">GET</span>
+              <div class="font-bold text-white text-sm">Read (ອ່ານ/ດຶງ)</div>
+              <p class="text-[11px] text-slate-400">ດຶງລາຍຊື່ທັງໝົດ ຫຼື ສະເພາະ ID ທີ່ເລືອກ</p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-[#0c1220] border border-slate-800 space-y-1 hover:border-amber-500/40 transition">
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-300 font-bold">PUT / PATCH</span>
+              <div class="font-bold text-white text-sm">Update (ແກ້ໄຂ)</div>
+              <p class="text-[11px] text-slate-400">ອັບເດດຂໍ້ມູນຊື່, ພາກວິຊາ, ຫຼື ສະຖານະ</p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-[#0c1220] border border-slate-800 space-y-1 hover:border-rose-500/40 transition">
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-950 text-rose-300 font-bold">DELETE</span>
+              <div class="font-bold text-white text-sm">Delete (ລຶບ)</div>
+              <p class="text-[11px] text-slate-400">ລຶບ Record ອອກຈາກລະບົບພ້ອມຢືນຢັນ</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2: Code Patterns -->
+        <section id="section-2" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center">2</span>
+            CRUD API Request Handlers ດ້ວຍ Axios / `$fetch`
+          </h2>
+
+          <div class="bg-[#050811] rounded-2xl overflow-hidden shadow-xl border border-slate-800">
+            <div class="bg-[#0c1220] px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span class="text-teal-400 font-semibold">Teacher CRUD Service Functions</span>
+              <button onclick="copyCmd(document.getElementById('code-crud-methods').innerText)" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-teal-500 hover:text-slate-950 text-slate-300 transition text-xs flex items-center gap-1">
+                <i class="mdi mdi-content-copy text-sm"></i>
+                <span>Copy Code</span>
+              </button>
+            </div>
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-crud-methods">// 1. CREATE: ເພີ່ມຄູໃໝ່ (POST)
+const createTeacher = async (teacherData) => {
+  return await $fetch('/api/teachers', {
+    method: 'POST',
+    body: teacherData
+  })
+}
+
+// 2. READ: ດຶງລາຍຊື່ (GET)
+const getTeachers = async () => {
+  return await $fetch('/api/teachers')
+}
+
+// 3. UPDATE: ແກ້ໄຂຂໍ້ມູນ (PUT)
+const updateTeacher = async (id, updatedData) => {
+  return await $fetch(`/api/teachers/${id}`, {
+    method: 'PUT',
+    body: updatedData
+  })
+}
+
+// 4. DELETE: ລຶບຂໍ້ມູນ (DELETE)
+const deleteTeacher = async (id) => {
+  return await $fetch(`/api/teachers/${id}`, {
+    method: 'DELETE'
+  })
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- Section 6: Interactive Live Teacher Full CRUD Simulator -->
+        <section id="section-6" class="space-y-6 scroll-mt-24">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center">6</span>
+              Interactive Live Teacher CRUD Simulator
+            </h2>
+            <button onclick="openCreateModal()" class="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs shadow-md shadow-teal-500/25 flex items-center gap-1.5 transition">
+              <i class="mdi mdi-plus-circle text-base"></i>
+              <span>+ ເພີ່ມອາຈານໃໝ່ (Create)</span>
+            </button>
+          </div>
+
+          <p class="text-slate-300 text-sm leading-relaxed">
+            ທົດລອງລະບົບຈັດການຄູ-ອາຈານແບບເຕັມຮູບແບບ! ທ່ານສາມາດ <strong>ເພີ່ມ (Add)</strong>, <strong>ແກ້ໄຂ (Edit)</strong>, ແລະ <strong>ລຶບ (Delete)</strong> ຂໍ້ມູນໄດ້ທັນທີ:
+          </p>
+
+          <!-- Interactive Playground Table -->
+          <div class="bg-[#0c1220] text-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-teal-500/30 space-y-4">
+            
+            <!-- Table Header Toolbar -->
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-slate-300">ລາຍຊື່ຄູທັງໝົດ:</span>
+                <span id="crud-total-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-950 text-teal-300 border border-teal-500/30">0 ຄົນ</span>
+              </div>
+              <input
+                type="text"
+                id="crud-search-input"
+                oninput="renderCrudTable()"
+                placeholder="ຄົ້ນຫາຊື່ຄູ..."
+                class="px-3.5 py-1.5 bg-[#050811] border border-slate-700 rounded-xl text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-teal-400 transition"
+              />
+            </div>
+
+            <!-- Table Container -->
+            <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-[#050811]">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-900/90 text-slate-400 font-bold uppercase tracking-wider border-b border-slate-800">
+                  <tr>
+                    <th class="p-3.5">ຊື່ ແລະ ຕຳແໜ່ງ</th>
+                    <th class="p-3.5">ພາກວິຊາ</th>
+                    <th class="p-3.5">ວິຊາສອນ</th>
+                    <th class="p-3.5 text-right">ຈັດການ (Actions)</th>
+                  </tr>
+                </thead>
+                <tbody id="crud-table-body" class="divide-y divide-slate-800/60 text-slate-300">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Section 7: Complete Page Code -->
+        <section id="section-7" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center">7</span>
+            ໂຄດຕົວຢ່າງສົມບູນ: <code class="text-teal-400 font-mono text-xl">app/pages/teachers/crud.vue</code>
+          </h2>
+
+          <div class="bg-[#050811] rounded-2xl overflow-hidden shadow-xl border border-slate-800">
+            <div class="bg-[#0c1220] px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span class="text-teal-400 font-semibold">app/pages/teachers/crud.vue</span>
+              <button onclick="copyCmd(document.getElementById('code-crud-vue').innerText)" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-teal-500 hover:text-slate-950 text-slate-300 transition text-xs flex items-center gap-1">
+                <i class="mdi mdi-content-copy text-sm"></i>
+                <span>Copy Code</span>
+              </button>
+            </div>
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-crud-vue">&lt;script setup lang="ts"&gt;
+import { ref } from 'vue'
+
+const teachers = ref([])
+const isDialogOpen = ref(false)
+const isEditing = ref(false)
+const form = ref({ id: null, name: '', department: '', subject: '' })
+
+// Save (Create or Update)
+const handleSave = async () => {
+  if (isEditing.value) {
+    await $fetch(`/api/teachers/${form.value.id}`, { method: 'PUT', body: form.value })
+  } else {
+    await $fetch('/api/teachers', { method: 'POST', body: form.value })
+  }
+  isDialogOpen.value = false
+}
+
+// Delete
+const handleDelete = async (id) => {
+  if (confirm('ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການລຶບຂໍ້ມູນອາຈານທ່ານນີ້?')) {
+    await $fetch(`/api/teachers/${id}`, { method: 'DELETE' })
+  }
+}
+&lt;/script&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- Navigation Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-slate-800">
+          <a href="./N10.html" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-[#0c1220] border border-slate-800 hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 font-bold text-xs sm:text-sm text-center transition flex items-center justify-center gap-2">
+            <span>←</span> ບົດກ່ອນໜ້າ (N10: Pinia State)
+          </a>
+          <a href="./N12.html" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs sm:text-sm text-center shadow-lg shadow-teal-500/25 transition flex items-center justify-center gap-2">
+            <span>ບົດຕໍ່ໄປ (N12: Nitro Server Engine) →</span>
+          </a>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- CRUD Modal Dialog (Create / Edit) -->
+  <div id="crud-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#0c1220] border border-slate-800 rounded-3xl max-w-md w-full p-6 text-white space-y-5 shadow-2xl animate-in fade-in zoom-in duration-200">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 id="modal-crud-title" class="font-bold text-base text-white">ເພີ່ມຄູ-ອາຈານໃໝ່</h3>
+        <button onclick="closeCrudModal()" class="p-2 text-slate-400 hover:text-white rounded-xl">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">ຊື່ ແລະ ນາມສະກຸນ *</label>
+          <input type="text" id="form-teacher-name" placeholder="ອຈ. ສົມສັກ..." class="w-full px-3.5 py-2.5 bg-[#050811] border border-slate-700 rounded-xl text-slate-200 focus:outline-none focus:border-teal-400" />
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">ພາກວິຊາ (Department) *</label>
+          <select id="form-teacher-dept" class="w-full px-3.5 py-2.5 bg-[#050811] border border-slate-700 rounded-xl text-slate-200 focus:outline-none focus:border-teal-400">
+            <option value="Computer Science">Computer Science</option>
+            <option value="Information Technology">Information Technology</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="English Language">English Language</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">ວິຊາສອນ (Subject) *</label>
+          <input type="text" id="form-teacher-subject" placeholder="Nuxt 4 & Web..." class="w-full px-3.5 py-2.5 bg-[#050811] border border-slate-700 rounded-xl text-slate-200 focus:outline-none focus:border-teal-400" />
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+        <button onclick="closeCrudModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition">
+          ຍົກເລີກ
+        </button>
+        <button onclick="saveCrudRecord()" class="px-5 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 text-xs font-bold transition">
+          ບັນທຶກ (Save)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="border-t border-slate-800 mt-16 py-8 text-center text-xs text-slate-500">
+    ຫຼັກສູດ Nuxt 4 (2027) • ສອນດ້ວຍຄວາມເຂົ້າໃຈງ່າຍ
+  </footer>
+
+  <!-- JavaScript Logic for Live CRUD Demo -->
+  <script>
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+      const bar = document.getElementById('progress-bar');
+      if (bar) bar.style.width = scrolled + '%';
+
+      const backToTop = document.getElementById('back-to-top');
+      if (backToTop) {
+        if (winScroll > 300) {
+          backToTop.classList.remove('opacity-0', 'pointer-events-none');
+          backToTop.classList.add('opacity-100');
+        } else {
+          backToTop.classList.add('opacity-0', 'pointer-events-none');
+          backToTop.classList.remove('opacity-100');
+        }
+      }
+    });
+
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('mobile-sidebar');
+      const backdrop = document.getElementById('mobile-sidebar-backdrop');
+      if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function copyCmd(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.remove('translate-y-24', 'opacity-0');
+        setTimeout(() => {
+          toast.classList.add('translate-y-24', 'opacity-0');
+        }, 2200);
+      });
+    }
+
+    // Live CRUD Database State in Memory
+    let crudTeachers = [
+      { id: 1, name: "ອຈ. ສົມສັກ ວົງໄຊ", department: "Computer Science", subject: "Nuxt 4 & Full-Stack" },
+      { id: 2, name: "ອຈ. ມະນີວອນ ແສງດາວ", department: "Computer Science", subject: "Vue 3 Composition" },
+      { id: 3, name: "ອຈ. ຄຳພອນ ໄຊຍະລາດ", department: "Information Technology", subject: "Nitro RESTful API" }
+    ];
+
+    let editingId = null;
+
+    function renderCrudTable() {
+      const search = (document.getElementById('crud-search-input').value || '').toLowerCase();
+      const tbody = document.getElementById('crud-table-body');
+      tbody.innerHTML = '';
+
+      const filtered = crudTeachers.filter(t => t.name.toLowerCase().includes(search) || t.subject.toLowerCase().includes(search));
+      document.getElementById('crud-total-badge').textContent = `${filtered.length} ຄົນ`;
+
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500 text-xs">ບໍ່ມີຂໍ້ມູນ</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(t => {
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-slate-900/60 transition';
+        row.innerHTML = `
+          <td class="p-3.5 font-bold text-white">${t.name}</td>
+          <td class="p-3.5 text-teal-400">${t.department}</td>
+          <td class="p-3.5 text-cyan-300">${t.subject}</td>
+          <td class="p-3.5 text-right space-x-2">
+            <button onclick="openEditModal(${t.id})" class="px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500 text-amber-300 hover:text-slate-950 font-bold text-xs transition">
+              <i class="mdi mdi-pencil"></i> ແກ້ໄຂ
+            </button>
+            <button onclick="deleteCrudRecord(${t.id})" class="px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500 text-rose-300 hover:text-white font-bold text-xs transition">
+              <i class="mdi mdi-delete"></i> ລຶບ
+            </button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function openCreateModal() {
+      editingId = null;
+      document.getElementById('modal-crud-title').textContent = 'ເພີ່ມຄູ-ອາຈານໃໝ່ (Create)';
+      document.getElementById('form-teacher-name').value = '';
+      document.getElementById('form-teacher-subject').value = '';
+      document.getElementById('crud-modal').classList.remove('hidden');
+    }
+
+    function openEditModal(id) {
+      const teacher = crudTeachers.find(t => t.id === id);
+      if (!teacher) return;
+
+      editingId = id;
+      document.getElementById('modal-crud-title').textContent = 'ແກ້ໄຂຂໍ້ມູນຄູ-ອາຈານ (Update)';
+      document.getElementById('form-teacher-name').value = teacher.name;
+      document.getElementById('form-teacher-dept').value = teacher.department;
+      document.getElementById('form-teacher-subject').value = teacher.subject;
+      document.getElementById('crud-modal').classList.remove('hidden');
+    }
+
+    function closeCrudModal() {
+      document.getElementById('crud-modal').classList.add('hidden');
+    }
+
+    function saveCrudRecord() {
+      const name = document.getElementById('form-teacher-name').value.trim();
+      const dept = document.getElementById('form-teacher-dept').value;
+      const subject = document.getElementById('form-teacher-subject').value.trim();
+
+      if (!name || !subject) {
+        alert('ກະລຸນາກອກຊື່ ແລະ ວິຊາສອນໃຫ້ຄົບຖ້ວນ!');
+        return;
+      }
+
+      if (editingId) {
+        // Update
+        const t = crudTeachers.find(item => item.id === editingId);
+        if (t) {
+          t.name = name;
+          t.department = dept;
+          t.subject = subject;
+        }
+      } else {
+        // Create
+        crudTeachers.push({
+          id: Date.now(),
+          name: name,
+          department: dept,
+          subject: subject
+        });
+      }
+
+      closeCrudModal();
+      renderCrudTable();
+    }
+
+    function deleteCrudRecord(id) {
+      const teacher = crudTeachers.find(t => t.id === id);
+      if (!teacher) return;
+
+      if (confirm(`ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການລຶບ "${teacher.name}"?`)) {
+        crudTeachers = crudTeachers.filter(t => t.id !== id);
+        renderCrudTable();
+      }
+    }
+
+    // Initial table render
+    renderCrudTable();
+  </script>
+
+</body>
+
+</html>

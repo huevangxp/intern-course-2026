@@ -10,15 +10,41 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+Lao:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+Lao:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
     rel="stylesheet">
+
+  <!-- Unified Theme Stylesheet -->
+  <link rel="stylesheet" href="./theme.css">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+              950: '#042f2e',
+            },
+            dark: {
+              canvas: '#070b12',
+              surface: '#0c1220',
+              card: '#0f172a',
+              border: '#1e293b',
+              muted: '#64748b',
+            }
+          },
           fontFamily: {
             sans: ['"Noto Sans Lao"', '"Plus Jakarta Sans"', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace'],
@@ -29,58 +55,86 @@
   </script>
 </head>
 
-<body class="bg-white text-slate-800 min-h-screen font-sans antialiased selection:bg-purple-500 selection:text-white">
+<body class="bg-[#070b12] text-slate-200 min-h-screen font-sans antialiased selection:bg-teal-500 selection:text-slate-950">
 
-  <!-- header (Full Width & White Background) -->
-  <header class="w-full bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none bg-[#0c1220] text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 text-sm border border-teal-500/50">
+    <span class="text-teal-400">📋</span>
+    <span>ຄັດລອກໂຄດສຳເລັດແລ້ວ!</span>
+  </div>
+
+  <!-- Header (Sticky Dark Glass Navbar) -->
+  <header class="w-full bg-[#070b12]/90 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
       
-      <!-- Logo -->
+      <!-- Logo & Breadcrumb -->
       <div class="flex items-center gap-3">
         <!-- Mobile Sidebar Toggle Button -->
-        <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 transition" aria-label="Toggle Menu">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 rounded-xl border border-slate-800 hover:bg-slate-800/60 text-slate-300 hover:text-teal-300 transition" aria-label="Toggle Menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
 
-        <a href="./index.html" class="flex items-center gap-3 group">
+        <a href="./index.html" class="flex items-center gap-2.5 group">
           <span
-            class="w-9 h-9 rounded-lg bg-purple-500 text-white font-black flex items-center justify-center text-sm shadow-md shadow-purple-500/20 group-hover:scale-105 transition">N4</span>
+            class="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-400 to-teal-600 text-slate-950 font-black flex items-center justify-center text-sm shadow-md shadow-teal-500/25 group-hover:scale-105 transition">N4</span>
           <div>
-            <span class="font-bold text-lg text-slate-900 group-hover:text-purple-600 transition">ຫຼັກສູດ Nuxt 4</span>
+            <span class="font-extrabold text-base sm:text-lg text-white group-hover:text-teal-400 transition">ຫຼັກສູດ Nuxt 4</span>
           </div>
         </a>
-        <span class="hidden sm:inline-block text-xs font-semibold text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-0.5 rounded-full ml-1">ບົດທີ 2</span>
+        <span class="hidden sm:inline-block text-xs font-semibold text-teal-300 bg-teal-950/70 border border-teal-500/30 px-2.5 py-0.5 rounded-full ml-1">ບົດທີ 2</span>
       </div>
 
       <!-- Desktop Nav -->
       <nav class="hidden md:flex items-center gap-6 text-sm font-semibold">
-        <a href="./index.html" class="text-slate-600 hover:text-purple-600 transition">ໜ້າຫຼັກ</a>
+        <a href="./index.html" class="text-slate-300 hover:text-teal-400 transition">ໜ້າຫຼັກ</a>
         
         <!-- Course Dropdown -->
         <div class="relative group">
-          <button class="text-purple-600 font-bold flex items-center gap-1.5 py-2">
+          <button class="text-teal-400 font-bold flex items-center gap-1.5 py-2">
             <span>ບົດຮຽນທັງໝົດ</span>
             <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </button>
-          <div class="absolute left-0 top-full hidden group-hover:block w-64 bg-white border border-slate-200 rounded-2xl shadow-xl p-2 z-50 space-y-1">
-            <a href="./N00.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 0: ແນະນຳ Nuxt 4</a>
-            <a href="./N01.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 1: ຕິດຕັ້ງໂປຣເຈັກ</a>
-            <a href="./N02.html" class="block px-3 py-2 rounded-xl bg-purple-50 text-purple-700 font-bold text-xs">ບົດທີ 2: ໜ້າເວັບ & Components</a>
-            <a href="./N03.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 3: Data Fetching & State</a>
-            <a href="./N05.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</a>
-            <a href="./N06.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 6: Form Handling & State</a>
-            <a href="./N07.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 7: MDI Icons Setup & Use</a>
-            <a href="./N08.html" class="block px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 text-xs">ບົດທີ 8: ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)</a>
+          <div class="absolute left-0 top-full hidden group-hover:block w-72 bg-[#0c1220] border border-slate-800 rounded-2xl shadow-2xl p-2 z-50 space-y-1">
+            <a href="./N00.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 0: ແນະນຳ Nuxt 4</a>
+            <a href="./N01.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 1: ຕິດຕັ້ງໂປຣເຈັກ</a>
+            <a href="./N02.html" class="block px-3 py-2 rounded-xl bg-teal-500/15 text-teal-300 font-bold text-xs border border-teal-500/30">ບົດທີ 2: ໜ້າເວັບ & Components (ປັດຈຸບັນ)</a>
+            <a href="./N03.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 3: Data Fetching & State</a>
+            <a href="./N04.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 4: nuxt.config, Plugins & Assets</a>
+            <details>
+              <summary class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800/60 text-slate-300 text-xs cursor-pointer list-none select-none">
+                <span>ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</span>
+                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </summary>
+              <div class="ml-3 pl-2 border-l border-slate-800 space-y-0.5 pt-1 pb-1">
+                <a href="./N05.html" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px] transition">📦 ພາບລວມ & ຕິດຕັ້ງ Vuetify</a>
+                <a href="./N05.html#topic-1" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px] transition">5.1 ຫົວຂໍ້ & ຂໍ້ຄວາມ (Title & Text)</a>
+                <a href="./N05.html#topic-2" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px] transition">5.2 v-card (ການ໌ດ)</a>
+                <a href="./N05.html#topic-3" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px] transition">5.3 v-text-field (ຊ່ອງກອກຂໍ້ມູນ)</a>
+                <a href="./N05.html#topic-4" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px] transition">5.4 v-row & v-col (Grid Layout)</a>
+                <a href="./N05.html#topic-5" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px] transition">5.5 v-btn (ປຸ່ມ)</a>
+                <a href="./N05.html#topic-6" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px] transition">5.6 v-select (ເລືອກລາຍການ)</a>
+                <a href="./N05.html#topic-7" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px] transition">5.7 v-dialog (Popup)</a>
+                <a href="./N05.html#topic-8" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px] transition">5.8 v-table (ຕາຕະລາງ)</a>
+              </div>
+            </details>
+            <a href="./N06.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 6: Form Handling & State</a>
+            <a href="./N07.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 7: MDI Icons Setup & Use</a>
+            <a href="./N08.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 8: ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)</a>
+            <a href="./N09.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 9: Route Middleware & Auth Guard</a>
+            <a href="./N10.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 10: State Management ດ້ວຍ Pinia</a>
+            <a href="./N11.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 11: Teacher Full CRUD Operations</a>
+            <a href="./N12.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 12: Nitro Server Engine & API Routes</a>
+            <a href="./N13.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 13: SEO & Production Deployment</a>
           </div>
         </div>
 
-        <a href="./about.html" class="text-slate-600 hover:text-purple-600 transition">ກ່ຽວກັບ</a>
-        <a href="./contact.html" class="text-slate-600 hover:text-purple-600 transition">ຕິດຕໍ່</a>
+        <a href="./about.html" class="text-slate-300 hover:text-teal-400 transition">ກ່ຽວກັບ</a>
+        <a href="./contact.html" class="text-slate-300 hover:text-teal-400 transition">ຕິດຕໍ່</a>
       </nav>
 
       <!-- Action Button -->
       <div class="flex items-center gap-3">
-        <a href="./N03.html" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md shadow-purple-500/20 transition">
+        <a href="./N03.html" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs shadow-lg shadow-teal-500/25 transition">
           <span>ບົດຕໍ່ໄປ (N03)</span>
           <span>→</span>
         </a>
@@ -90,58 +144,61 @@
   </header>
 
   <!-- Mobile Sidebar Overlay & Drawer -->
-  <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden transition-opacity duration-300"></div>
-  <aside id="mobile-sidebar" class="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-white border-r border-slate-200 z-50 p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 space-y-6 shadow-2xl">
-    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+  <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden transition-opacity duration-300"></div>
+  <aside id="mobile-sidebar" class="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-[#0a0f1b] border-r border-slate-800 z-50 p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 space-y-6 shadow-2xl">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-800">
       <div class="flex items-center gap-2">
-        <span class="w-8 h-8 rounded-lg bg-purple-500 text-white font-black flex items-center justify-center text-sm">N4</span>
-        <span class="font-bold text-slate-900 text-base">ຫຼັກສູດ Nuxt 4</span>
+        <span class="w-8 h-8 rounded-lg bg-teal-500 text-slate-950 font-black flex items-center justify-center text-sm shadow-md shadow-teal-500/25">N4</span>
+        <span class="font-bold text-white text-base">ຫຼັກສູດ Nuxt 4</span>
       </div>
-      <button onclick="toggleMobileSidebar()" class="p-2 text-slate-400 hover:text-slate-700 rounded-lg">✕</button>
+      <button onclick="toggleMobileSidebar()" class="p-2 text-slate-400 hover:text-white rounded-lg">✕</button>
     </div>
 
     <!-- Navigation -->
     <div class="space-y-1">
-      <div class="text-[11px] font-bold uppercase text-slate-400 px-3 pb-1">ເມນູຫຼັກ</div>
-      <a href="./index.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">🏠 ໜ້າຫຼັກ</a>
-      <a href="./about.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">ℹ️ ກ່ຽວກັບ</a>
-      <a href="./contact.html" class="block px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-50 text-sm font-semibold">📧 ຕິດຕໍ່</a>
+      <div class="text-[11px] font-bold uppercase text-slate-500 px-3 pb-1 tracking-wider">ເມນູຫຼັກ</div>
+      <a href="./index.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-white text-sm font-semibold transition">🏠 ໜ້າຫຼັກ</a>
+      <a href="./about.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-white text-sm font-semibold transition">ℹ️ ກ່ຽວກັບ</a>
+      <a href="./contact.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-white text-sm font-semibold transition">📧 ຕິດຕໍ່</a>
     </div>
 
     <!-- Course List -->
     <div class="space-y-1 pt-2">
-      <div class="text-[11px] font-bold uppercase text-slate-400 px-3 pb-1">ບົດຮຽນ Nuxt 4</div>
-      <a href="./N00.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
-        00. ແນະນຳ Nuxt 4
-      </a>
-      <a href="./N01.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
-        01. ຕິດຕັ້ງໂປຣເຈັກ
-      </a>
-      <a href="./N02.html" class="block px-3 py-2.5 rounded-xl bg-purple-50 text-purple-700 font-bold text-xs border border-purple-200">
-        02. ໜ້າເວັບ ແລະ Components (ປັດຈຸບັນ)
-      </a>
-      <a href="./N03.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
-        03. Data Fetching & State
-      </a>
-      <a href="./N04.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
-        04. nuxt.config, Plugins & Assets
-      </a>
-      <a href="./N05.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
-        05. ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify
-      </a>
-      <a href="./N06.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
-        06. Form Handling & State
-      </a>
-      <a href="./N07.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
-        07. MDI Icons Setup & Use
-      </a>
-      <a href="./N08.html" class="block px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 text-xs font-semibold">
-        08. ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)
-      </a>
+      <div class="text-[11px] font-bold uppercase text-slate-500 px-3 pb-1 tracking-wider">ບົດຮຽນ Nuxt 4 (14 ບົດ)</div>
+      <a href="./N00.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">00. ແນະນຳ Nuxt 4</a>
+      <a href="./N01.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">01. ຕິດຕັ້ງໂປຣເຈັກ</a>
+      <a href="./N02.html" class="block px-3 py-2.5 rounded-xl bg-teal-500/15 text-teal-300 font-bold text-xs border border-teal-500/30">02. ໜ້າເວັບ ແລະ Components (ປັດຈຸບັນ)</a>
+      <a href="./N03.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">03. Data Fetching & State</a>
+      <a href="./N04.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">04. nuxt.config, Plugins & Assets</a>
+      <details>
+        <summary class="flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 text-xs font-semibold cursor-pointer list-none select-none">
+          <span>05. ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</span>
+          <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="ml-4 pl-2 border-l border-slate-800 space-y-0.5 pt-1 pb-1">
+          <a href="./N05.html" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px]">📦 ພາບລວມ & ຕິດຕັ້ງ Vuetify</a>
+          <a href="./N05.html#topic-1" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px]">5.1 ຫົວຂໍ້ & ຂໍ້ຄວາມ (Title & Text)</a>
+          <a href="./N05.html#topic-2" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px]">5.2 v-card (ການ໌ດ)</a>
+          <a href="./N05.html#topic-3" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px]">5.3 v-text-field (ຊ່ອງກອກຂໍ້ມູນ)</a>
+          <a href="./N05.html#topic-4" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px]">5.4 v-row & v-col (Grid Layout)</a>
+          <a href="./N05.html#topic-5" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px]">5.5 v-btn (ປຸ່ມ)</a>
+          <a href="./N05.html#topic-6" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px]">5.6 v-select (ເລືອກລາຍການ)</a>
+          <a href="./N05.html#topic-7" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px]">5.7 v-dialog (Popup)</a>
+          <a href="./N05.html#topic-8" class="block px-3 py-1.5 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 text-slate-400 text-[11px]">5.8 v-table (ຕາຕະລາງ)</a>
+        </div>
+      </details>
+      <a href="./N06.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">06. Form Handling & State</a>
+      <a href="./N07.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">07. MDI Icons Setup & Use</a>
+      <a href="./N08.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">08. ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)</a>
+      <a href="./N09.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">09. Route Middleware & Auth Guard</a>
+      <a href="./N10.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">10. State Management ດ້ວຍ Pinia</a>
+      <a href="./N11.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">11. Teacher Full CRUD Operations</a>
+      <a href="./N12.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">12. Nitro Server Engine & API Routes</a>
+      <a href="./N13.html" class="block px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">13. SEO & Production Deployment</a>
     </div>
   </aside>
 
-  <!-- main container with Sidebar Layout -->
+  <!-- Main Container with Sidebar Layout -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       
@@ -149,106 +206,153 @@
       <aside class="hidden lg:block lg:col-span-4 sticky top-24 space-y-6">
         
         <!-- Course Outline Card -->
-        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+        <div class="dark-card p-5 rounded-3xl shadow-lg space-y-3">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h3 class="font-bold text-white text-sm flex items-center gap-2">
               <span>📚</span> ສາລະບານຫຼັກສູດ Nuxt 4
             </h3>
-            <span class="text-[11px] font-semibold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full">9 ບົດຮຽນ</span>
+            <span class="text-[11px] font-semibold text-teal-400 bg-teal-950/70 border border-teal-500/30 px-2 py-0.5 rounded-full">14 ບົດຮຽນ</span>
           </div>
 
-          <div class="space-y-2 text-xs">
+          <div class="space-y-1.5 text-xs">
             <!-- Lesson 0 -->
-            <a href="./N00.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
-              <span class="w-7 h-7 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0 border border-emerald-200/60">00</span>
+            <a href="./N00.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+              <span class="w-7 h-7 rounded-xl bg-slate-800 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-slate-700/60">00</span>
               <div class="flex-grow">
                 <div class="font-semibold">ບົດທີ 0: ແນະນຳ Nuxt 4</div>
-                <div class="text-[10px] text-slate-400">ພື້ນຖານ & Architecture</div>
+                <div class="text-[10px] text-slate-500">ພື້ນຖານ & Architecture</div>
               </div>
             </a>
 
             <!-- Lesson 1 -->
-            <a href="./N01.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
-              <span class="w-7 h-7 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-xs font-bold shrink-0 border border-cyan-200/60">01</span>
+            <a href="./N01.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+              <span class="w-7 h-7 rounded-xl bg-slate-800 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-slate-700/60">01</span>
               <div class="flex-grow">
                 <div class="font-semibold">ບົດທີ 1: ຕິດຕັ້ງໂປຣເຈັກ</div>
-                <div class="text-[10px] text-slate-400">Nuxi CLI & Setup</div>
+                <div class="text-[10px] text-slate-500">Nuxi CLI & Setup</div>
               </div>
             </a>
 
             <!-- Lesson 2 (Active) -->
-            <a href="./N02.html" class="flex items-center gap-3 p-3 rounded-2xl bg-purple-50 text-purple-800 font-bold border border-purple-200 shadow-sm transition">
-              <span class="w-7 h-7 rounded-xl bg-purple-500 text-white flex items-center justify-center text-xs font-black shrink-0">02</span>
+            <a href="./N02.html" class="flex items-center gap-3 p-3 rounded-2xl bg-teal-500/15 text-teal-300 font-bold border border-teal-500/40 shadow-sm transition">
+              <span class="w-7 h-7 rounded-xl bg-teal-500 text-slate-950 flex items-center justify-center text-xs font-black shrink-0">02</span>
               <div class="flex-grow">
                 <div>ບົດທີ 2: ໜ້າເວັບ & Components</div>
-                <div class="text-[10px] text-purple-600 font-normal">Pages, Routes & Layouts</div>
+                <div class="text-[10px] text-teal-400/80 font-normal">Pages, Routes & Layouts</div>
               </div>
-              <span class="text-purple-600 font-bold">●</span>
+              <span class="text-teal-400 font-bold">●</span>
             </a>
 
             <!-- Lesson 3 -->
-            <a href="./N03.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
-              <span class="w-7 h-7 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold shrink-0 border border-blue-200/60">03</span>
+            <a href="./N03.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+              <span class="w-7 h-7 rounded-xl bg-slate-800 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-slate-700/60">03</span>
               <div class="flex-grow">
                 <div class="font-semibold">ບົດທີ 3: Data Fetching & State</div>
-                <div class="text-[10px] text-slate-400">useFetch & useState</div>
+                <div class="text-[10px] text-slate-500">useFetch & useState</div>
               </div>
             </a>
 
             <!-- Lesson 4 -->
-            <a href="./N04.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
-              <span class="w-7 h-7 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xs font-bold shrink-0 border border-amber-200/60">04</span>
+            <a href="./N04.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+              <span class="w-7 h-7 rounded-xl bg-slate-800 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-slate-700/60">04</span>
               <div class="flex-grow">
                 <div class="font-semibold">ບົດທີ 4: Configuration & Plugins</div>
-                <div class="text-[10px] text-slate-400">nuxt.config, Plugins & Assets</div>
+                <div class="text-[10px] text-slate-500">nuxt.config, Plugins & Assets</div>
               </div>
             </a>
 
             <!-- Lesson 5 -->
-            <a href="./N05.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
-              <span class="w-7 h-7 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs font-bold shrink-0 border border-indigo-200/60">05</span>
+            <a href="./N05.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+              <span class="w-7 h-7 rounded-xl bg-slate-800 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-slate-700/60">05</span>
               <div class="flex-grow">
                 <div class="font-semibold">ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</div>
-                <div class="text-[10px] text-slate-400">Vuetify 3, MDI Icons & Theme</div>
+                <div class="text-[10px] text-slate-500">Vuetify 3, MDI Icons & Theme</div>
               </div>
             </a>
 
             <!-- Lesson 6 -->
-            <a href="./N06.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
-              <span class="w-7 h-7 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xs font-bold shrink-0 border border-rose-200/60">06</span>
+            <a href="./N06.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+              <span class="w-7 h-7 rounded-xl bg-slate-800 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-slate-700/60">06</span>
               <div class="flex-grow">
                 <div class="font-semibold">ບົດທີ 6: Form Handling & State</div>
-                <div class="text-[10px] text-slate-400">v-model, const form & Show Data</div>
+                <div class="text-[10px] text-slate-500">v-model, const form & Show Data</div>
               </div>
             </a>
 
             <!-- Lesson 7 -->
-            <a href="./N07.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
-              <span class="w-7 h-7 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-200/60">07</span>
+            <a href="./N07.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+              <span class="w-7 h-7 rounded-xl bg-slate-800 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-slate-700/60">07</span>
               <div class="flex-grow">
                 <div class="font-semibold">ບົດທີ 7: MDI Icons Setup & Use</div>
-                <div class="text-[10px] text-slate-400">Material Icons, SVG & v-icon</div>
+                <div class="text-[10px] text-slate-500">Material Icons, SVG & v-icon</div>
               </div>
             </a>
 
             <!-- Lesson 8 -->
-            <a href="./N08.html" class="flex items-center gap-3 p-3 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition">
-              <span class="w-7 h-7 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center text-xs font-bold shrink-0 border border-violet-200/60">08</span>
+            <a href="./N08.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+              <span class="w-7 h-7 rounded-xl bg-slate-800 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-slate-700/60">08</span>
               <div class="flex-grow">
                 <div class="font-semibold">ບົດທີ 8: ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)</div>
-                <div class="text-[10px] text-slate-400">Axios Instance, Interceptors & API</div>
+                <div class="text-[10px] text-slate-500">Axios Instance, Interceptors & API</div>
+              </div>
+            </a>
+
+            <!-- Lesson 9 -->
+            <a href="./N09.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+              <span class="w-7 h-7 rounded-xl bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">09</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 9: Route Middleware & Auth Guard</div>
+                <div class="text-[10px] text-slate-400">Protected Routes, Token & RBAC</div>
+              </div>
+            </a>
+
+            <!-- Lesson 10 -->
+            <a href="./N10.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+              <span class="w-7 h-7 rounded-xl bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">10</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 10: State Management (Pinia)</div>
+                <div class="text-[10px] text-slate-400">@pinia/nuxt, Store, Actions & Persist</div>
+              </div>
+            </a>
+
+            <!-- Lesson 11 -->
+            <a href="./N11.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+              <span class="w-7 h-7 rounded-xl bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">11</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 11: Teacher Full CRUD Operations</div>
+                <div class="text-[10px] text-slate-400">Create, Read, Update, Delete & Dialogs</div>
+              </div>
+            </a>
+
+            <!-- Lesson 12 -->
+            <a href="./N12.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+              <span class="w-7 h-7 rounded-xl bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">12</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 12: Nitro Server Engine & APIs</div>
+                <div class="text-[10px] text-slate-400">H3 Handlers, server/api & DB Prisma</div>
+              </div>
+            </a>
+
+            <!-- Lesson 13 -->
+            <a href="./N13.html" class="flex items-center gap-3 p-2.5 rounded-2xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+              <span class="w-7 h-7 rounded-xl bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">13</span>
+              <div class="flex-grow">
+                <div class="font-semibold">ບົດທີ 13: SEO & Production Deploy</div>
+                <div class="text-[10px] text-slate-400">useSeoMeta, Docker, PM2 & Cloud</div>
               </div>
             </a>
           </div>
         </div>
 
         <!-- In-Page Jump Links -->
-        <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 space-y-3">
-          <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider text-slate-400">ຫົວຂໍ້ໃນບົດນີ້</h4>
+        <div class="dark-card p-5 rounded-3xl space-y-3">
+          <h4 class="font-bold text-xs uppercase tracking-wider text-teal-400">ຫົວຂໍ້ໃນບົດນີ້</h4>
           <nav class="space-y-1.5 text-xs">
-            <a href="#section-1" class="block py-1 text-slate-600 hover:text-purple-600 transition">1. File-Based Routing</a>
-            <a href="#section-2" class="block py-1 text-slate-600 hover:text-purple-600 transition">2. Auto-Imported Components</a>
-            <a href="#section-3" class="block py-1 text-slate-600 hover:text-purple-600 transition">3. ລະບົບ Layouts</a>
+            <a href="#section-1" class="block py-1 text-slate-400 hover:text-teal-300 transition">1. ສ້າງໜ້າເວັບ (Pages & Routing)</a>
+            <a href="#section-2" class="block py-1 text-slate-400 hover:text-teal-300 transition">2. ການເຊື່ອມໜ້າ (NuxtLink)</a>
+            <a href="#section-3" class="block py-1 text-slate-400 hover:text-teal-300 transition">3. Components (Auto-Import)</a>
+            <a href="#section-4" class="block py-1 text-slate-400 hover:text-teal-300 transition">4. ລະບົບ Layouts</a>
+            <a href="#section-5" class="block py-1 text-slate-400 hover:text-teal-300 transition">5. ສະຫຼຸບ & ແບບຝຶກຫັດ</a>
           </nav>
         </div>
 
@@ -258,110 +362,365 @@
       <main class="lg:col-span-8 space-y-10">
 
         <!-- Lesson Header Banner -->
-        <div class="bg-gradient-to-br from-purple-600 via-indigo-700 to-slate-900 rounded-3xl p-8 sm:p-10 text-white shadow-xl space-y-4">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-xs font-bold border border-purple-400/30">
-            <span>LESSON 02</span> • <span>Routing & Components</span>
+        <div class="relative overflow-hidden rounded-3xl p-8 sm:p-10 text-white shadow-2xl border border-teal-500/30 bg-gradient-to-br from-[#0c1626] via-[#09121e] to-[#042f2e]/60 space-y-4">
+          <div class="relative z-10 space-y-3">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/20 text-teal-300 text-xs font-bold border border-teal-400/30">
+              <span>LESSON 02</span> • <span>Routing & Components</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight">ບົດທີ 2: ໜ້າເວັບ ແລະ Components (Pages & Components)</h1>
+            <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
+              ບົດນີ້ຈະສອນວິທີ <strong class="text-white">ສ້າງໜ້າເວັບໃໝ່</strong> ໂດຍພຽງແຕ່ສ້າງໄຟລ໌, ວິທີ <strong class="text-white">ເຊື່ອມແຕ່ລະໜ້າເຂົ້າຫາກັນ</strong> ແລະ ວິທີ <strong class="text-white">ແບ່ງໂຄດອອກເປັນຊິ້ນສ່ວນ (Components)</strong> ເພື່ອນຳກັບມາໃຊ້ຄືນໄດ້.
+            </p>
+            <!-- What you'll learn -->
+            <div class="bg-[#050811]/70 border border-teal-500/30 rounded-2xl p-5 space-y-2 text-sm mt-4">
+              <div class="font-bold text-teal-300">🎯 ຮຽນຈົບບົດນີ້ ທ່ານຈະສາມາດ:</div>
+              <ul class="space-y-1 text-slate-300 list-none text-xs sm:text-sm">
+                <li>✅ ສ້າງໜ້າເວັບໃໝ່ (ເຊັ່ນ ໜ້າ About) ໄດ້ພາຍໃນ 1 ນາທີ</li>
+                <li>✅ ເຮັດປຸ່ມ/ລິ້ງ ກົດປ່ຽນໜ້າໄດ້ໂດຍບໍ່ Reload ດ້ວຍ &lt;NuxtLink&gt;</li>
+                <li>✅ ສ້າງ Component ໃຊ້ຊ້ຳໄດ້ຫຼາຍໆໜ້າ ແບບບໍ່ຕ້ອງ Import</li>
+                <li>✅ ເຮັດ Navbar + Footer ໃຫ້ສະແດງທຸກໜ້າດ້ວຍ Layout &lt;slot /&gt;</li>
+              </ul>
+            </div>
           </div>
-          <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight">ບົດທີ 2: ໜ້າເວັບ ແລະ Components (Pages & Components)</h1>
-          <p class="text-purple-100 text-base sm:text-lg leading-relaxed">
-            ຮຽນຮູ້ການສ້າງ Routing ອັດຕະໂນມັດຜ່ານ <code class="text-white font-mono bg-purple-900/50 px-2 py-0.5 rounded">app/pages/</code>, Dynamic Route Parameters, Layouts ແລະ ການໃຊ້ງານ Vue Components ແບບ Zero-Import.
-          </p>
+          <!-- Ambient Glow -->
+          <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
         </div>
 
         <!-- Section 1: File-based Routing -->
-        <section id="section-1" class="space-y-4 scroll-mt-24">
-          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-xl bg-purple-500 text-white text-sm font-bold flex items-center justify-center">1</span>
-            ການສ້າງໜ້າເວັບດ້ວຍ File-Based Routing
+        <section id="section-1" class="dark-card p-6 sm:p-8 rounded-3xl shadow-lg space-y-5 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center shadow-md shadow-teal-500/25">1</span>
+            ສ້າງໜ້າເວັບ: ສ້າງໄຟລ໌ = ໄດ້ໜ້າເວັບ ✨
           </h2>
-          <p class="text-slate-600 leading-relaxed">
-            ໃນ Nuxt 4, ເມື່ອທ່ານສ້າງໄຟລ໌ `.vue` ໄວ້ໃນໂຟລເດີ <code class="text-purple-700 font-mono bg-purple-50 px-1.5 py-0.5 rounded">app/pages/</code> ລະບົບຈະສ້າງເສັ້ນທາງ URL ໃຫ້ອັດຕະໂນມັດ:
+
+          <!-- Simple concept -->
+          <div class="bg-[#0c1626] border border-teal-500/30 rounded-2xl p-5 space-y-2">
+            <div class="font-bold text-teal-300 text-sm flex items-center gap-2">
+              <span>💡</span> ແນວຄິດງ່າຍໆ
+            </div>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              ໃນເວັບແບບເກົ່າ ຖ້າຢາກມີໜ້າໃໝ່ ຕ້ອງໄປຂຽນຕັ້ງຄ່າ Router ເອງ (ຫຍຸ້ງຍາກ).
+              ແຕ່ໃນ Nuxt 4 <strong>ພຽງແຕ່ສ້າງໄຟລ໌ .vue ໃສ່ໂຟລເດີ <code class="font-mono text-teal-300 bg-slate-800/90 border border-teal-500/20 px-1.5 py-0.5 rounded">app/pages/</code> — Nuxt ຈະສ້າງ URL ໃຫ້ອັດຕະໂນມັດທັນທີ!</strong>
+            </p>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              🏠 ປຽບເໝືອນເຮືອນ: ໂຟລເດີ <code class="font-mono text-teal-300 bg-slate-800/90 border border-teal-500/20 px-1.5 py-0.5 rounded">pages/</code> ຄືເຮືອນ, ແຕ່ລະໄຟລ໌ຄືແຕ່ລະຫ້ອງ — ສ້າງຫ້ອງໃໝ່ປຸ໊ບ ປະຕູ (URL) ເຂົ້າຫ້ອງນັ້ນກໍເກີດຂຶ້ນເອງ.
+            </p>
+          </div>
+
+          <!-- Folder structure -->
+          <p class="text-slate-300 leading-relaxed text-sm">ເບິ່ງໂຄງສ້າງໂຟລເດີ ແລ້ວທຽບກັບ URL ທີ່ໄດ້:</p>
+          <div class="bg-[#050811] border border-slate-800 rounded-2xl p-5 text-slate-200 font-mono text-xs sm:text-sm shadow-xl overflow-x-auto">
+<pre class="leading-relaxed">📁 app/
+ └── 📁 pages/
+      ├── 📄 index.vue      <span class="text-teal-400">→  ເປີດເວັບຈະເຫັນໜ້ານີ້ກ່ອນ  (/)</span>
+      ├── 📄 about.vue      <span class="text-teal-400">→  /about</span>
+      ├── 📄 contact.vue    <span class="text-teal-400">→  /contact</span>
+      └── 📁 courses/
+           ├── 📄 index.vue <span class="text-teal-400">→  /courses</span>
+           └── 📄 [id].vue  <span class="text-cyan-300">→  /courses/1, /courses/2, ... (ໄດ້ໝົດ!)</span></pre>
+          </div>
+
+          <!-- Rules table -->
+          <div class="overflow-x-auto rounded-2xl border border-slate-800">
+            <table class="w-full text-xs sm:text-sm">
+              <thead class="bg-[#080d18] text-teal-300">
+                <tr>
+                  <th class="text-left px-4 py-3 font-bold border-b border-slate-800">ຊື່ໄຟລ໌</th>
+                  <th class="text-left px-4 py-3 font-bold border-b border-slate-800">URL ທີ່ໄດ້</th>
+                  <th class="text-left px-4 py-3 font-bold border-b border-slate-800">ຈື່ງ່າຍໆ</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800/80 text-slate-300">
+                <tr class="hover:bg-slate-800/30 transition">
+                  <td class="px-4 py-3 font-mono text-teal-300">index.vue</td>
+                  <td class="px-4 py-3 font-mono text-white">/</td>
+                  <td class="px-4 py-3 text-slate-400">index = ໜ້າຫຼັກສະເໝີ</td>
+                </tr>
+                <tr class="hover:bg-slate-800/30 transition">
+                  <td class="px-4 py-3 font-mono text-teal-300">about.vue</td>
+                  <td class="px-4 py-3 font-mono text-white">/about</td>
+                  <td class="px-4 py-3 text-slate-400">ຊື່ໄຟລ໌ = ຊື່ URL</td>
+                </tr>
+                <tr class="hover:bg-slate-800/30 transition">
+                  <td class="px-4 py-3 font-mono text-teal-300">courses/[id].vue</td>
+                  <td class="px-4 py-3 font-mono text-white">/courses/ຫຍັງກໍໄດ້</td>
+                  <td class="px-4 py-3 text-slate-400">ວົງເລັບ [ ] = ຄ່າປ່ຽນໄດ້ (Dynamic)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Try it step by step -->
+          <h3 class="text-lg font-bold text-white pt-2">🛠️ ລອງເຮັດເລີຍ: ສ້າງໜ້າ About ໃນ 2 ຂັ້ນຕອນ</h3>
+          <div class="space-y-3">
+            <div class="flex gap-3 items-start">
+              <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 border border-teal-500/30">1</span>
+              <p class="text-sm text-slate-300">ສ້າງໄຟລ໌ໃໝ່ຊື່ <code class="text-teal-300 font-mono bg-slate-800/90 border border-teal-500/20 px-1.5 py-0.5 rounded">app/pages/about.vue</code> ແລ້ວໃສ່ໂຄດນີ້:</p>
+            </div>
+            <div class="bg-[#050811] border border-slate-800 rounded-2xl p-5 text-slate-200 font-mono text-xs sm:text-sm shadow-xl overflow-x-auto">
+<pre class="leading-relaxed"><span class="text-slate-500">&lt;!-- app/pages/about.vue --&gt;</span>
+<span class="text-teal-400">&lt;template&gt;</span>
+  &lt;div class=<span class="text-teal-300">"p-8 space-y-4"</span>&gt;
+    &lt;h1 class=<span class="text-teal-300">"text-2xl font-bold text-white"</span>&gt;ກ່ຽວກັບພວກເຮົາ&lt;/h1&gt;
+    &lt;p class=<span class="text-teal-300">"text-slate-300"</span>&gt;ນີ້ຄືໜ້າ About ທີ່ຂ້ອຍສ້າງເອງໃນ Nuxt 4!&lt;/p&gt;
+  &lt;/div&gt;
+<span class="text-teal-400">&lt;/template&gt;</span></pre>
+            </div>
+            <div class="flex gap-3 items-start">
+              <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 border border-teal-500/30">2</span>
+              <p class="text-sm text-slate-300">ເປີດ Browser ໄປທີ່ <code class="text-teal-300 font-mono bg-slate-800/90 border border-teal-500/20 px-1.5 py-0.5 rounded">http://localhost:3000/about</code> — ສຳເລັດ! ບໍ່ຕ້ອງຕັ້ງຄ່າຫຍັງເພີ່ມເລີຍ 🎉</p>
+            </div>
+          </div>
+
+          <!-- Dynamic route explained -->
+          <h3 class="text-lg font-bold text-white pt-2">🔢 ໜ້າແບບ Dynamic: ໜ້າດຽວ ສະແດງໄດ້ຫຼາຍຂໍ້ມູນ</h3>
+          <p class="text-slate-300 leading-relaxed text-sm">
+            ສົມມຸດມີບົດຮຽນ 100 ບົດ — ຈະສ້າງ 100 ໄຟລ໌ບໍ? <strong>ບໍ່ຕ້ອງ!</strong> ສ້າງໄຟລ໌ດຽວຊື່ <code class="text-teal-300 font-mono bg-slate-800/90 border border-teal-500/20 px-1.5 py-0.5 rounded">[id].vue</code> (ມີວົງເລັບ) ແລ້ວອ່ານຄ່າຈາກ URL ມາໃຊ້:
+          </p>
+          <div class="bg-[#050811] border border-slate-800 rounded-2xl p-5 text-slate-200 font-mono text-xs sm:text-sm shadow-xl overflow-x-auto">
+<pre class="leading-relaxed"><span class="text-slate-500">&lt;!-- app/pages/courses/[id].vue --&gt;</span>
+<span class="text-cyan-300">&lt;script setup&gt;</span>
+<span class="text-slate-500">// useRoute() ໃຊ້ອ່ານຂໍ້ມູນຈາກ URL ປັດຈຸບັນ</span>
+const route = useRoute()
+<span class="text-slate-500">// ຖ້າເຂົ້າ /courses/5  →  route.params.id ຈະໄດ້ຄ່າ "5"</span>
+<span class="text-cyan-300">&lt;/script&gt;</span>
+
+<span class="text-teal-400">&lt;template&gt;</span>
+  &lt;h1 class=<span class="text-teal-300">"text-xl font-bold text-white"</span>&gt;ບົດຮຽນເລກທີ: {{ route.params.id }}&lt;/h1&gt;
+<span class="text-teal-400">&lt;/template&gt;</span></pre>
+          </div>
+          <div class="bg-[#080d18] border border-slate-800 rounded-2xl p-4 text-xs sm:text-sm text-slate-300 space-y-1">
+            <div>👉 ເຂົ້າ <code class="font-mono text-teal-300">/courses/1</code> ຈະເຫັນ: <strong>ບົດຮຽນເລກທີ: 1</strong></div>
+            <div>👉 ເຂົ້າ <code class="font-mono text-teal-300">/courses/99</code> ຈະເຫັນ: <strong>ບົດຮຽນເລກທີ: 99</strong></div>
+          </div>
+        </section>
+
+        <!-- Section 2: NuxtLink -->
+        <section id="section-2" class="dark-card p-6 sm:p-8 rounded-3xl shadow-lg space-y-5 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center shadow-md shadow-teal-500/25">2</span>
+            ເຊື່ອມແຕ່ລະໜ້າດ້ວຍ <code class="text-teal-300 font-mono text-xl">&lt;NuxtLink&gt;</code>
+          </h2>
+          <p class="text-slate-300 leading-relaxed">
+            ມີໜ້າແລ້ວ ກໍຕ້ອງມີລິ້ງໃຫ້ຜູ້ໃຊ້ກົດໄປມາ. ໃນ Nuxt ໃຫ້ໃຊ້ <code class="text-teal-300 font-mono bg-slate-800/90 border border-teal-500/20 px-1.5 py-0.5 rounded">&lt;NuxtLink&gt;</code> ແທນ <code class="font-mono bg-slate-800 px-1.5 py-0.5 rounded text-slate-300">&lt;a&gt;</code> ທຳມະດາ:
           </p>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-              <div class="text-xs font-mono text-purple-700 font-bold">app/pages/index.vue</div>
-              <div class="text-sm font-bold text-slate-800">ໜ້າຫຼັກ (Route: `/`)</div>
-              <p class="text-xs text-slate-500">ສະແດງຜົນເມື່ອຜູ້ໃຊ້ເຂົ້າເວັບໄຊທຳອິດ.</p>
+            <div class="p-5 rounded-2xl bg-rose-950/40 border border-rose-500/30 space-y-2">
+              <div class="text-sm font-bold text-rose-300">❌ &lt;a href&gt; ແບບເກົ່າ</div>
+              <p class="text-xs text-rose-200 leading-relaxed">ກົດແລ້ວ Browser ຈະ <strong>Reload ໜ້າຈໍທັງໝົດ</strong> — ຈໍວັບ, ຊ້າ, ເສຍຄ່າ State ທີ່ຄ້າງໄວ້.</p>
             </div>
+            <div class="p-5 rounded-2xl bg-teal-950/40 border border-teal-500/30 space-y-2">
+              <div class="text-sm font-bold text-teal-300">✅ &lt;NuxtLink&gt; ຂອງ Nuxt</div>
+              <p class="text-xs text-teal-200 leading-relaxed">ປ່ຽນສະເພາະເນື້ອຫາ <strong>ໄວທັນທີ ບໍ່ Reload</strong> — ຄືກັບແອັບມືຖື ລື່ນໆ.</p>
+            </div>
+          </div>
 
-            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-              <div class="text-xs font-mono text-purple-700 font-bold">app/pages/about.vue</div>
-              <div class="text-sm font-bold text-slate-800">ໜ້າກ່ຽວກັບ (Route: `/about`)</div>
-              <p class="text-xs text-slate-500">ສະແດງຜົນເມື່ອເຂົ້າໄປທີ່ URL `/about`.</p>
-            </div>
+          <div class="bg-[#050811] border border-slate-800 rounded-2xl p-5 text-slate-200 font-mono text-xs sm:text-sm shadow-xl overflow-x-auto">
+<pre class="leading-relaxed"><span class="text-teal-400">&lt;template&gt;</span>
+  &lt;nav class=<span class="text-teal-300">"flex gap-4"</span>&gt;
+    &lt;NuxtLink to=<span class="text-teal-300">"/"</span> class=<span class="text-teal-300">"text-teal-400 hover:underline"</span>&gt;ໜ້າຫຼັກ&lt;/NuxtLink&gt;
+    &lt;NuxtLink to=<span class="text-teal-300">"/about"</span> class=<span class="text-teal-300">"text-teal-400 hover:underline"</span>&gt;ກ່ຽວກັບ&lt;/NuxtLink&gt;
+    &lt;NuxtLink to=<span class="text-teal-300">"/courses/1"</span> class=<span class="text-teal-300">"text-teal-400 hover:underline"</span>&gt;ບົດຮຽນທີ 1&lt;/NuxtLink&gt;
+  &lt;/nav&gt;
+<span class="text-teal-400">&lt;/template&gt;</span></pre>
+          </div>
 
-            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-              <div class="text-xs font-mono text-purple-700 font-bold">app/pages/courses/[id].vue</div>
-              <div class="text-sm font-bold text-slate-800">Dynamic Route (Route: `/courses/:id`)</div>
-              <p class="text-xs text-slate-500">ດຶງ Parameter ຜ່ານ `useRoute().params.id`.</p>
-            </div>
-
-            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-              <div class="text-xs font-mono text-purple-700 font-bold">&lt;NuxtLink to="/about"&gt;</div>
-              <div class="text-sm font-bold text-slate-800">ການເຊື່ອມໂຍງໜ້າເວັບ (Navigation)</div>
-              <p class="text-xs text-slate-500">ປ່ຽນໜ້າໄດ້ທັນທີໂດຍບໍ່ຕ້ອງ Reload ໜ້າຈໍໃໝ່.</p>
-            </div>
+          <div class="bg-[#0c1626] border border-teal-500/30 rounded-2xl p-4 text-xs sm:text-sm text-slate-300">
+            💡 <strong>ຈື່ງ່າຍໆ:</strong> ລິ້ງພາຍໃນເວັບເຮົາ → ໃຊ້ <code class="font-mono text-teal-300 bg-slate-800/90 border border-teal-500/20 px-1 rounded">&lt;NuxtLink&gt;</code>, ລິ້ງໄປເວັບຄົນອື່ນ (ເຊັ່ນ google.com) → ໃຊ້ <code class="font-mono text-slate-300 bg-slate-800 px-1 rounded">&lt;a href&gt;</code> ຄືເກົ່າ.
           </div>
         </section>
 
-        <!-- Section 2: Auto-Imported Components -->
-        <section id="section-2" class="space-y-4 scroll-mt-24">
-          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-xl bg-purple-500 text-white text-sm font-bold flex items-center justify-center">2</span>
-            ການໃຊ້ງານ Components ແບບ Auto-Import
+        <!-- Section 3: Auto-Imported Components -->
+        <section id="section-3" class="dark-card p-6 sm:p-8 rounded-3xl shadow-lg space-y-5 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center shadow-md shadow-teal-500/25">3</span>
+            Components: ຂຽນເທື່ອດຽວ ໃຊ້ໄດ້ທຸກໜ້າ ♻️
           </h2>
-          <p class="text-slate-600 leading-relaxed">
-            ທຸກ Component ທີ່ຢູ່ໃນໂຟລເດີ <code class="text-purple-700 font-mono bg-purple-50 px-1.5 py-0.5 rounded">app/components/</code> ສາມາດເອີ້ນໃຊ້ໃນໜ້າໃດກໍໄດ້ທັນທີ ໂດຍບໍ່ຕ້ອງຂຽນ `import MyComponent from '...'`:
-          </p>
 
-          <div class="bg-slate-900 rounded-2xl p-5 text-slate-200 font-mono text-xs sm:text-sm shadow-xl space-y-3">
-            <div class="text-slate-400">// 1. ສ້າງ Component: app/components/CourseHeader.vue</div>
-            <div class="text-emerald-400">&lt;template&gt;
-  &lt;h1 class="text-2xl font-bold"&gt;{{ title }}&lt;/h1&gt;
-&lt;/template&gt;</div>
+          <div class="bg-[#0c1626] border border-teal-500/30 rounded-2xl p-5 space-y-2">
+            <div class="font-bold text-teal-300 text-sm flex items-center gap-2">
+              <span>💡</span> ແນວຄິດງ່າຍໆ
+            </div>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Component ຄື <strong>ຊິ້ນສ່ວນ UI ທີ່ຕັດອອກມາເປັນໄຟລ໌ຂອງມັນເອງ</strong> ເຊັ່ນ ປຸ່ມ, ການ໌ດສິນຄ້າ, Navbar — ປຽບເໝືອນຕົວຕໍ່ Lego 🧱: ສ້າງຊິ້ນດຽວ ແລ້ວເອົາໄປຕໍ່ໃສ່ໜ້າໃດກໍໄດ້.
+            </p>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              ຈຸດເດັ່ນຂອງ Nuxt: ໄຟລ໌ໃນ <code class="font-mono text-teal-300 bg-slate-800/90 border border-teal-500/20 px-1.5 py-0.5 rounded">app/components/</code> <strong>ບໍ່ຕ້ອງ import ເລີຍ</strong> — ພິມຊື່ Tag ໃຊ້ໄດ້ທັນທີ!
+            </p>
+          </div>
 
-            <div class="text-slate-400 pt-2">// 2. ເອີ້ນໃຊ້ໃນ app/pages/index.vue ໄດ້ທັນທີ:</div>
-            <div class="text-cyan-300">&lt;template&gt;
-  &lt;div&gt;
-    &lt;CourseHeader title="ຍິນດີຕ້ອນຮັບສູ່ Nuxt 4!" /&gt;
+          <!-- Compare old vs new -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="p-5 rounded-2xl bg-rose-950/40 border border-rose-500/30 space-y-2">
+              <div class="text-sm font-bold text-rose-300">❌ Vue ແບບປົກກະຕິ</div>
+              <pre class="text-[11px] font-mono text-rose-200 overflow-x-auto leading-relaxed">import CourseCard
+  from '~/components/CourseCard.vue'
+// ຕ້ອງຂຽນແບບນີ້ທຸກໜ້າ ທຸກ component 😩</pre>
+            </div>
+            <div class="p-5 rounded-2xl bg-teal-950/40 border border-teal-500/30 space-y-2">
+              <div class="text-sm font-bold text-teal-300">✅ Nuxt 4 (Auto-Import)</div>
+              <pre class="text-[11px] font-mono text-teal-200 overflow-x-auto leading-relaxed">&lt;CourseCard /&gt;
+// ໃຊ້ໄດ້ເລີຍ! Nuxt import ໃຫ້ເອງ 😎</pre>
+            </div>
+          </div>
+
+          <!-- Full example -->
+          <h3 class="text-lg font-bold text-white pt-2">🛠️ ຕົວຢ່າງເຕັມ: ສ້າງການ໌ດບົດຮຽນ (CourseCard)</h3>
+          <div class="space-y-3">
+            <div class="flex gap-3 items-start">
+              <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 border border-teal-500/30">1</span>
+              <p class="text-sm text-slate-300">ສ້າງໄຟລ໌ <code class="text-teal-300 font-mono bg-slate-800/90 border border-teal-500/20 px-1.5 py-0.5 rounded">app/components/CourseCard.vue</code> — ຮັບຂໍ້ມູນຜ່ານ <strong>props</strong> (ຄືຊ່ອງສຽບຂໍ້ມູນ):</p>
+            </div>
+            <div class="bg-[#050811] border border-slate-800 rounded-2xl p-5 text-slate-200 font-mono text-xs sm:text-sm shadow-xl overflow-x-auto">
+<pre class="leading-relaxed"><span class="text-slate-500">&lt;!-- app/components/CourseCard.vue --&gt;</span>
+<span class="text-cyan-300">&lt;script setup&gt;</span>
+<span class="text-slate-500">// ປະກາດວ່າ Component ນີ້ຮັບຂໍ້ມູນຫຍັງແດ່</span>
+defineProps({
+  title: String,   <span class="text-slate-500">// ຊື່ບົດຮຽນ</span>
+  hours: Number    <span class="text-slate-500">// ຈຳນວນຊົ່ວໂມງ</span>
+})
+<span class="text-cyan-300">&lt;/script&gt;</span>
+
+<span class="text-teal-400">&lt;template&gt;</span>
+  &lt;div class=<span class="text-teal-300">"p-5 rounded-2xl bg-[#0c1220] border border-slate-800 space-y-2"</span>&gt;
+    &lt;h3 class=<span class="text-teal-300">"text-lg font-bold text-white"</span>&gt;{{ title }}&lt;/h3&gt;
+    &lt;p class=<span class="text-teal-300">"text-xs text-slate-400"</span>&gt;ໄລຍະຮຽນ: {{ hours }} ຊົ່ວໂມງ&lt;/p&gt;
   &lt;/div&gt;
-&lt;/template&gt;</div>
+<span class="text-teal-400">&lt;/template&gt;</span></pre>
+            </div>
+            <div class="flex gap-3 items-start">
+              <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 border border-teal-500/30">2</span>
+              <p class="text-sm text-slate-300">ເອີ້ນໃຊ້ໃນໜ້າໃດກໍໄດ້ <strong>ໂດຍບໍ່ຕ້ອງ import</strong> — ໃສ່ຂໍ້ມູນຕ່າງກັນໄດ້ແຕ່ລະອັນ:</p>
+            </div>
+            <div class="bg-[#050811] border border-slate-800 rounded-2xl p-5 text-slate-200 font-mono text-xs sm:text-sm shadow-xl overflow-x-auto">
+<pre class="leading-relaxed"><span class="text-slate-500">&lt;!-- app/pages/index.vue --&gt;</span>
+<span class="text-teal-400">&lt;template&gt;</span>
+  &lt;div class=<span class="text-teal-300">"grid grid-cols-2 gap-4"</span>&gt;
+    &lt;CourseCard title=<span class="text-teal-300">"ພື້ນຖານ Nuxt 4"</span> :hours=<span class="text-teal-300">"3"</span> /&gt;
+    &lt;CourseCard title=<span class="text-teal-300">"ຕິດຕັ້ງ Vuetify"</span> :hours=<span class="text-teal-300">"2"</span> /&gt;
+  &lt;/div&gt;
+<span class="text-teal-400">&lt;/template&gt;</span></pre>
+            </div>
+          </div>
+
+          <div class="bg-[#080d18] border border-slate-800 rounded-2xl p-4 text-xs sm:text-sm text-slate-300 space-y-1">
+            <div>⚠️ <strong>ຂໍ້ຄວນຮູ້:</strong> ຖ້າ Component ຢູ່ໃນໂຟລເດີຍ່ອຍ ຊື່ Tag ຈະລວມຊື່ໂຟລເດີນຳ:</div>
+            <div class="font-mono text-xs text-teal-300">app/components/course/Card.vue → ໃຊ້ເປັນ &lt;CourseCard /&gt;</div>
           </div>
         </section>
 
-        <!-- Section 3: Layouts System -->
-        <section id="section-3" class="space-y-4 scroll-mt-24">
-          <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-xl bg-purple-500 text-white text-sm font-bold flex items-center justify-center">3</span>
-            ລະບົບ Layouts ໃນ <code class="text-purple-600 font-mono text-xl">app/layouts/</code>
+        <!-- Section 4: Layouts System -->
+        <section id="section-4" class="dark-card p-6 sm:p-8 rounded-3xl shadow-lg space-y-5 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center shadow-md shadow-teal-500/25">4</span>
+            Layouts: Navbar + Footer ອັນດຽວ ໃຊ້ທຸກໜ້າ 🖼️
           </h2>
-          <p class="text-slate-600 leading-relaxed">
-            ສ້າງໂຄງຮ່າງໜ້າເວັບຫຼັກເຊັ່ນ Navbar ແລະ Footer ທີ່ໃຊ້ຮ່ວມກັນທຸກໜ້າຜ່ານ <code class="text-purple-700 font-mono bg-purple-50 px-1.5 py-0.5 rounded">app/layouts/default.vue</code>:
+
+          <div class="bg-[#0c1626] border border-teal-500/30 rounded-2xl p-5 space-y-2">
+            <div class="font-bold text-teal-300 text-sm flex items-center gap-2">
+              <span>💡</span> ແນວຄິດງ່າຍໆ
+            </div>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Layout ປຽບເໝືອນ <strong>ກອບຮູບ</strong>: ກອບ (Navbar + Footer) ຄືເກົ່າສະເໝີ, ປ່ຽນແຕ່ຮູບຂ້າງໃນ (ເນື້ອຫາຂອງແຕ່ລະໜ້າ).
+              ດັ່ງນັ້ນເຮົາຂຽນ Navbar ເທື່ອດຽວ — ບໍ່ຕ້ອງ copy ໃສ່ທຸກໜ້າ.
+            </p>
+          </div>
+
+          <p class="text-slate-300 leading-relaxed text-sm">
+            ສ້າງໄຟລ໌ <code class="text-teal-300 font-mono bg-slate-800/90 border border-teal-500/20 px-1.5 py-0.5 rounded">app/layouts/default.vue</code> — ຊື່ <strong>default</strong> ໝາຍຄວາມວ່າທຸກໜ້າຈະໃຊ້ Layout ນີ້ອັດຕະໂນມັດ:
           </p>
 
-          <div class="bg-slate-900 rounded-2xl p-5 text-slate-200 font-mono text-xs sm:text-sm shadow-xl space-y-2">
-            <div class="text-slate-400">// app/layouts/default.vue</div>
-            <div class="text-purple-300">&lt;template&gt;
-  &lt;div class="min-h-screen flex flex-col"&gt;
-    &lt;header&gt;Navbar ຮ່ວມກັນທຸກໜ້າ&lt;/header&gt;
-    
-    &lt;main class="flex-grow"&gt;
-      &lt;slot /&gt; &lt;!-- ເນື້ອຫາຂອງແຕ່ລະໜ້າຈະມາສະແດງຢູ່ນີ້ --&gt;
+          <div class="bg-[#050811] border border-slate-800 rounded-2xl p-5 text-slate-200 font-mono text-xs sm:text-sm shadow-xl overflow-x-auto">
+<pre class="leading-relaxed"><span class="text-slate-500">&lt;!-- app/layouts/default.vue --&gt;</span>
+<span class="text-teal-400">&lt;template&gt;</span>
+  &lt;div class=<span class="text-teal-300">"min-h-screen flex flex-col bg-[#070b12] text-white"</span>&gt;
+
+    &lt;header class=<span class="text-teal-300">"p-4 border-b border-slate-800"</span>&gt;🔝 Navbar — ສະແດງທຸກໜ້າ&lt;/header&gt;
+
+    &lt;main class=<span class="text-teal-300">"flex-grow p-6"</span>&gt;
+      <span class="text-teal-300">&lt;slot /&gt;</span>  <span class="text-slate-500">&lt;!-- ⭐ ຈຸດສຳຄັນ! ເນື້ອຫາຂອງແຕ່ລະໜ້າ
+           ຈະຖືກສະຫຼັບມາສະແດງຢູ່ບ່ອນນີ້ --&gt;</span>
     &lt;/main&gt;
 
-    &lt;footer&gt;Footer ດ້ານລຸ່ມ&lt;/footer&gt;
+    &lt;footer class=<span class="text-teal-300">"p-4 border-t border-slate-800 text-center"</span>&gt;🔻 Footer — ສະແດງທຸກໜ້າ&lt;/footer&gt;
+
   &lt;/div&gt;
-&lt;/template&gt;</div>
+<span class="text-teal-400">&lt;/template&gt;</span></pre>
+          </div>
+
+          <div class="bg-[#080d18] border border-slate-800 rounded-2xl p-5 text-xs sm:text-sm text-slate-300 space-y-2">
+            <div class="font-bold text-teal-300">🔍 ເກີດຫຍັງຂຶ້ນເມື່ອກົດປ່ຽນໜ້າ?</div>
+            <div class="font-mono text-xs leading-relaxed">
+              ເຂົ້າ <span class="text-teal-400">/</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Navbar + <strong class="text-white">index.vue</strong> + Footer<br>
+              ເຂົ້າ <span class="text-teal-400">/about</span> → Navbar + <strong class="text-white">about.vue</strong> + Footer
+            </div>
+            <p>ສັງເກດ: Navbar ແລະ Footer ຄືເກົ່າຕະຫຼອດ — ປ່ຽນສະເພາະສ່ວນ <code class="font-mono bg-slate-800 text-teal-300 px-1 rounded">&lt;slot /&gt;</code> ເທົ່ານັ້ນ.</p>
+          </div>
+
+          <div class="bg-[#0c1626] border border-teal-500/30 rounded-2xl p-4 text-xs sm:text-sm text-slate-300">
+            ⚠️ <strong>ຢ່າລືມ!</strong> ໄຟລ໌ <code class="font-mono bg-slate-800 text-teal-300 px-1 rounded">app/app.vue</code> ຕ້ອງມີ <code class="font-mono bg-slate-800 text-teal-300 px-1 rounded">&lt;NuxtLayout&gt;&lt;NuxtPage /&gt;&lt;/NuxtLayout&gt;</code> ຢູ່ນຳ — ຖ້າບໍ່ມີ Layout ຈະບໍ່ສະແດງຜົນ.
+          </div>
+        </section>
+
+        <!-- Section 5: Summary & Exercise -->
+        <section id="section-5" class="dark-card p-6 sm:p-8 rounded-3xl shadow-lg space-y-5 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center shadow-md shadow-teal-500/25">5</span>
+            ສະຫຼຸບບົດຮຽນ 📝
+          </h2>
+
+          <div class="overflow-x-auto rounded-2xl border border-slate-800">
+            <table class="w-full text-xs sm:text-sm">
+              <thead class="bg-[#080d18] text-teal-300">
+                <tr>
+                  <th class="text-left px-4 py-3 font-bold border-b border-slate-800">ຢາກເຮັດຫຍັງ?</th>
+                  <th class="text-left px-4 py-3 font-bold border-b border-slate-800">ເຮັດແນວໃດ?</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800/80 text-slate-300">
+                <tr class="hover:bg-slate-800/30 transition">
+                  <td class="px-4 py-3 text-white font-medium">ສ້າງໜ້າເວັບໃໝ່</td>
+                  <td class="px-4 py-3">ສ້າງໄຟລ໌ .vue ໃນ <code class="font-mono text-teal-300">app/pages/</code></td>
+                </tr>
+                <tr class="hover:bg-slate-800/30 transition">
+                  <td class="px-4 py-3 text-white font-medium">ໜ້າທີ່ຮັບຄ່າຈາກ URL</td>
+                  <td class="px-4 py-3">ຕັ້ງຊື່ໄຟລ໌ <code class="font-mono text-teal-300">[id].vue</code> + ອ່ານດ້ວຍ <code class="font-mono text-teal-300">useRoute().params.id</code></td>
+                </tr>
+                <tr class="hover:bg-slate-800/30 transition">
+                  <td class="px-4 py-3 text-white font-medium">ລິ້ງປ່ຽນໜ້າ (ບໍ່ Reload)</td>
+                  <td class="px-4 py-3"><code class="font-mono text-teal-300">&lt;NuxtLink to="/about"&gt;</code></td>
+                </tr>
+                <tr class="hover:bg-slate-800/30 transition">
+                  <td class="px-4 py-3 text-white font-medium">ຊິ້ນສ່ວນ UI ໃຊ້ຊ້ຳ</td>
+                  <td class="px-4 py-3">ສ້າງໄຟລ໌ໃນ <code class="font-mono text-teal-300">app/components/</code> — ໃຊ້ໄດ້ເລີຍ ບໍ່ຕ້ອງ import</td>
+                </tr>
+                <tr class="hover:bg-slate-800/30 transition">
+                  <td class="px-4 py-3 text-white font-medium">Navbar/Footer ທຸກໜ້າ</td>
+                  <td class="px-4 py-3">ສ້າງ <code class="font-mono text-teal-300">app/layouts/default.vue</code> + ໃສ່ <code class="font-mono text-teal-300">&lt;slot /&gt;</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Exercise -->
+          <div class="bg-[#0c1626] border border-teal-500/30 rounded-2xl p-6 space-y-3">
+            <div class="font-bold text-teal-300 flex items-center gap-2">✏️ ແບບຝຶກຫັດທ້າຍບົດ (ລອງເຮັດເອງ)</div>
+            <ol class="list-decimal list-inside space-y-2 text-sm text-slate-300">
+              <li>ສ້າງໜ້າ <code class="font-mono text-teal-300 bg-slate-800/90 border border-teal-500/20 px-1.5 py-0.5 rounded">app/pages/contact.vue</code> ໃຫ້ສະແດງຊື່ ແລະ ເບີໂທຂອງທ່ານ</li>
+              <li>ສ້າງ Component <code class="font-mono text-teal-300 bg-slate-800/90 border border-teal-500/20 px-1.5 py-0.5 rounded">app/components/MyButton.vue</code> ທີ່ຮັບ prop ຊື່ <code class="font-mono">label</code> ແລ້ວເອົາໄປໃຊ້ 2 ໜ້າ</li>
+              <li>ສ້າງ Layout <code class="font-mono text-teal-300 bg-slate-800/90 border border-teal-500/20 px-1.5 py-0.5 rounded">default.vue</code> ທີ່ມີ Navbar ພ້ອມ <code class="font-mono">&lt;NuxtLink&gt;</code> ໄປຫາ 3 ໜ້າ: ໜ້າຫຼັກ, About, Contact</li>
+              <li>ທ້າທາຍ 🔥: ສ້າງ <code class="font-mono text-teal-300 bg-slate-800/90 border border-teal-500/20 px-1.5 py-0.5 rounded">app/pages/students/[name].vue</code> ໃຫ້ສະແດງ "ສະບາຍດີ {name}" ເມື່ອເຂົ້າ <code class="font-mono">/students/somchai</code></li>
+            </ol>
           </div>
         </section>
 
         <!-- Navigation Footer -->
-        <div class="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <a href="./N01.html" class="px-6 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition flex items-center gap-2">
+        <div class="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <a href="./N01.html" class="px-6 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-sm transition flex items-center gap-2">
             ← ກັບໄປບົດທີ 1 (ຕິດຕັ້ງໂປຣເຈັກ)
           </a>
-          <a href="./N03.html" class="px-6 py-3 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-sm shadow-lg shadow-purple-500/20 transition flex items-center gap-2">
+          <a href="./N03.html" class="px-6 py-3 rounded-2xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-sm shadow-lg shadow-teal-500/25 transition flex items-center gap-2">
             ໄປບົດທີ 3: Data Fetching & State →
           </a>
         </div>
@@ -371,8 +730,12 @@
     </div>
   </div>
 
-  <footer class="border-t border-slate-200 mt-16 py-8 text-center text-xs text-slate-500">
-    ຫຼັກສູດ Nuxt 4 (2027) • ສອນດ້ວຍຄວາມເຂົ້າໃຈງ່າຍ
+  <footer class="border-t border-slate-800/80 mt-16 py-10 bg-[#060910] text-center text-xs text-slate-400 space-y-2">
+    <div class="flex items-center justify-center gap-2 text-sm font-bold text-white">
+      <span class="w-6 h-6 rounded-lg bg-teal-500 text-slate-950 text-xs font-black flex items-center justify-center">N4</span>
+      <span>ຫຼັກສູດ Nuxt 4 (2027 Edition)</span>
+    </div>
+    <div class="text-slate-500">© 2027 Nuxt Course Laos • ເຜີຍແຜ່ເພື່ອການສຶກສາ ແລະ ຍົກລະດັບນັກພັດທະນາລາວ</div>
   </footer>
 
   <script>
@@ -392,9 +755,9 @@
       navigator.clipboard.writeText(text).then(() => {
         const toast = document.getElementById('toast');
         if (toast) {
-          toast.classList.remove('translate-y-20', 'opacity-0');
+          toast.classList.remove('translate-y-24', 'opacity-0');
           setTimeout(() => {
-            toast.classList.add('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-24', 'opacity-0');
           }, 2200);
         }
       });

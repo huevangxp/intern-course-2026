@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="lo" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ບົດທີ 9: Route Middleware & Authentication Guards - ຫຼັກສູດ Nuxt 4 (2027)</title>
+
+  <!-- Google Fonts: Noto Sans Lao, Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+Lao:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Material Design Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+
+  <!-- Core Theme Stylesheet -->
+  <link rel="stylesheet" href="./theme.css">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            teal: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+              950: '#042f2e',
+            },
+            dark: {
+              canvas: '#070b12',
+              surface: '#0c1220',
+              card: '#0f172a',
+              border: '#1e293b',
+              muted: '#64748b',
+            }
+          },
+          fontFamily: {
+            sans: ['"Noto Sans Lao"', '"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom dark scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070b12;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(45, 212, 191, 0.4);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(45, 212, 191, 0.8);
+    }
+    .custom-dark-scrollbar::-webkit-scrollbar-track {
+      background: #050811;
+    }
+    .custom-dark-scrollbar::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+    .custom-dark-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #14b8a6;
+    }
+  </style>
+</head>
+
+<body class="bg-[#070b12] text-slate-200 min-h-screen font-sans antialiased selection:bg-teal-500 selection:text-slate-950">
+
+  <!-- Scroll Reading Progress Bar -->
+  <div id="progress-bar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-teal-400 via-emerald-400 to-cyan-500 z-50 transition-all duration-150" style="width: 0%"></div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none bg-[#0c1220] text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 text-sm border border-teal-500/50">
+    <span class="text-teal-400 text-base">✨</span>
+    <span id="toast-message">ຄັດລອກໂຄດສຳເລັດແລ້ວ!</span>
+  </div>
+
+  <!-- Floating Back To Top Button -->
+  <button id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 left-6 z-40 w-11 h-11 rounded-2xl bg-[#0c1220] border border-slate-700 text-teal-400 shadow-2xl flex items-center justify-center text-lg opacity-0 pointer-events-none transition-all duration-300 hover:bg-teal-500 hover:text-slate-950 hover:border-teal-500 hover:scale-110" aria-label="Back to Top">
+    <i class="mdi mdi-arrow-up"></i>
+  </button>
+
+  <!-- Header (Sticky Dark Glass Navbar) -->
+  <header class="w-full bg-[#070b12]/90 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
+      
+      <!-- Logo & Breadcrumb -->
+      <div class="flex items-center gap-3">
+        <!-- Mobile Sidebar Toggle Button -->
+        <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 rounded-xl border border-slate-800 hover:bg-slate-800/60 text-slate-300 hover:text-teal-300 transition" aria-label="Toggle Menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+
+        <a href="./index.html" class="flex items-center gap-2.5 group">
+          <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-400 to-teal-600 text-slate-950 font-black flex items-center justify-center text-sm shadow-md shadow-teal-500/25 group-hover:scale-105 transition">N4</span>
+          <div>
+            <span class="font-extrabold text-base sm:text-lg text-white group-hover:text-teal-400 transition">ຫຼັກສູດ Nuxt 4</span>
+          </div>
+        </a>
+        <span class="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-teal-300 bg-teal-950/70 border border-teal-500/30 px-2.5 py-0.5 rounded-full ml-1">
+          <i class="mdi mdi-shield-lock-outline text-[13px]"></i>
+          ບົດທີ 9: Middleware & Auth Guard
+        </span>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold">
+        <a href="./index.html" class="text-slate-300 hover:text-teal-400 transition">ໜ້າຫຼັກ</a>
+        
+        <!-- Course Dropdown -->
+        <div class="relative group">
+          <button class="text-teal-400 font-bold flex items-center gap-1.5 py-2">
+            <span>ບົດຮຽນທັງໝົດ</span>
+            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="absolute left-0 top-full hidden group-hover:block w-72 bg-[#0c1220] border border-slate-800 rounded-2xl shadow-2xl p-2 z-50 space-y-1">
+            <a href="./N00.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 0: ແນະນຳ Nuxt 4</a>
+            <a href="./N01.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 1: ຕິດຕັ້ງໂປຣເຈັກ</a>
+            <a href="./N02.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 2: ໜ້າເວັບ & Components</a>
+            <a href="./N03.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 3: Data Fetching & State</a>
+            <a href="./N04.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 4: nuxt.config, Plugins & Assets</a>
+            <a href="./N05.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 5: ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</a>
+            <a href="./N06.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 6: Form Handling & State</a>
+            <a href="./N07.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 7: MDI Icons Setup & Use</a>
+            <a href="./N08.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 8: ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)</a>
+            <a href="./N09.html" class="block px-3 py-2 rounded-xl bg-teal-500/15 text-teal-300 font-bold text-xs border border-teal-500/30">ບົດທີ 9: Route Middleware & Auth Guard</a>
+            <a href="./N10.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 10: State Management ດ້ວຍ Pinia</a>
+            <a href="./N11.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 11: Teacher Full CRUD Operations</a>
+            <a href="./N12.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 12: Nitro Server Engine & API Routes</a>
+            <a href="./N13.html" class="block px-3 py-2 rounded-xl hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 text-xs transition">ບົດທີ 13: SEO & Production Deployment</a>
+          </div>
+        </div>
+
+        <a href="./about.html" class="text-slate-300 hover:text-teal-400 transition">ກ່ຽວກັບ</a>
+        <a href="./contact.html" class="text-slate-300 hover:text-teal-400 transition">ຕິດຕໍ່</a>
+      </nav>
+
+      <!-- Action Button -->
+      <div class="flex items-center gap-2.5">
+        <a href="./N08.html" class="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-slate-800 hover:bg-slate-800/60 text-slate-300 hover:text-teal-300 font-semibold text-xs transition">
+          <i class="mdi mdi-chevron-left text-base"></i>
+          <span>ບົດທີ 8</span>
+        </a>
+        <a href="./N10.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs shadow-md shadow-teal-500/25 transition">
+          <span>ບົດຕໍ່ໄປ (N10)</span>
+          <i class="mdi mdi-arrow-right text-sm"></i>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Sidebar Overlay & Drawer -->
+  <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden transition-opacity duration-300"></div>
+  <aside id="mobile-sidebar" class="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-[#0c1220] border-r border-slate-800 z-50 p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 space-y-6 shadow-2xl">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+      <div class="flex items-center gap-2.5">
+        <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-teal-400 to-teal-600 text-slate-950 font-black flex items-center justify-center text-sm">N4</span>
+        <span class="font-bold text-white text-base">ຫຼັກສູດ Nuxt 4</span>
+      </div>
+      <button onclick="toggleMobileSidebar()" class="p-2 text-slate-400 hover:text-white rounded-xl" aria-label="Close Menu">✕</button>
+    </div>
+
+    <!-- Navigation -->
+    <div class="space-y-1">
+      <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pb-1">ເມນູຫຼັກ</div>
+      <a href="./index.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-sm font-semibold transition">🏠 ໜ້າຫຼັກ</a>
+      <a href="./about.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-sm font-semibold transition">ℹ️ ກ່ຽວກັບ</a>
+      <a href="./contact.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-sm font-semibold transition">📧 ຕິດຕໍ່</a>
+    </div>
+
+    <!-- Course List -->
+    <div class="space-y-1 pt-2">
+      <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pb-1">ບົດຮຽນ Nuxt 4 (14 ບົດ)</div>
+      <a href="./N00.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">00. ແນະນຳ Nuxt 4</a>
+      <a href="./N01.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">01. ຕິດຕັ້ງໂປຣເຈັກ</a>
+      <a href="./N02.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">02. ໜ້າເວັບ ແລະ Components</a>
+      <a href="./N03.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">03. Data Fetching & State</a>
+      <a href="./N04.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">04. nuxt.config, Plugins & Assets</a>
+      <a href="./N05.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">05. ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</a>
+      <a href="./N06.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">06. Form Handling & State</a>
+      <a href="./N07.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">07. MDI Icons Setup & Use</a>
+      <a href="./N08.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">08. ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ (Teacher)</a>
+      <a href="./N09.html" class="block px-3 py-2 rounded-xl bg-teal-500/15 text-teal-300 font-bold text-xs border border-teal-500/30">09. Route Middleware & Auth Guard</a>
+      <a href="./N10.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">10. State Management ດ້ວຍ Pinia</a>
+      <a href="./N11.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">11. Teacher Full CRUD Operations</a>
+      <a href="./N12.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">12. Nitro Server Engine & API Routes</a>
+      <a href="./N13.html" class="block px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 text-xs font-semibold transition">13. SEO & Production Deployment</a>
+    </div>
+  </aside>
+
+  <!-- Main Container with Sidebar Layout -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- DESKTOP STICKY SIDEBAR (Left Column) -->
+      <aside class="hidden lg:block lg:col-span-4 sticky top-24 space-y-6">
+        
+        <!-- Course Outline Card -->
+        <div class="bg-[#0c1220] border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+              <span class="text-teal-400">📚</span> ສາລະບານຫຼັກສູດ Nuxt 4
+            </h3>
+            <span class="text-[11px] font-semibold text-teal-300 bg-teal-950/80 border border-teal-500/30 px-2 py-0.5 rounded-full">14 ບົດຮຽນ</span>
+          </div>
+
+          <div class="space-y-1.5 text-xs max-h-[420px] overflow-y-auto pr-1 custom-dark-scrollbar">
+            <a href="./N00.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">00</span>
+              <div class="truncate">00. ແນະນຳ Nuxt 4 & Architecture</div>
+            </a>
+            <a href="./N01.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">01</span>
+              <div class="truncate">01. ຕິດຕັ້ງໂປຣເຈັກ & CLI</div>
+            </a>
+            <a href="./N02.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">02</span>
+              <div class="truncate">02. ໜ້າເວັບ, Routing & Layouts</div>
+            </a>
+            <a href="./N03.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">03</span>
+              <div class="truncate">03. Data Fetching & useState</div>
+            </a>
+            <a href="./N04.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">04</span>
+              <div class="truncate">04. nuxt.config, Plugins & Assets</div>
+            </a>
+            <a href="./N05.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">05</span>
+              <div class="truncate">05. ຕິດຕັ້ງ & ໃຊ້ງານ Vuetify</div>
+            </a>
+            <a href="./N06.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">06</span>
+              <div class="truncate">06. Form Handling & State</div>
+            </a>
+            <a href="./N07.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">07</span>
+              <div class="truncate">07. MDI Icons Setup & Use</div>
+            </a>
+            <a href="./N08.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">08</span>
+              <div class="truncate">08. ໃຊ້ງານ Axios ດຶງຂໍ້ມູນ</div>
+            </a>
+
+            <!-- Lesson 09 (Active) -->
+            <a href="./N09.html" class="flex items-center gap-3 p-2 rounded-xl bg-teal-500/15 text-teal-300 font-bold border border-teal-500/40 shadow-sm shadow-teal-500/10 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-500 text-slate-950 flex items-center justify-center text-xs font-black shrink-0">09</span>
+              <div class="truncate">09. Route Middleware & Auth Guard</div>
+              <span class="text-teal-400 font-bold ml-auto">●</span>
+            </a>
+
+            <a href="./N10.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">10</span>
+              <div class="truncate">10. State Management (Pinia)</div>
+            </a>
+            <a href="./N11.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">11</span>
+              <div class="truncate">11. Teacher Full CRUD Operations</div>
+            </a>
+            <a href="./N12.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">12</span>
+              <div class="truncate">12. Nitro Server Engine & APIs</div>
+            </a>
+            <a href="./N13.html" class="flex items-center gap-3 p-2 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">
+              <span class="w-6 h-6 rounded-lg bg-teal-950/60 text-teal-400 flex items-center justify-center text-xs font-bold shrink-0 border border-teal-500/30">13</span>
+              <div class="truncate">13. SEO & Production Deploy</div>
+            </a>
+          </div>
+        </div>
+
+        <!-- In-Page Jump Links with Active Scrollspy -->
+        <div class="bg-[#0c1220] border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+            <h4 class="font-bold text-white text-xs uppercase tracking-wider flex items-center gap-1.5">
+              <i class="mdi mdi-format-list-bulleted text-teal-400"></i>
+              ຫົວຂໍ້ໃນບົດນີ້
+            </h4>
+            <span class="text-[10px] text-teal-400 font-mono">8 ຫົວຂໍ້</span>
+          </div>
+          <nav id="section-nav" class="space-y-1 text-xs">
+            <a href="#section-1" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">1. Middleware ແມ່ນຫຍັງ? 3 ປະເພດຫຼັກ</a>
+            <a href="#section-2" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">2. ສ້າງ Named Auth Guard (`auth.ts`)</a>
+            <a href="#section-3" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">3. Global Route Middleware</a>
+            <a href="#section-4" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">4. Role-Based Access Control (RBAC)</a>
+            <a href="#section-5" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">5. ໃຊ້ງານໃນ Page ດ້ວຍ `definePageMeta`</a>
+            <a href="#section-6" class="toc-link block px-2.5 py-1.5 rounded-xl text-teal-300 bg-teal-500/10 border border-teal-500/30 transition font-bold">6. ⚡ Interactive Live Auth Guard Simulator</a>
+            <a href="#section-7" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">7. ໂຄດ Vue 3 ສົມບູນ (Admin Page & Auth)</a>
+            <a href="#section-8" class="toc-link block px-2.5 py-1.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-teal-300 transition">8. Best Practices & ຂໍ້ຄວນລະວັງ</a>
+          </nav>
+        </div>
+
+      </aside>
+
+      <!-- MAIN CONTENT (Right Column) -->
+      <main class="lg:col-span-8 space-y-10">
+
+        <!-- Lesson Header Banner -->
+        <div class="relative overflow-hidden bg-gradient-to-br from-teal-950/70 via-slate-900 to-[#070b12] rounded-3xl p-8 sm:p-10 text-white shadow-2xl border border-teal-500/30 space-y-4">
+          <div class="absolute -right-16 -top-16 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/15 text-teal-300 text-xs font-bold border border-teal-500/30">
+            <span>LESSON 09</span> • <span>Route Security & Middleware Guards</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight tracking-tight">
+            ບົດທີ 9: Route Middleware & Authentication Guards
+          </h1>
+          <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
+            ຮຽນຮູ້ວິທີປົກປ້ອງໜ້າເວັບ (Protected Routes), ການສ້າງລະບົບ <strong class="text-teal-300">Auth Guard</strong>, ການກວດສອບ Login Token ຜ່ານ Cookie, ການ Redirect ໄປໜ້າ Login ດ້ວຍ <code class="font-mono text-teal-300">navigateTo()</code>, ແລະ ການແບ່ງສິດຜູ້ໃຊ້ <strong class="text-teal-300">Role-Based Access Control (RBAC)</strong>.
+          </p>
+        </div>
+
+        <!-- Section 1: Overview & Types -->
+        <section id="section-1" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center">1</span>
+            Route Middleware ແມ່ນຫຍັງ? ແລະ 3 ປະເພດໃນ Nuxt 4
+          </h2>
+          <p class="text-slate-300 leading-relaxed text-sm">
+            <strong>Route Middleware</strong> ແມ່ນ Function ທີ່ຈະຖືກເອີ້ນເຮັດວຽກ <strong>"ກ່ອນ"</strong> ທີ່ຜູ້ໃຊ້ຈະເຂົ້າເຖິງໜ້າເວັບໃດໜຶ່ງ (Before Navigation). ມັນເຮັດໜ້າທີ່ຄືກັບ <em>"ຕຳຫຼວດກວດຄົນເຂົ້າເມືອງ"</em> ເພື່ອກວດສອບວ່າ ຜູ້ໃຊ້ Login ແລ້ວບໍ? ມີສິດເຂົ້າເຖິງໜ້ານີ້ຫຼືບໍ່? ຫາກບໍ່ມີສິດ ລະບົບຈະ Reject ຫຼື Redirect ອອກໄປທັນທີ.
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+            <div class="p-5 rounded-2xl bg-[#0c1220] border border-slate-800 space-y-2 hover:border-teal-500/40 transition">
+              <div class="w-9 h-9 rounded-xl bg-teal-500/15 text-teal-300 flex items-center justify-center font-bold text-base border border-teal-500/30">🏷️</div>
+              <h3 class="font-bold text-white text-sm">1. Named Middleware</h3>
+              <p class="text-xs text-slate-400 leading-relaxed">ສ້າງໄວ້ທີ່ <code class="font-mono text-teal-300">app/middleware/auth.ts</code> ແລະ ເລືອກເອີ້ນໃຊ້ສະເພາະບາງໜ້າຜ່ານ <code class="font-mono">definePageMeta</code>.</p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-[#0c1220] border border-slate-800 space-y-2 hover:border-cyan-500/40 transition">
+              <div class="w-9 h-9 rounded-xl bg-cyan-500/15 text-cyan-300 flex items-center justify-center font-bold text-base border border-cyan-500/30">🌐</div>
+              <h3 class="font-bold text-white text-sm">2. Global Middleware</h3>
+              <p class="text-xs text-slate-400 leading-relaxed">ໃສ່ນາມສະກຸນ <code class="font-mono text-cyan-300">.global.ts</code> (ເຊັ່ນ <code class="font-mono">app/middleware/log.global.ts</code>) ເພື່ອໃຫ້ເຮັດວຽກ <strong>ທຸກໆໜ້າ</strong> ອັດຕະໂນມັດ.</p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-[#0c1220] border border-slate-800 space-y-2 hover:border-emerald-500/40 transition">
+              <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-300 flex items-center justify-center font-bold text-base border border-emerald-500/30">📄</div>
+              <h3 class="font-bold text-white text-sm">3. Inline / Anonymous</h3>
+              <p class="text-xs text-slate-400 leading-relaxed">ຂຽນ Function Middleware ໂດຍກົງພາຍໃນໄຟລ໌ໜ້າເວັບ Page Component ນັ້ນໆ ໂດຍບໍ່ຕ້ອງສ້າງໄຟລ໌ແຍກ.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2: Named Auth Middleware -->
+        <section id="section-2" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center">2</span>
+            ສ້າງ Named Auth Guard (<code class="text-teal-400 font-mono text-xl">app/middleware/auth.ts</code>)
+          </h2>
+          <p class="text-slate-300 leading-relaxed text-sm">
+            ໃນ Nuxt 4, ພວກເຮົາໃຊ້ Helper <code class="font-mono text-teal-300 bg-teal-950/70 border border-teal-500/30 px-1.5 py-0.5 rounded">defineNuxtRouteMiddleware((to, from) => { ... })</code>. ຫາກກວດພົບວ່າບໍ່ມີ Auth Token ຈະໃຊ້ <code class="font-mono text-teal-300 bg-teal-950/70 border border-teal-500/30 px-1.5 py-0.5 rounded">navigateTo()</code> ເພື່ອສົ່ງຜູ້ໃຊ້ໄປໜ້າ Login:
+          </p>
+
+          <div class="bg-[#050811] rounded-2xl overflow-hidden shadow-xl border border-slate-800">
+            <div class="bg-[#0c1220] px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+                <span class="ml-2 text-teal-400 font-semibold">app/middleware/auth.ts</span>
+              </div>
+              <button onclick="copyCmd(document.getElementById('code-auth-middleware').innerText)" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-teal-500 hover:text-slate-950 text-slate-300 transition text-xs flex items-center gap-1">
+                <i class="mdi mdi-content-copy text-sm"></i>
+                <span>Copy Code</span>
+              </button>
+            </div>
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-auth-middleware">export default defineNuxtRouteMiddleware((to, from) => {
+  // 1. ດຶງ Token ຈາກ Cookie (ໃຊ້ໄດ້ທັງຝັ່ງ Server SSR ແລະ Client)
+  const token = useCookie('auth_token').value
+
+  // 2. ຖ້າບໍ່ມີ Token (ຍັງບໍ່ທັນ Login)
+  if (!token) {
+    // ແຈ້ງເຕືອນ log ຫຼື redirect ໄປໜ້າ Login ພ້ອມແນບ redirect query param
+    return navigateTo({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    })
+  }
+
+  // 3. ຖ້າມີ Token ອະນຸຍາດໃຫ້ຜ່ານໄປໜ້າປາຍທາງໄດ້
+})</code></pre>
+          </div>
+        </section>
+
+        <!-- Section 3: Global Middleware -->
+        <section id="section-3" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center">3</span>
+            Global Middleware & ການຈັດລຳດັບການເຮັດວຽກ
+          </h2>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            Global Middleware ຈະເຮັດວຽກໃນທຸກໆການປ່ຽນ Route. ພວກເຮົາສາມາດກຳນົດລຳດັບ (Execution Order) ໄດ້ໂດຍການໃສ່ຕົວເລກນຳໜ້າຊື່ໄຟລ໌:
+          </p>
+
+          <div class="bg-[#050811] rounded-2xl overflow-hidden shadow-xl border border-slate-800">
+            <div class="bg-[#0c1220] px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span class="text-teal-400 font-semibold">app/middleware/01.analytics.global.ts</span>
+            </div>
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code>export default defineNuxtRouteMiddleware((to, from) => {
+  // ເຮັດວຽກເປັນອັນດັບ 1 ທຸກໆຄັ້ງທີ່ມີການກົດປ່ຽນໜ້າ
+  if (import.meta.client) {
+    console.log(`[Navigation] ຜູ້ໃຊ້ກຳລັງຍ້າຍຈາກ: ${from.path} ໄປຫາ: ${to.path}`)
+  }
+})</code></pre>
+          </div>
+        </section>
+
+        <!-- Section 4: Role-Based Access Control (RBAC) -->
+        <section id="section-4" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center">4</span>
+            Role-Based Access Control (RBAC: Admin vs Teacher vs Student)
+          </h2>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            ບາງໜ້າເວັບ (ເຊັ່ນ: ການຈັດການເງິນເດືອນ, ການລຶບຂໍ້ມູນອາຈານ) ຕ້ອງການສິດສະເພາະ <strong class="text-teal-300">Admin</strong> ເທົ່ານັ້ນ. ພວກເຮົາສາມາດສ້າງ <code class="font-mono text-teal-300 bg-teal-950/70 border border-teal-500/30 px-1 py-0.5 rounded">app/middleware/admin-only.ts</code>:
+          </p>
+
+          <div class="bg-[#050811] rounded-2xl overflow-hidden shadow-xl border border-slate-800">
+            <div class="bg-[#0c1220] px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span class="text-teal-400 font-semibold">app/middleware/admin-only.ts</span>
+            </div>
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code>export default defineNuxtRouteMiddleware((to, from) => {
+  const userRole = useCookie('user_role').value // 'admin' | 'teacher' | 'student'
+
+  if (userRole !== 'admin') {
+    // ຖ້າບໍ່ແມ່ນ Admin ໃຫ້ສົ່ງ Error 403 Forbidden ຫຼື Redirect ໄປໜ້າ Home
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'ທ່ານບໍ່ມີສິດເຂົ້າເຖິງໜ້ານີ້ (Forbidden: Admin Only)'
+    })
+  }
+})</code></pre>
+          </div>
+        </section>
+
+        <!-- Section 5: Using in Page Components -->
+        <section id="section-5" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center">5</span>
+            ວິທີນຳໃຊ້ Middleware ໃນ Page Component
+          </h2>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            ໃນໄຟລ໌ໜ້າເວັບ (<code class="font-mono text-teal-300 bg-teal-950/70 border border-teal-500/30 px-1.5 py-0.5 rounded">app/pages/teachers/index.vue</code>), ພວກເຮົາຈະໃຊ້ Compiler Macro <code class="font-mono text-teal-300 bg-teal-950/70 border border-teal-500/30 px-1.5 py-0.5 rounded">definePageMeta()</code>:
+          </p>
+
+          <div class="bg-[#050811] rounded-2xl overflow-hidden shadow-xl border border-slate-800">
+            <div class="bg-[#0c1220] px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span class="text-teal-400 font-semibold">app/pages/teachers/manage.vue</span>
+            </div>
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code>&lt;script setup lang="ts"&gt;
+// ປະກາດ Middleware ທີ່ຕ້ອງການໃຫ້ເຮັດວຽກ (ສາມາດໃສ່ຫຼາຍຕົວຕາມລຳດັບ Array)
+definePageMeta({
+  middleware: ['auth', 'admin-only']
+})
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div class="p-6"&gt;
+    &lt;h1&gt;ໜ້າຈັດການຄູ-ອາຈານ (ສຳລັບ Admin ທີ່ Login ແລ້ວເທົ່ານັ້ນ)&lt;/h1&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- Section 6: Interactive Live Auth Guard Simulator -->
+        <section id="section-6" class="space-y-6 scroll-mt-24">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center">6</span>
+              Interactive Live Route Guard Simulator
+            </h2>
+            <span class="text-xs font-semibold text-teal-300 bg-teal-950/70 border border-teal-500/30 px-3 py-1 rounded-full">
+              Live Nuxt Guard Simulation
+            </span>
+          </div>
+
+          <p class="text-slate-300 text-sm leading-relaxed">
+            ທົດສອບການເຮັດວຽກຂອງ Auth Guard ແບບ Real-Time! ລອງສະຫຼັບສະຖານະຜູ້ໃຊ້ (Guest, Teacher, Admin) ແລ້ວກົດທົດລອງເຂົ້າເຖິງ Route ຕ່າງໆ ເພື່ອເບິ່ງວ່າ Middleware ຈະອະນຸຍາດໃຫ້ເຂົ້າ ຫຼື Redirect ອອກໄປ:
+          </p>
+
+          <!-- Interactive Playground Container -->
+          <div class="bg-[#0c1220] text-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-teal-500/30 space-y-6">
+            
+            <!-- User Session State Switcher -->
+            <div class="space-y-2 pb-5 border-b border-slate-800">
+              <div class="text-xs font-bold uppercase tracking-wider text-teal-400 flex items-center gap-1.5">
+                <i class="mdi mdi-account-cog text-base"></i>
+                <span>1. ເລືອກສະຖານະຜູ້ໃຊ້ (Simulated Session):</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <button onclick="setSimulatorUser('guest')" id="role-btn-guest" class="p-3.5 rounded-2xl bg-teal-500 text-slate-950 font-bold text-xs flex items-center gap-3 transition">
+                  <span class="text-lg">👤</span>
+                  <div class="text-left">
+                    <div>Guest (ບໍ່ທັນ Login)</div>
+                    <div class="text-[10px] opacity-80">Token: null</div>
+                  </div>
+                </button>
+
+                <button onclick="setSimulatorUser('teacher')" id="role-btn-teacher" class="p-3.5 rounded-2xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-bold text-xs flex items-center gap-3 border border-slate-700 transition">
+                  <span class="text-lg">👨‍🏫</span>
+                  <div class="text-left">
+                    <div>Teacher (ຄູທົ່ວໄປ)</div>
+                    <div class="text-[10px] opacity-80">Role: 'teacher'</div>
+                  </div>
+                </button>
+
+                <button onclick="setSimulatorUser('admin')" id="role-btn-admin" class="p-3.5 rounded-2xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-bold text-xs flex items-center gap-3 border border-slate-700 transition">
+                  <span class="text-lg">👑</span>
+                  <div class="text-left">
+                    <div>Admin (ຜູ້ດູແລລະບົບ)</div>
+                    <div class="text-[10px] opacity-80">Role: 'admin' (ສິດສູງສຸດ)</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Route Navigation Test Bar -->
+            <div class="space-y-2 pb-5 border-b border-slate-800">
+              <div class="text-xs font-bold uppercase tracking-wider text-teal-400 flex items-center gap-1.5">
+                <i class="mdi mdi-navigation-variant text-base"></i>
+                <span>2. ກົດທົດສອບເຂົ້າເຖິງ Route (Target URL):</span>
+              </div>
+              <div class="flex flex-wrap gap-2.5">
+                <button onclick="testNavigate('/')" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 flex items-center gap-1.5 transition">
+                  <span>/ (Home - Public)</span>
+                </button>
+                <button onclick="testNavigate('/teachers')" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 flex items-center gap-1.5 transition">
+                  <span>/teachers (Protected: auth)</span>
+                </button>
+                <button onclick="testNavigate('/admin/dashboard')" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 flex items-center gap-1.5 transition">
+                  <span>/admin/dashboard (Protected: admin-only)</span>
+                </button>
+                <button onclick="testNavigate('/login')" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 flex items-center gap-1.5 transition">
+                  <span>/login (Guest Only)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Guard Execution Console Log -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+                <span class="flex items-center gap-1.5 text-teal-400 font-bold">
+                  <i class="mdi mdi-console"></i>
+                  Middleware Execution Result:
+                </span>
+                <span id="eval-timestamp" class="text-slate-500">Ready</span>
+              </div>
+
+              <div id="sim-result-card" class="p-5 rounded-2xl bg-[#050811] border border-slate-800 space-y-3 font-mono text-xs">
+                <div class="flex items-center gap-2">
+                  <span class="text-slate-500">Status:</span>
+                  <span id="sim-status-badge" class="px-2.5 py-0.5 rounded-full font-bold bg-slate-800 text-slate-400">WAITING_FOR_NAVIGATION</span>
+                </div>
+                <div class="text-slate-300">
+                  Requested URL: <span id="sim-requested-url" class="text-teal-300">/</span>
+                </div>
+                <div class="text-slate-300">
+                  Target Destination: <span id="sim-final-dest" class="text-emerald-300">/</span>
+                </div>
+                <div id="sim-log-message" class="text-slate-400 text-[11px] leading-relaxed pt-2 border-t border-slate-800/80">
+                  ກົດເລືອກ Route ດ້ານເທິງເພື່ອເລີ່ມຕົ້ນການທົດສອບ Middleware Guard!
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Section 7: Full Vue 3 Admin Dashboard Code -->
+        <section id="section-7" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center">7</span>
+            ໂຄດຕົວຢ່າງສົມບູນ: ໜ້າ Admin Dashboard ພ້ອມ Auth Guard
+          </h2>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            ຕົວຢ່າງການຂຽນໄຟລ໌ <code class="font-mono text-teal-300 bg-teal-950/70 border border-teal-500/30 px-1 py-0.5 rounded">app/pages/admin/dashboard.vue</code> ທີ່ປົກປ້ອງດ້ວຍ Middleware ແລະ ສະແດງປຸ່ມ Logout:
+          </p>
+
+          <div class="bg-[#050811] rounded-2xl overflow-hidden shadow-xl border border-slate-800">
+            <div class="bg-[#0c1220] px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span class="text-teal-400 font-semibold">app/pages/admin/dashboard.vue</span>
+              <button onclick="copyCmd(document.getElementById('code-admin-dashboard').innerText)" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-teal-500 hover:text-slate-950 text-slate-300 transition text-xs flex items-center gap-1">
+                <i class="mdi mdi-content-copy text-sm"></i>
+                <span>Copy Code</span>
+              </button>
+            </div>
+            <pre class="p-5 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto"><code id="code-admin-dashboard">&lt;script setup lang="ts"&gt;
+// 1. ປ້ອງກັນໜ້ານີ້ດ້ວຍ auth ແລະ admin-only middleware
+definePageMeta({
+  middleware: ['auth', 'admin-only']
+})
+
+// 2. ດຶງຂໍ້ມູນ User Profile
+const user = useCookie('auth_user')
+
+// 3. ຟັງຊັນອອກຈາກລະບົບ (Logout)
+const handleLogout = () => {
+  useCookie('auth_token').value = null
+  useCookie('user_role').value = null
+  useCookie('auth_user').value = null
+  
+  // ສົ່ງກັບໄປໜ້າ Login
+  navigateTo('/login')
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;v-container class="py-8"&gt;
+    &lt;v-card elevation="2" class="p-6 rounded-2xl bg-surface"&gt;
+      &lt;div class="d-flex justify-space-between align-center mb-4"&gt;
+        &lt;h1 class="text-h5 font-weight-bold"&gt;Admin Dashboard&lt;/h1&gt;
+        &lt;v-btn color="error" variant="tonal" prepend-icon="mdi-logout" @click="handleLogout"&gt;
+          ອອກຈາກລະບົບ
+        &lt;/v-btn&gt;
+      &lt;/div&gt;
+      &lt;p&gt;ຍິນດີຕ້ອນຮັບ, ທ່ານເຂົ້າສູ່ລະບົບໃນຖານະ: &lt;strong class="text-teal"&gt;Admin&lt;/strong&gt;&lt;/p&gt;
+    &lt;/v-card&gt;
+  &lt;/v-container&gt;
+&lt;/template&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- Section 8: Best Practices & Pitfalls -->
+        <section id="section-8" class="space-y-4 scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-teal-500 text-slate-950 text-sm font-bold flex items-center justify-center">8</span>
+            ຂໍ້ຄວນລະວັງ & Best Practices ກ່ຽວກັບ Route Middleware
+          </h2>
+
+          <div class="space-y-3 text-sm text-slate-300">
+            <div class="p-4 rounded-2xl bg-[#0c1220] border border-slate-800 space-y-1.5 hover:border-teal-500/40 transition">
+              <div class="font-bold text-white flex items-center gap-2">
+                <span class="text-rose-400">⚠️</span> ລະວັງບັນຫາ Infinite Redirect Loop!
+              </div>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                ຖ້າ Middleware ກວດສອບວ່າບໍ່ມີ Token ແລ້ວສັ່ງ <code class="font-mono text-teal-300">navigateTo('/login')</code> ໂດຍບໍ່ກວດສອບກ່ອນວ່າໜ້າປັດຈຸບັນແມ່ນ <code class="font-mono">/login</code> ແລ້ວຫຼືບໍ່, ລະບົບຈະ redirect ວົນຊ້ຳບໍ່ສິ້ນສຸດ. ໃຫ້ໃສ່ເງື່ອນໄຂ <code class="font-mono text-teal-300">if (!token && to.path !== '/login')</code> ສະເໝີ!
+              </p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-[#0c1220] border border-slate-800 space-y-1.5 hover:border-teal-500/40 transition">
+              <div class="font-bold text-white flex items-center gap-2">
+                <span class="text-teal-400">💡</span> ໃຊ້ <code class="font-mono text-xs text-teal-300">useCookie()</code> ແທນ <code class="font-mono text-xs text-slate-400">localStorage</code>
+              </div>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                ເພາະ Nuxt 4 ເຮັດວຽກແບບ Server-Side Rendering (SSR). ໃນຕອນ Render ຢູ່ Server ຈະບໍ່ມີ <code class="font-mono">window</code> ຫຼື <code class="font-mono">localStorage</code>. ການໃຊ້ <code class="font-mono text-teal-300">useCookie()</code> ຈະເຮັດໃຫ້ Middleware ອ່ານ Token ໄດ້ຢ່າງຖືກຕ້ອງທັງຝັ່ງ Server ແລະ Client.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-[#0c1220] border border-slate-800 space-y-1.5 hover:border-teal-500/40 transition">
+              <div class="font-bold text-white flex items-center gap-2">
+                <span class="text-teal-400">⚡</span> ກວດສອບ Token Expiration (ວັນໝົດອາຍຸ)
+              </div>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                ຢ່າກວດພຽງແຕ່ມີ Token ຫຼື ບໍ່, ຄວນກວດສອບວ່າ Token ໝົດອາຍຸຫຼືຍັງ ຫາກໝົດອາຍຸໃຫ້ Redirect ໄປ Login ພ້ອມລຶບ Cookie ເກົ່າຖິ້ມ.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Navigation Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-slate-800">
+          <a href="./N08.html" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-[#0c1220] border border-slate-800 hover:bg-slate-800/60 hover:text-teal-300 text-slate-300 font-bold text-xs sm:text-sm text-center transition flex items-center justify-center gap-2">
+            <span>←</span> ບົດກ່ອນໜ້າ (N08: Axios)
+          </a>
+          <a href="./N10.html" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs sm:text-sm text-center shadow-lg shadow-teal-500/25 transition flex items-center justify-center gap-2">
+            <span>ບົດຕໍ່ໄປ (N10: Pinia State) →</span>
+          </a>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <footer class="border-t border-slate-800 mt-16 py-8 text-center text-xs text-slate-500">
+    ຫຼັກສູດ Nuxt 4 (2027) • ສອນດ້ວຍຄວາມເຂົ້າໃຈງ່າຍ
+  </footer>
+
+  <!-- JavaScript Logic for Live Auth Guard Simulator -->
+  <script>
+    // Scroll progress bar & Back to Top
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+      const bar = document.getElementById('progress-bar');
+      if (bar) bar.style.width = scrolled + '%';
+
+      const backToTop = document.getElementById('back-to-top');
+      if (backToTop) {
+        if (winScroll > 300) {
+          backToTop.classList.remove('opacity-0', 'pointer-events-none');
+          backToTop.classList.add('opacity-100');
+        } else {
+          backToTop.classList.add('opacity-0', 'pointer-events-none');
+          backToTop.classList.remove('opacity-100');
+        }
+      }
+    });
+
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('mobile-sidebar');
+      const backdrop = document.getElementById('mobile-sidebar-backdrop');
+      if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function copyCmd(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.remove('translate-y-24', 'opacity-0');
+        setTimeout(() => {
+          toast.classList.add('translate-y-24', 'opacity-0');
+        }, 2200);
+      });
+    }
+
+    // Simulator State
+    let simulatorState = {
+      userType: 'guest', // 'guest' | 'teacher' | 'admin'
+      token: null,
+      role: null
+    };
+
+    function setSimulatorUser(type) {
+      simulatorState.userType = type;
+      if (type === 'guest') {
+        simulatorState.token = null;
+        simulatorState.role = null;
+      } else if (type === 'teacher') {
+        simulatorState.token = 'mock_jwt_teacher_token_xyz';
+        simulatorState.role = 'teacher';
+      } else if (type === 'admin') {
+        simulatorState.token = 'mock_jwt_admin_token_super';
+        simulatorState.role = 'admin';
+      }
+
+      // Update button styling
+      const btnGuest = document.getElementById('role-btn-guest');
+      const btnTeacher = document.getElementById('role-btn-teacher');
+      const btnAdmin = document.getElementById('role-btn-admin');
+
+      const activeClass = 'p-3.5 rounded-2xl bg-teal-500 text-slate-950 font-bold text-xs flex items-center gap-3 transition';
+      const inactiveClass = 'p-3.5 rounded-2xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-bold text-xs flex items-center gap-3 border border-slate-700 transition';
+
+      btnGuest.className = type === 'guest' ? activeClass : inactiveClass;
+      btnTeacher.className = type === 'teacher' ? activeClass : inactiveClass;
+      btnAdmin.className = type === 'admin' ? activeClass : inactiveClass;
+
+      testNavigate('/');
+    }
+
+    function testNavigate(targetPath) {
+      const requestedEl = document.getElementById('sim-requested-url');
+      const finalDestEl = document.getElementById('sim-final-dest');
+      const statusBadge = document.getElementById('sim-status-badge');
+      const logMessage = document.getElementById('sim-log-message');
+      const timeEl = document.getElementById('eval-timestamp');
+
+      timeEl.textContent = new Date().toLocaleTimeString();
+      requestedEl.textContent = targetPath;
+
+      // Simulate Nuxt 4 Middleware Guard Evaluation
+      if (targetPath === '/') {
+        // Public route
+        statusBadge.textContent = '200 ALLOWED (Public)';
+        statusBadge.className = 'px-2.5 py-0.5 rounded-full font-bold bg-emerald-950 text-emerald-300 border border-emerald-800/60';
+        finalDestEl.textContent = '/';
+        finalDestEl.className = 'text-emerald-300 font-bold';
+        logMessage.innerHTML = `✅ <strong>ອະນຸຍາດ:</strong> Route <code>/</code> ເປັນໜ້າສາທາລະນະ (Public), ບໍ່ມີ Middleware ປິດກັ້ນ. ທຸກຄົນເຂົ້າເບິ່ງໄດ້.`;
+      } else if (targetPath === '/login') {
+        // Guest route
+        if (simulatorState.token) {
+          // Already logged in, redirect to dashboard
+          statusBadge.textContent = '302 REDIRECT';
+          statusBadge.className = 'px-2.5 py-0.5 rounded-full font-bold bg-cyan-950 text-cyan-300 border border-cyan-800/60';
+          finalDestEl.textContent = '/teachers';
+          finalDestEl.className = 'text-cyan-300 font-bold';
+          logMessage.innerHTML = `ℹ️ <strong>Redirect:</strong> ຜູ້ໃຊ້ Login ແລ້ວ (Role: ${simulatorState.role}), Middleware ສົ່ງຕໍ່ໄປຍັງໜ້າຫຼັກ <code>/teachers</code> ອັດຕະໂນມັດ ໂດຍບໍ່ໃຫ້ເຫັນໜ້າ Login ອີກ.`;
+        } else {
+          statusBadge.textContent = '200 ALLOWED';
+          statusBadge.className = 'px-2.5 py-0.5 rounded-full font-bold bg-emerald-950 text-emerald-300 border border-emerald-800/60';
+          finalDestEl.textContent = '/login';
+          finalDestEl.className = 'text-emerald-300 font-bold';
+          logMessage.innerHTML = `✅ <strong>ອະນຸຍາດ:</strong> Guest ສາມາດເຂົ້າໜ້າ <code>/login</code> ເພື່ອກອກຂໍ້ມູນບັນຊີ.`;
+        }
+      } else if (targetPath === '/teachers') {
+        // Requires 'auth'
+        if (!simulatorState.token) {
+          // Rejected
+          statusBadge.textContent = '302 REDIRECT (Unauthenticated)';
+          statusBadge.className = 'px-2.5 py-0.5 rounded-full font-bold bg-rose-950 text-rose-300 border border-rose-800/60';
+          finalDestEl.textContent = '/login?redirect=/teachers';
+          finalDestEl.className = 'text-rose-300 font-bold';
+          logMessage.innerHTML = `🚫 <strong>ຖືກປະຕິເສດ:</strong> ໜ້າ <code>/teachers</code> ຕ້ອງການ <code>auth</code> Middleware. ເນື່ອງຈາກຜູ້ໃຊ້ຍັງບໍ່ທັນ Login (Token: null), ລະບົບຈຶ່ງ Redirect ໄປ <code>/login?redirect=/teachers</code>!`;
+        } else {
+          statusBadge.textContent = '200 ALLOWED (Authorized)';
+          statusBadge.className = 'px-2.5 py-0.5 rounded-full font-bold bg-emerald-950 text-emerald-300 border border-emerald-800/60';
+          finalDestEl.textContent = '/teachers';
+          finalDestEl.className = 'text-emerald-300 font-bold';
+          logMessage.innerHTML = `✅ <strong>ອະນຸຍາດ:</strong> ພົບ Auth Token ທີ່ຖືກຕ້ອງ! ຜູ້ໃຊ້ (${simulatorState.role}) ສາມາດເຂົ້າເຖິງລາຍຊື່ຄູ-ອາຈານໄດ້.`;
+        }
+      } else if (targetPath === '/admin/dashboard') {
+        // Requires 'auth' + 'admin-only'
+        if (!simulatorState.token) {
+          statusBadge.textContent = '302 REDIRECT (No Token)';
+          statusBadge.className = 'px-2.5 py-0.5 rounded-full font-bold bg-rose-950 text-rose-300 border border-rose-800/60';
+          finalDestEl.textContent = '/login?redirect=/admin/dashboard';
+          finalDestEl.className = 'text-rose-300 font-bold';
+          logMessage.innerHTML = `🚫 <strong>ຖືກປະຕິເສດ (ຂັ້ນຕອນ auth):</strong> ບໍ່ພົບ Token, Middleware ສົ່ງກັບໄປ Login.`;
+        } else if (simulatorState.role !== 'admin') {
+          statusBadge.textContent = '403 FORBIDDEN (Permission Denied)';
+          statusBadge.className = 'px-2.5 py-0.5 rounded-full font-bold bg-amber-950 text-amber-300 border border-amber-800/60';
+          finalDestEl.textContent = 'Error 403: Forbidden';
+          finalDestEl.className = 'text-amber-300 font-bold';
+          logMessage.innerHTML = `⛔ <strong>ສິດບໍ່ເຖິງ (ຂັ້ນຕອນ admin-only):</strong> ຜູ້ໃຊ້ເຂົ້າສູ່ລະບົບແລ້ວກໍ່ຈິງ ແຕ່ມີ Role: <code>${simulatorState.role}</code> ເຊິ່ງບໍ່ແມ່ນ <code>admin</code>! Middleware ຕັດສິດການເຂົ້າເຖິງທັນທີ.`;
+        } else {
+          statusBadge.textContent = '200 ALLOWED (Super Admin)';
+          statusBadge.className = 'px-2.5 py-0.5 rounded-full font-bold bg-emerald-950 text-emerald-300 border border-emerald-800/60';
+          finalDestEl.textContent = '/admin/dashboard';
+          finalDestEl.className = 'text-emerald-300 font-bold';
+          logMessage.innerHTML = `👑 <strong>ອະນຸຍາດສູງສຸດ:</strong> ຜູ້ໃຊ້ຄື Admin ຕົວຈິງ! ຜ່ານທັງສອງ Middleware (\`auth\` + \`admin-only\`) ຢ່າງສົມບູນ.`;
+        }
+      }
+    }
+  </script>
+
+</body>
+
+</html>
